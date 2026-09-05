@@ -1,34 +1,45 @@
 [project]
-name = "blender-mcp"
-version = "1.4.0"
-description = "Blender integration through the Model Context Protocol"
+name = "blender-harness"
+version = "4.0.0"
+description = "Multi-Project 2D Image to 3D Blender Reconstruction & Self-Refining Harness with Model Context Protocol (MCP)"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Blender Works Team"}
 ]
-license = {text = "MIT"}
+license = {text = "Personal Use and Non-Commercial License"}
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
 ]
 dependencies = [
-    "mcp[cli]>=1.3.0",
-    "supabase>=2.0.0",
-    "tomli>=2.0.0",
+    "numpy>=1.26.0",
+    "pillow>=10.0.0",
+    "opencv-python>=4.8.0",
+    "scikit-learn>=1.4.0",
+    "scikit-image>=0.22.0",
+    "scipy>=1.12.0",
+    "pyyaml>=6.0.1",
+    "requests>=2.31.0",
+    "mcp>=1.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
 ]
 
 [project.scripts]
-blender-mcp = "blender_mcp.server:main"
+harness = "harness.__main__:main"
+blender-harness = "harness.__main__:main"
+blender-mcp = "mcp_server.server:main"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-
-[project.urls]
-"Homepage" = "https://github.com/yourusername/blender-mcp"
-"Bug Tracker" = "https://github.com/yourusername/blender-mcp/issues"
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["harness*", "mcp_server*"]

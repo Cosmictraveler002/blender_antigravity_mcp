@@ -37,10 +37,10 @@ def test_connection():
         sock.close()
         return True
     except ConnectionRefusedError:
-        print("❌ FAILED: Connection refused. Is Blender running? Is the addon enabled and 'BlenderMCP' server started in the sidebar?")
+        print("FAILED: Connection refused. Is Blender running? Is the addon enabled and 'BlenderMCP' server started in the sidebar?")
         return False
     except Exception as e:
-        print(f"❌ ERROR: {str(e)}")
+        print(f"ERROR: {str(e)}")
         return False
 
 if __name__ == "__main__":

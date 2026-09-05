@@ -11,8 +11,33 @@ wheels/
 .venv*/
 manual_env/
 
-# macOS
+# Environment & Secret Files (CRITICAL: KEEP LOCAL)
+.env
+.env.*
+*.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.crt
+*secret*
+*credential*
+*token*
+
+# User Projects (CRITICAL: EXCLUDED AS REQUESTED)
+projects/
+
+# Texture Cache & Heavy Local Assets
+assets/textures_cache/
+
+# Blender backup files
+*.blend1
+*.blend2
+*.blend@
+
+# macOS / System
 .DS_Store
+Thumbs.db
 
 # Local config secrets
 src/blender_mcp/config.py
@@ -21,20 +46,10 @@ src/blender_mcp/config.py
 debug/
 *.log
 
-# Documentation (Keep local)
+# Documentation / History / Local IDE (Keep local)
+.agents/
 docs/
-
-# User Workspaces (CRITICAL: KEEP LOCAL)
 3D_Creation_Workspace/
 3D Finnal Chat history/
 *Chat history*
 *Workspace*
-
-# UV lock file
-# uv.lock
-
-# Tests folder
-# tests/
-
-# Mac/System
-.DS_Store
