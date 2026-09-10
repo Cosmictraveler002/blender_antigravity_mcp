@@ -52,9 +52,26 @@ def run_viewport_capture(params=None):
     has_geometry = False
 
     geo_types = {'MESH', 'CURVE', 'SURFACE', 'FONT', 'GREASEPENCIL', 'GPENCIL'}
-    candidate_objs = [obj for obj in scene.objects if obj.type in geo_types and not obj.hide_render]
+
+    # Exclude background studio floor / ground planes from character bounding box
+    floor_keywords = ['floor', 'ground', 'backdrop', 'studio_floor']
+    floor_objs = [
+        obj for obj in scene.objects
+        if obj.type == 'MESH' and any(k in obj.name.lower() for k in floor_keywords)
+    ]
+
+    candidate_objs = [
+        obj for obj in scene.objects
+        if obj.type in geo_types and not obj.hide_render and obj not in floor_objs
+    ]
     if not candidate_objs:
         candidate_objs = [obj for obj in scene.objects if obj.type in geo_types]
+
+    hidden_floor_objs = []
+    for f_obj in floor_objs:
+        if not f_obj.hide_render:
+            f_obj.hide_render = True
+            hidden_floor_objs.append(f_obj)
 
     for obj in candidate_objs:
         has_geometry = True
@@ -149,10 +166,13 @@ def run_viewport_capture(params=None):
             # Orient camera toward center
             direction = (center - cam_obj.location).normalized()
             if abs(direction.z) > 0.999:
-                quat = direction.to_track_quat('-Z', 'Y')
+                if direction.z < 0:
+                    cam_obj.rotation_euler = mathutils.Euler((0.0, 0.0, 0.0))
+                else:
+                    cam_obj.rotation_euler = mathutils.Euler((math.pi, 0.0, 0.0))
             else:
-                quat = direction.to_track_quat('-Z', 'Z')
-            cam_obj.rotation_euler = quat.to_euler()
+                quat = direction.to_track_quat('-Z', 'Y')
+                cam_obj.rotation_euler = quat.to_euler()
 
             if is_ortho:
                 cam_data.type = 'ORTHO'
@@ -195,8 +215,13 @@ def run_viewport_capture(params=None):
         scene.render.resolution_x = orig_res_x
         scene.render.resolution_y = orig_res_y
         scene.render.resolution_percentage = orig_res_pct
-        scene.render.filepath = orig_filepath
         scene.render.film_transparent = orig_film_transparent
+
+        for f_obj in hidden_floor_objs:
+            try:
+                f_obj.hide_render = False
+            except Exception:
+                pass
 
         if orig_cycles_samples is not None and hasattr(scene, "cycles"):
             scene.cycles.samples = orig_cycles_samples
