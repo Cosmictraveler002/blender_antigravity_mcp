@@ -21,18 +21,25 @@ Blender-MCP/
 │   ├── __main__.py                    # CLI: python -m harness run <project>
 │   ├── config.py                      # Global defaults & convergence thresholds
 │   ├── project_loader.py              # Manifest parser & workspace discovery
-│   ├── pipeline/                      # 5-Stage Orchestration
+│   ├── pipeline/                      # 6-Stage Orchestration
 │   │   ├── stage_analyze.py           # Stage 1: Computer vision & feature extraction
 │   │   ├── stage_generate.py          # Stage 2: Blender model synthesis
+│   │   ├── stage_capture.py           # Stage Capture: Multi-viewport 360° orbit & montage
 │   │   ├── stage_compare.py           # Stage 3: Render vs reference multi-modal comparison
 │   │   ├── stage_refine.py            # Stage 4: Closed-loop parameter correction
 │   │   └── stage_report.py            # Stage 5: Diagnostics, verdicts & summary docs
+│   ├── capture/                       # Multi-Viewport 360° Capture Engine
+│   │   ├── multi_viewport_renderer.py # 14-camera orbit controller & socket bridge
+│   │   ├── contact_sheet_generator.py # 4x4 visual montage builder (PIL)
+│   │   └── blender_scripts/           # Inside-Blender bpy camera scripts
+│   │       └── multi_viewport_render.py
 │   ├── analyzers/                     # Vision & Profiling Modules
 │   │   ├── gemini_analyzer.py         # Multi-modal semantic & typography extraction
 │   │   ├── geometry_analyzer.py       # Radial profile mesh, aspect ratios, landmarks
 │   │   ├── structural_geometry_analyzer.py # 7-Step BMesh profiling, symmetry & primitives
 │   │   ├── color_texture_analyzer.py  # CIE L*a*b* K-Means, Gabor filters, BSDF synthesis
-│   │   └── placement_report_generator.py # Multi-viewpoint spatial element placement
+│   │   ├── placement_report_generator.py # Multi-viewpoint spatial element placement
+│   │   └── viewport_analyzer.py       # 360° silhouette, coverage & symmetry analyzer
 │   ├── comparators/                   # Verification Engine
 │   │   └── render_geometry_comparator.py # 100-level radial mesh, CIEDE2000 ΔE, Procrustes
 │   ├── materials/                     # PBR Texture Retrieval & Synthesis Engine
@@ -58,9 +65,9 @@ Blender-MCP/
 │       │   ├── refine_geometry.py     # Closed-loop tuner (subclasses BaseRefinementEngine)
 │       │   └── verify_and_refine_bottle.py
 │       └── outputs/                   # Generated artifacts
-│           ├── renders/               # Viewport & Cycles renders
+│           ├── renders/               # Viewport & Cycles renders (plus viewports/ 14 angles)
 │           ├── specs/                 # JSON design specifications
-│           ├── reports/               # Markdown summaries & comparison collages
+│           ├── reports/               # Markdown summaries, contact sheets & collages
 │           └── textures/              # Downloaded / synthesized PBR textures
 │
 └── mcp_server/                        # Antigravity Model Context Protocol Server
@@ -135,6 +142,9 @@ python -m harness run bottle --stage analyze
 # Stage 2: Blender 3D Model Generation
 python -m harness run bottle --stage generate
 
+# Stage: Multi-Viewport 360° Capture & Analysis
+python -m harness run bottle --stage capture
+
 # Stage 3: Render vs Reference Comparison
 python -m harness run bottle --stage compare
 
@@ -152,12 +162,13 @@ python -m harness run bottle --dry-run
 
 ---
 
-## 🔬 The 5-Stage Pipeline Explained
+## 🔬 The 6-Stage Pipeline Explained
 
 | Stage | Name | Key Algorithms & Operations | Output Artifacts |
 | :--- | :--- | :--- | :--- |
 | **Stage 1** | **Analyze** | • Radial profile mesh (100 elevation slices)<br>• CIE L\*a\*b\* K-Means palette clustering<br>• Gabor filter anisotropy & frequency analysis<br>• Spatial coordinate mapping from 6 orthographic views | `geometry_design_doc.json`<br>`color_texture_design_doc.json`<br>`placement_report.json` / `.md`<br>`master_3d_design_specification.json` |
 | **Stage 2** | **Generate** | • Procedural mesh synthesis in Blender<br>• Principled BSDF shader setup<br>• Procedural PBR texture baking<br>• Studio lighting & camera framing | Active 3D Blender scene<br>`initial_render.png` |
+| **Stage Capture** | **Capture** | • 14-camera spherical orbit (6 ortho + 8 perspective)<br>• Transparent film background capture with headlight fill<br>• Lateral & anterior-posterior silhouette symmetry IoU<br>• 4×4 visual contact sheet montage generation | `renders/viewports/*.png`<br>`viewport_manifest.json`<br>`viewport_analysis_report.json`<br>`viewport_contact_sheet.png` |
 | **Stage 3** | **Compare** | • 100-level radial mesh MAE<br>• Component-wise CIEDE2000 color delta ($\Delta E_{00}$)<br>• Height IoU & Procrustes shape metric<br>• Visual diagnostic collage generation | `comparison_report.json`<br>`render_geometry_annotated.png`<br>`comparison_side_by_side.png` |
 | **Stage 4** | **Refine** | • Closed-loop feedback controller<br>• Automated bidirectional parameter tuning<br>• Multi-zone perceptual color optimization | Updated Blender scene<br>`refinement_log.json` |
 | **Stage 5** | **Report** | • Multi-metric aggregation<br>• Pass/Fail verdicts against configurable tolerances<br>• Actionable recommendations for human review | `final_report.json`<br>`final_report.md` |
@@ -194,6 +205,12 @@ Creating a new reconstruction project is as simple as creating a directory under
      resolution: [1920, 1080]
      view_transform: "Standard"
      samples: 128
+   viewport_capture:
+     enabled: true
+     resolution_scale: 0.5
+     samples: 64
+     padding_factor: 1.25
+     camera_distance_factor: 3.2
    ```
 3. Run the harness:
    ```bash

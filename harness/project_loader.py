@@ -11,7 +11,7 @@ import yaml
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any
 
-from harness.config import DEFAULT_CONFIG, HarnessConfig, ConvergenceConfig, RenderConfig
+from harness.config import DEFAULT_CONFIG, HarnessConfig, ConvergenceConfig, RenderConfig, ViewportCaptureConfig
 
 
 @dataclass
@@ -31,10 +31,12 @@ class ProjectDefinition:
     # Override-able config
     convergence: Optional[ConvergenceConfig] = None
     render: Optional[RenderConfig] = None
+    viewport: Optional[ViewportCaptureConfig] = None
 
     # Output directories (absolute)
     outputs_dir: str = ""
     renders_dir: str = ""
+    viewports_dir: str = ""
     specs_dir: str = ""
     reports_dir: str = ""
     textures_dir: str = ""
@@ -45,6 +47,7 @@ class ProjectDefinition:
     def __post_init__(self):
         self.outputs_dir = os.path.join(self.project_dir, "outputs")
         self.renders_dir = os.path.join(self.outputs_dir, "renders")
+        self.viewports_dir = os.path.join(self.renders_dir, "viewports")
         self.specs_dir = os.path.join(self.outputs_dir, "specs")
         self.reports_dir = os.path.join(self.outputs_dir, "reports")
         self.textures_dir = os.path.join(self.outputs_dir, "textures")
@@ -131,6 +134,19 @@ def load_project(project_name: str, harness_root: Optional[str] = None) -> Proje
             samples=r_cfg.get("samples", DEFAULT_CONFIG.render.samples),
         )
 
+    # Parse viewport capture overrides
+    viewport = None
+    if "viewport_capture" in cfg:
+        vp_cfg = cfg["viewport_capture"]
+        viewport = ViewportCaptureConfig(
+            enabled=vp_cfg.get("enabled", DEFAULT_CONFIG.viewport.enabled),
+            resolution_scale=vp_cfg.get("resolution_scale", DEFAULT_CONFIG.viewport.resolution_scale),
+            samples=vp_cfg.get("samples", DEFAULT_CONFIG.viewport.samples),
+            padding_factor=vp_cfg.get("padding_factor", DEFAULT_CONFIG.viewport.padding_factor),
+            camera_distance_factor=vp_cfg.get("camera_distance_factor", DEFAULT_CONFIG.viewport.camera_distance_factor),
+            include_gemini_analysis=vp_cfg.get("include_gemini_analysis", DEFAULT_CONFIG.viewport.include_gemini_analysis),
+        )
+
     project = ProjectDefinition(
         name=cfg["name"],
         version=cfg.get("version", "1.0.0"),
@@ -142,12 +158,13 @@ def load_project(project_name: str, harness_root: Optional[str] = None) -> Proje
         refine_script=refine_script,
         convergence=convergence,
         render=render,
+        viewport=viewport,
         raw_config=cfg,
     )
 
     # Ensure output directories exist
-    for d in [project.outputs_dir, project.renders_dir, project.specs_dir,
-              project.reports_dir, project.textures_dir]:
+    for d in [project.outputs_dir, project.renders_dir, project.viewports_dir,
+              project.specs_dir, project.reports_dir, project.textures_dir]:
         os.makedirs(d, exist_ok=True)
 
     return project

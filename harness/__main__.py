@@ -43,6 +43,7 @@ def cmd_run(args):
     # Import pipeline stages
     from harness.pipeline.stage_analyze import run_analysis
     from harness.pipeline.stage_generate import run_generation
+    from harness.pipeline.stage_capture import run_capture
     from harness.pipeline.stage_compare import run_comparison
     from harness.pipeline.stage_refine import run_refinement
     from harness.pipeline.stage_report import run_report
@@ -50,16 +51,18 @@ def cmd_run(args):
     stages = {
         "analyze": run_analysis,
         "generate": run_generation,
+        "capture": run_capture,
         "compare": run_comparison,
         "refine": run_refinement,
         "report": run_report,
     }
 
-    stage_order = ["analyze", "generate", "compare", "refine", "report"]
+    valid_stages = ["analyze", "generate", "capture", "compare", "refine", "report"]
+    stage_order = ["analyze", "generate", "capture", "compare", "refine", "report"]
 
     if args.stage:
         if args.stage not in stages:
-            print(f"ERROR: Unknown stage '{args.stage}'. Valid: {', '.join(stage_order)}")
+            print(f"ERROR: Unknown stage '{args.stage}'. Valid: {', '.join(valid_stages)}")
             sys.exit(1)
         stage_order = [args.stage]
 
@@ -121,7 +124,7 @@ def main():
     # run
     run_parser = subparsers.add_parser("run", help="Execute pipeline for a project")
     run_parser.add_argument("project", help="Project name (directory name under projects/)")
-    run_parser.add_argument("--stage", choices=["analyze", "generate", "compare", "refine", "report"],
+    run_parser.add_argument("--stage", choices=["analyze", "generate", "capture", "compare", "refine", "report"],
                            help="Run only a specific stage (default: all)")
     run_parser.add_argument("--dry-run", action="store_true", help="Show what would run without executing")
     run_parser.add_argument("--continue-on-error", action="store_true", help="Don't stop on stage failure")

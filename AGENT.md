@@ -25,16 +25,17 @@ This repository is an **automated 2D image to 3D Blender reconstruction & closed
 
 | Path | Purpose | Editable by Agent? |
 | :--- | :--- | :--- |
-| `harness/` | Reusable core engine (analyzers, comparators, refiners, pipeline orchestration) | ✅ Only when improving reusable algorithms or adding harness capabilities |
-| `projects/<name>/project.yaml` | Project manifest declaring inputs, scripts, tolerances | ✅ Always when configuring or tweaking a project |
+| `harness/` | Reusable core engine (analyzers, capture, comparators, refiners, pipeline orchestration) | ✅ Only when improving reusable algorithms or adding harness capabilities |
+| `harness/capture/` | 14-camera spherical orbit renderer, contact sheet generator, and Blender bpy capture scripts | ✅ Only for system-wide capture improvements |
+| `projects/<name>/project.yaml` | Project manifest declaring inputs, scripts, tolerances, and viewport capture settings | ✅ Always when configuring or tweaking a project |
 | `projects/<name>/reference/` | Reference images (ground truth) | ⚠️ Read-only (do not overwrite original reference) |
 | `projects/<name>/scripts/` | Procedural scripts (`generate_*.py`, `refine_*.py`, `verify_*.py`) | ✅ Main working area for object-specific 3D modeling & refinement |
-| `projects/<name>/outputs/` | Pipeline outputs (`renders/`, `specs/`, `reports/`, `textures/`) | 🤖 Generated automatically by the harness |
+| `projects/<name>/outputs/` | Pipeline outputs (`renders/`, `renders/viewports/`, `specs/`, `reports/`, `textures/`) | 🤖 Generated automatically by the harness |
 | `mcp_server/` | Fast stdio binary MCP server and Blender addon | ✅ For MCP protocol fixes or new tools |
 
 ---
 
-## 3. The 5-Stage Pipeline Workflow
+## 3. The 6-Stage Pipeline Workflow
 
 Every 3D reconstruction follows this deterministic sequence:
 
@@ -44,14 +45,16 @@ graph TD
     S1 --> Specs[Design Specs JSON]
     Specs --> S2[Stage 2: Generate]
     S2 --> Render[Initial Render PNG]
-    Render --> S3[Stage 3: Compare]
+    Render --> S_Cap[Stage: Capture]
+    S_Cap --> VP_Renders[14 Viewport PNGs & Contact Sheet]
+    VP_Renders --> S3[Stage 3: Compare]
     Specs --> S3
     S3 --> CompReport[Comparison Report & Scores]
     CompReport --> S4[Stage 4: Refine]
     S4 -->|Iterate until convergence| S2
     S4 --> FinalData[Refinement Log]
     FinalData --> S5[Stage 5: Report]
-    S5 --> MarkdownDoc[Final Report MD & JSON]
+    S5 --> MarkdownDoc[Final Report MD & JSON with 360 Contact Sheet]
 ```
 
 ### Command Reference
@@ -62,6 +65,7 @@ python -m harness run <project_name>
 # Run individual stages
 python -m harness run <project_name> --stage analyze
 python -m harness run <project_name> --stage generate
+python -m harness run <project_name> --stage capture   # 14-camera 360° orbit & analysis
 python -m harness run <project_name> --stage compare
 python -m harness run <project_name> --stage refine
 python -m harness run <project_name> --stage report
@@ -82,6 +86,7 @@ When Stage 2 (`generate`) or Stage 4 (`refine`) invokes a project script in Blen
 | `HARNESS_GEOM_JSON` | Absolute path to `geometry_design_doc.json` |
 | `HARNESS_COLOR_JSON` | Absolute path to `color_texture_design_doc.json` |
 | `HARNESS_RENDER_DIR` | Absolute path to `projects/<project>/outputs/renders/` |
+| `HARNESS_VIEWPORT_DIR` | Absolute path to `projects/<project>/outputs/renders/viewports/` |
 | `HARNESS_TEXTURE_DIR` | Absolute path to `projects/<project>/outputs/textures/` |
 
 ### How Project Scripts Must Read Configuration
@@ -133,6 +138,10 @@ render:
   resolution: [1920, 1080]
   view_transform: "Standard"
   samples: 128
+viewport_capture:
+  enabled: true
+  resolution_scale: 0.5
+  samples: 64
 ```
 
 ### Step 4: Run Stage 1 (Analyze)
@@ -175,7 +184,7 @@ This inspects the image and scene mesh, producing:
 ```bash
 python -m harness run <name>
 ```
-The harness will execute Stage 2 (Generate) $\to$ Stage 3 (Compare) $\to$ Stage 4 (Refine using your project's `refine_<name>.py` loop until convergence) $\to$ Stage 5 (Diagnostic Report).
+The harness will execute Stage 2 (Generate) $\to$ Stage Capture (14-camera 360° orbit & analysis) $\to$ Stage 3 (Compare) $\to$ Stage 4 (Refine using your project's `refine_<name>.py` loop until convergence) $\to$ Stage 5 (Diagnostic Report with 360° contact sheet montage).
 
 ---
 

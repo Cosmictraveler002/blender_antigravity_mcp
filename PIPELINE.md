@@ -1,6 +1,6 @@
-# 3D Reconstruction Pipeline Specification (v4.0.0)
+# 3D Reconstruction Pipeline Specification (v4.1.0)
 
-This document specifies the technical architecture, mathematical foundations, data contracts, and execution model for the **5-Stage 2D-to-3D Reconstruction & Refinement Pipeline**.
+This document specifies the technical architecture, mathematical foundations, data contracts, and execution model for the **6-Stage 2D-to-3D Reconstruction, Viewport Capture & Refinement Pipeline**.
 
 ---
 
@@ -40,6 +40,19 @@ flowchart TD
         Render["Viewport / Studio Cycles Render"]
     end
 
+    subgraph StageCapture["Stage: Capture (Multi-Viewport 360°)"]
+        MVR["MultiViewportRenderer\n(14-Camera Spherical Orbit)"]
+        VA["ViewportAnalyzer\n(Coverage, Symmetry IoU, Defects)"]
+        CSG["ContactSheetGenerator\n(4x4 Visual Montage)"]
+    end
+
+    subgraph StageCaptureOutputs["Capture Artifacts (renders/viewports/ & reports/)"]
+        VPRenders["14 Viewport PNGs\n(6 Ortho + 8 Perspective)"]
+        VPManifest["viewport_manifest.json"]
+        VPReport["viewport_analysis_report.json"]
+        CSImg["viewport_contact_sheet.png"]
+    end
+
     subgraph Stage3["Stage 3: Verification & Comparison"]
         Comp["RenderGeometryComparator\n(Radial Mesh MAE, CIEDE2000, Procrustes)"]
         CompVis["Side-by-Side Visual Diagnostic Collage"]
@@ -54,7 +67,7 @@ flowchart TD
 
     subgraph Stage5["Stage 5: Final Report"]
         ReportGen["Diagnostic Summary Generator"]
-        FinalMD["final_report.md"]
+        FinalMD["final_report.md (with 360° Contact Sheet)"]
         FinalJSON["final_report.json"]
     end
 
@@ -67,8 +80,15 @@ flowchart TD
     MasterSpec --> BlenderGen
     TexGen --> BlenderGen
     BlenderGen --> Render
+    Render --> MVR
+
+    MVR --> VPRenders & VPManifest
+    VPRenders --> VA & CSG
+    VA --> VPReport
+    CSG --> CSImg
 
     Render --> Comp
+    VPRenders --> Comp
     GDoc & CDoc --> Comp
     Comp --> CompVis & CompData
 
@@ -77,7 +97,7 @@ flowchart TD
     GeomRefine & ColorRefine --> BlenderGen
     Controller -- "Converged or max iter" --> ReportGen
 
-    CompData --> ReportGen
+    CompData & VPReport & CSImg --> ReportGen
     ReportGen --> FinalMD & FinalJSON
 ```
 
@@ -168,9 +188,43 @@ The dominant grain angle is computed as:
 $$
 \theta_{\text{grain}} = \arg\max_\theta \sum_{x, y} |I(x, y) * g(x, y; \lambda, \theta)|
 $$
-Anisotropy ratio:
+### 2.6 Multi-Viewport Spherical Camera Orbit Transform
+The 14-camera array orbits the model on a bounding sphere of radius $R = r_{\text{bbox}} \cdot d_{\text{cam}}$ centered at the scene's axis-aligned bounding box center $\mathbf{c} = (c_x, c_y, c_z)$.
+Under Blender's coordinate system ($+X = \text{right}, -Y = \text{front}, +Y = \text{back}, +Z = \text{up}$), the camera position $\mathbf{p} = (x, y, z)$ is parameterized by azimuth $\phi \in [0, 360^\circ)$ and elevation $\alpha \in [-90^\circ, +90^\circ]$:
 $$
-\rho_{\text{anisotropy}} = \frac{\max_\theta E(\theta)}{\text{median}_\theta E(\theta)}
+x = c_x + R \cos\alpha \sin\phi, \quad
+y = c_y - R \cos\alpha \cos\phi, \quad
+z = c_z + R \sin\alpha
+$$
+The camera orientation quaternion $\mathbf{q} \in \mathbb{H}$ aligns the optical axis $-\mathbf{z}_{\text{cam}}$ with the target direction vector:
+$$
+\mathbf{d} = \frac{\mathbf{c} - \mathbf{p}}{\|\mathbf{c} - \mathbf{p}\|}
+$$
+To eliminate gimbal singularity when looking directly at polar vertices ($|\mathbf{d}_z| > 0.999$), the up-vector $\mathbf{u}$ switches from world-Z to world-Y:
+$$
+\mathbf{u} = \begin{cases}
+(0, 1, 0)^T & \text{if } |\mathbf{d}_z| > 0.999 \\
+(0, 0, 1)^T & \text{otherwise}
+\end{cases}
+$$
+
+### 2.7 Cross-Viewport Silhouette & Symmetry Metrics
+To validate 360° geometry fidelity without reference photos for every angle, cross-view silhouette consistency is computed between opposing vantage points:
+
+#### Lateral Symmetry (Left vs Right)
+For reflective bilateral models, the right silhouette mask $M_R$ is mirrored horizontally and compared to the left silhouette mask $M_L$:
+$$
+\text{IoU}_{\text{lateral}} = \frac{\sum_{x, y} \left[ M_L(x, y) \land M_R(W - 1 - x, y) \right]}{\sum_{x, y} \left[ M_L(x, y) \lor M_R(W - 1 - x, y) \right]} \times 100\%
+$$
+
+#### Anterior-Posterior Symmetry (Front vs Back)
+$$
+\text{IoU}_{\text{AP}} = \frac{\sum_{x, y} \left[ M_F(x, y) \land M_B(W - 1 - x, y) \right]}{\sum_{x, y} \left[ M_F(x, y) \lor M_B(W - 1 - x, y) \right]} \times 100\%
+$$
+
+#### Vertical Footprint Ratio (Top vs Bottom)
+$$
+\rho_{\text{TB}} = \frac{\sum_{x, y} M_{\text{top}}(x, y)}{\max\left(1, \sum_{x, y} M_{\text{bottom}}(x, y)\right)}
 $$
 
 ---
@@ -266,6 +320,62 @@ $$
         "action": "Scale cap radius by 0.96x"
       }
     ]
+  }
+}
+```
+
+### 3.4 `viewport_manifest.json`
+```json
+{
+  "project_name": "Bink Cobalt Blue Bottle",
+  "viewports_dir": "projects/bink_bottle/outputs/renders/viewports",
+  "total_viewports": 14,
+  "captured_count": 14,
+  "resolution": [409, 512],
+  "bounding_box": {
+    "center": [0.0, 0.0, 1.25],
+    "dimensions": [2.0, 2.0, 2.5],
+    "radius": 1.803
+  },
+  "viewports": [
+    {
+      "name": "front",
+      "path": ".../viewport_front.png",
+      "azimuth": 0,
+      "elevation": 0,
+      "ortho": true,
+      "exists": true
+    }
+  ]
+}
+```
+
+### 3.5 `viewport_analysis_report.json`
+```json
+{
+  "total_viewports": 14,
+  "analyzed_viewports": 14,
+  "overall_health_score": 100.0,
+  "defect_warnings": [],
+  "cross_viewport_metrics": {
+    "lateral_symmetry_iou": 99.3,
+    "anterior_posterior_iou": 64.6,
+    "top_to_bottom_area_ratio": 0.998
+  },
+  "per_viewport_metrics": {
+    "front": {
+      "status": "success",
+      "image_size": [409, 512],
+      "foreground_pixels": 39302,
+      "coverage_percentage": 18.77,
+      "is_clipped": false,
+      "aspect_ratio": 0.62,
+      "bbox": [40, 154, 329, 204],
+      "framing_fill_factor": 58.6,
+      "azimuth": 0,
+      "elevation": 0,
+      "ortho": true
+    }
   }
 }
 ```

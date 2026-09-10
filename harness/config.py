@@ -38,12 +38,24 @@ class ConvergenceConfig:
 
 
 @dataclass
+class ViewportCaptureConfig:
+    """Multi-viewport camera capture and orbit settings."""
+    enabled: bool = True
+    resolution_scale: float = 0.5       # Resolution multiplier (e.g. 0.5 = half project res)
+    samples: int = 64                   # Viewport render samples
+    padding_factor: float = 1.25        # Bounding box frame padding factor
+    camera_distance_factor: float = 3.2 # Orbit radius = bbox_radius * distance_factor
+    include_gemini_analysis: bool = False
+
+
+@dataclass
 class HarnessConfig:
     """Master configuration container."""
     projects_dir: str = "projects"
     blender: BlenderConfig = field(default_factory=BlenderConfig)
     render: RenderConfig = field(default_factory=RenderConfig)
     convergence: ConvergenceConfig = field(default_factory=ConvergenceConfig)
+    viewport: ViewportCaptureConfig = field(default_factory=ViewportCaptureConfig)
 
     @classmethod
     def from_env(cls) -> "HarnessConfig":
