@@ -125,6 +125,8 @@ def run_comparison(project: ProjectDefinition, config: HarnessConfig) -> Dict[st
         "annotated_render_path": annotated_path,
         "side_by_side_path": sbs_path,
         "overall_score": total_score,
+        "convergence_status": comp_results.get("convergence_status", {}),
+        "correction_recommendations": comp_results.get("correction_recommendations", []),
         "recommendations": recommendations,
         "component_fidelity": component_reports,
     }
@@ -156,5 +158,13 @@ def _find_latest_render(renders_dir: str) -> Optional[str]:
 
     if not png_files:
         return None
+
+    # Prioritize front or initial render if present
+    front_candidates = [
+        p for p in png_files
+        if "front" in os.path.basename(p).lower() or "initial" in os.path.basename(p).lower()
+    ]
+    if front_candidates:
+        return max(front_candidates, key=os.path.getmtime)
 
     return max(png_files, key=os.path.getmtime)

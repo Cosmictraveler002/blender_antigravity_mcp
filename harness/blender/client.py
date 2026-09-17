@@ -7,10 +7,10 @@ import argparse
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 9876
 
-def send_blender_code(code: str, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
+def send_blender_code(code: str, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, timeout: float = 300.0):
     """Sends python code to Blender socket server and returns response dict."""
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(60.0)
+    sock.settimeout(timeout)
     try:
         sock.connect((host, port))
     except Exception as e:

@@ -139,23 +139,27 @@ class ColorTextureAnalyzer:
             responses.append(float(np.mean(np.abs(f_img))))
 
         max_idx = int(np.argmax(responses))
-        grain_direction = deg_map[max_idx]
         min_r = min(responses)
         max_r = max(responses)
         isotropy = float(min_r / max(1e-5, max_r))
+
+        # Eliminate forced argmax trap: If surface is isotropic or gradient energy is negligible,
+        # do not force a directional grain angle (PIPELINE_SOLUTIONS_SPEC.md § 1.1)
+        is_isotropic = bool(isotropy >= 0.72 or energy < 0.004)
+        grain_direction = None if is_isotropic else deg_map[max_idx]
 
         # Calibrated roughness mapping:
         # Matte powder coat: high micro-dispersion (0.65 - 0.78)
         # Laser text stainless steel: smoother, lower roughness (0.28 - 0.35)
         # Bamboo wood: directional fiber grain (0.38 - 0.45)
-        roughness = float(np.clip(0.38 + 16.0 * energy, 0.15, 0.85))
+        roughness = float(np.clip(0.35 + 18.0 * energy, 0.15, 0.85))
 
         if energy > 0.015:
             cat = "GRAINED_OR_ROUGH"
         elif energy > 0.005:
             cat = "FINE_MATTE_POWDER"
         else:
-            cat = "SMOOTH_SATIN"
+            cat = "SMOOTH_ISOTROPIC" if is_isotropic else "SMOOTH_SATIN"
 
         return {
             "roughness_estimate": round(roughness, 2),
@@ -163,6 +167,7 @@ class ColorTextureAnalyzer:
             "lbp_entropy": round(entropy, 2),
             "gabor_grain_direction_deg": grain_direction,
             "gabor_isotropy_score": round(isotropy, 3),
+            "is_isotropic": is_isotropic,
             "texture_category": cat
         }
 
@@ -248,25 +253,60 @@ class ColorTextureAnalyzer:
             }
 
         materials = {}
+        from harness.analyzers.svbrdf_analyzer import SVBRDFEngine
+        svbrdf_engine = SVBRDFEngine()
+
         if self.geom_doc and "components" in self.geom_doc and len(self.geom_doc["components"]) > 0:
             for cid, comp in self.geom_doc["components"].items():
+                bounds = comp.get("snapped_pixel_y_bounds")
                 bbox = comp.get("pixel_bbox")
-                if bbox:
+                if bounds:
+                    y1, y2 = bounds
+                    bx = bbox[0] if bbox else 0
+                    bw = bbox[2] if bbox else self.w
+                elif bbox:
                     bx, by, bw, bh = bbox
-                    x1 = max(0, min(self.w - 1, bx))
-                    x2 = max(x1 + 1, min(self.w, bx + bw))
-                    y1 = max(0, min(self.h - 1, by))
-                    y2 = max(y1 + 1, min(self.h, by + bh))
-                    crop = self.img_rgb[y1:y2, x1:x2]
+                    y1, y2 = by, by + bh
                 else:
-                    crop = self.img_rgb
+                    bx, bw, y1, y2 = 0, self.w, 0, self.h
 
-                rough_hint = comp.get("estimated_roughness", 0.60)
+                x1 = max(0, min(self.w - 1, bx))
+                x2 = max(x1 + 1, min(self.w, bx + bw))
+                y1 = max(0, min(self.h - 1, y1))
+                y2 = max(y1 + 1, min(self.h, y2))
+
+                # Rule 2: internal erosion to prevent edge contamination
+                erosion = 3
+                crop_y1 = min(y2 - 1, y1 + erosion)
+                crop_y2 = max(crop_y1 + 1, y2 - erosion)
+                crop_x1 = min(x2 - 1, x1 + erosion)
+                crop_x2 = max(crop_x1 + 1, x2 - erosion)
+                crop = self.img_rgb[crop_y1:crop_y2, crop_x1:crop_x2]
+
+                rough_hint = comp.get("estimated_roughness", 0.50)
                 metal_hint = comp.get("estimated_metallic", 0.0)
                 disp_name = comp.get("display_name", cid).replace(" ", "") + "Material"
 
                 c_rgb, c_spec = sample_clean_color(crop)
                 c_tex = self.analyze_texture_and_gabor(crop)
+
+                # Execute SVBRDF engine intrinsic analysis
+                crop_bgr = cv2.cvtColor(crop, cv2.COLOR_RGB2BGR) if crop.size > 0 else np.zeros((32, 32, 3), dtype=np.uint8)
+                svbrdf_temp_dir = os.path.join(os.path.dirname(self.image_path), "..", "textures", cid)
+                try:
+                    svbrdf_manifest = svbrdf_engine.decompose_crop(
+                        crop_bgr=crop_bgr,
+                        output_dir=svbrdf_temp_dir,
+                        component_id=cid,
+                        target_color_hex=comp.get("color_hex"),
+                        base_roughness_hint=rough_hint,
+                        base_metallic_hint=metal_hint,
+                        erosion_px=0  # Already eroded above
+                    )
+                except Exception as e:
+                    print(f"[ColorTextureAnalyzer] SVBRDF analysis fallback for {cid}: {e}")
+                    svbrdf_manifest = {"composite_confidence_q": 0.5, "decomposition_mode": "basic_fallback"}
+
                 mat_spec = make_spec(
                     disp_name, c_rgb, c_spec, c_tex,
                     rough=rough_hint, metallic=metal_hint,
@@ -274,6 +314,7 @@ class ColorTextureAnalyzer:
                     notes=comp.get("description", f"Procedural PBR material for {cid}")
                 )
                 mat_spec["color_histogram_lab"] = self.compute_lab_histogram(crop)
+                mat_spec["svbrdf_analysis"] = svbrdf_manifest
                 materials[cid] = mat_spec
         else:
             # Fallback to dominant palette

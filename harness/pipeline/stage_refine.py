@@ -71,6 +71,7 @@ def run_refinement(project: ProjectDefinition, config: HarnessConfig) -> Dict[st
         env["HARNESS_COMPARISON_JSON"] = comparison_json
         env["HARNESS_MAX_ITERATIONS"] = str(convergence.max_iterations)
         env["HARNESS_CONVERGENCE_THRESHOLD"] = str(convergence.geometry_score_threshold * 100)
+        env["HARNESS_GENERATE_SCRIPT"] = project.generate_script or ""
         env["PYTHONPATH"] = os.getcwd() + (os.pathsep + env["PYTHONPATH"] if "PYTHONPATH" in env else "")
 
         proc = subprocess.run(
