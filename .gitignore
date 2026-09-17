@@ -45,6 +45,9 @@ src/blender_mcp/config.py
 # Debug artifacts
 debug/
 *.log
+outputs/
+scratch/
+.pytest_cache/
 
 # Documentation / History / Local IDE (Keep local)
 .agents/

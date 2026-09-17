@@ -7,6 +7,12 @@
 
 A production-grade, multi-modal **2D Reference Image to 3D Blender Reconstruction & Self-Refining Harness** with integrated **Model Context Protocol (MCP)** server for AI-driven 3D modeling in Google Antigravity.
 
+### Key Capabilities & Architectural Highlights
+- 🔄 **Auto-Rebuild on Structural Recommendations**: Automatically escalates from micro parameter nudges to clean procedural re-generation in Blender whenever topological or aspect ratio discrepancies are detected.
+- 🎨 **Packaging Diffuse Substrate Tinting (`LabelTint`)**: Inserts dynamic `ShaderNodeMix` RGBA Multiply nodes in the shader graph, preventing packaging textures from blocking closed-loop color calibration.
+- 🎯 **Multi-Gate Component Convergence**: Rigorous validation enforcing aspect ratio ($\le 2\%$), component vertical span ($\le 0.8\%$), perceptual color difference ($\Delta E_{00} \le 6.5$), and radial contour MAE ($\le 0.040$) for $\ge 92.0\%$ fidelity.
+- 📸 **14-Camera Multi-Viewport 360° Capture**: Automated spherical orbit verification capturing orthographic and perspective views with symmetry IoU analysis.
+
 ---
 
 ## 🌟 Architecture Overview
@@ -114,50 +120,54 @@ Add the following to your Antigravity MCP configuration (`mcp_config.json`):
 
 ## ⚡ Using the Harness CLI
 
+> [!NOTE]
+> On Windows, use `py` (Python Launcher for Windows) to ensure execution with the active Python 3.12 environment. On macOS/Linux, use `python` or `python3`.
+
 ### Discover Projects
 ```bash
-python -m harness list
+py -m harness list
 ```
 Output:
 ```
-Found 1 project(s):
+Found 2 project(s):
   - bottle: Abhinav Bottle (v1.0.0) [bottle]
+  - pyana_reka_can: Pyana Reka Beverage Can (v1.0.0) [can]
 ```
 
 ### Inspect Project Configuration
 ```bash
-python -m harness info bottle
+py -m harness info pyana_reka_can
 ```
 
-### Execute the Full 5-Stage Pipeline
+### Execute the Full Pipeline
 ```bash
-python -m harness run bottle
+py -m harness run pyana_reka_can
 ```
 
 ### Execute a Specific Stage
 ```bash
 # Stage 1: Computer Vision & Feature Extraction
-python -m harness run bottle --stage analyze
+py -m harness run pyana_reka_can --stage analyze
 
 # Stage 2: Blender 3D Model Generation
-python -m harness run bottle --stage generate
+py -m harness run pyana_reka_can --stage generate
 
 # Stage: Multi-Viewport 360° Capture & Analysis
-python -m harness run bottle --stage capture
+py -m harness run pyana_reka_can --stage capture
 
 # Stage 3: Render vs Reference Comparison
-python -m harness run bottle --stage compare
+py -m harness run pyana_reka_can --stage compare
 
-# Stage 4: Closed-Loop Refinement Loop
-python -m harness run bottle --stage refine
+# Stage 4: Closed-Loop Refinement Loop (with Auto-Rebuild)
+py -m harness run pyana_reka_can --stage refine
 
 # Stage 5: Final Quality Report & Metrics
-python -m harness run bottle --stage report
+py -m harness run pyana_reka_can --stage report
 ```
 
 ### Dry Run
 ```bash
-python -m harness run bottle --dry-run
+py -m harness run pyana_reka_can --dry-run
 ```
 
 ---
@@ -169,8 +179,8 @@ python -m harness run bottle --dry-run
 | **Stage 1** | **Analyze** | • Radial profile mesh (100 elevation slices)<br>• CIE L\*a\*b\* K-Means palette clustering<br>• Gabor filter anisotropy & frequency analysis<br>• Spatial coordinate mapping from 6 orthographic views | `geometry_design_doc.json`<br>`color_texture_design_doc.json`<br>`placement_report.json` / `.md`<br>`master_3d_design_specification.json` |
 | **Stage 2** | **Generate** | • Procedural mesh synthesis in Blender<br>• Principled BSDF shader setup<br>• Procedural PBR texture baking<br>• Studio lighting & camera framing | Active 3D Blender scene<br>`initial_render.png` |
 | **Stage Capture** | **Capture** | • 14-camera spherical orbit (6 ortho + 8 perspective)<br>• Transparent film background capture with headlight fill<br>• Lateral & anterior-posterior silhouette symmetry IoU<br>• 4×4 visual contact sheet montage generation | `renders/viewports/*.png`<br>`viewport_manifest.json`<br>`viewport_analysis_report.json`<br>`viewport_contact_sheet.png` |
-| **Stage 3** | **Compare** | • 100-level radial mesh MAE<br>• Component-wise CIEDE2000 color delta ($\Delta E_{00}$)<br>• Height IoU & Procrustes shape metric<br>• Visual diagnostic collage generation | `comparison_report.json`<br>`render_geometry_annotated.png`<br>`comparison_side_by_side.png` |
-| **Stage 4** | **Refine** | • Closed-loop feedback controller<br>• Automated bidirectional parameter tuning<br>• Multi-zone perceptual color optimization | Updated Blender scene<br>`refinement_log.json` |
+| **Stage 3** | **Compare** | • Dual-analysis `GeometryAnalyzer` (identical model)<br>• 100-level radial mesh MAE & Procrustes metric<br>• Component CIEDE2000 color delta ($\Delta E_{00}$)<br>• Structural recommendation tagging (`is_structural`, `requires_rebuild`)<br>• 1:1 normalized baseline side-by-side diagnostic | `comparison_report.json`<br>`render_geometry_annotated.png`<br>`comparison_side_by_side.png` |
+| **Stage 4** | **Refine** | • Closed-loop proportional feedback controller<br>• Auto-Rebuild escalation on structural recommendations<br>• Multi-gate component convergence validation<br>• Diffuse substrate tinting (`LabelTint` multiplier) | Updated Blender scene<br>`refinement_log.json` |
 | **Stage 5** | **Report** | • Multi-metric aggregation<br>• Pass/Fail verdicts against configurable tolerances<br>• Actionable recommendations for human review | `final_report.json`<br>`final_report.md` |
 
 ---

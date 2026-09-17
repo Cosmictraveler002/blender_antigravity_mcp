@@ -88,6 +88,7 @@ When Stage 2 (`generate`) or Stage 4 (`refine`) invokes a project script in Blen
 | `HARNESS_RENDER_DIR` | Absolute path to `projects/<project>/outputs/renders/` |
 | `HARNESS_VIEWPORT_DIR` | Absolute path to `projects/<project>/outputs/renders/viewports/` |
 | `HARNESS_TEXTURE_DIR` | Absolute path to `projects/<project>/outputs/textures/` |
+| `HARNESS_GENERATE_SCRIPT` | Absolute path to project's procedural generate script (`scripts/generate_<name>.py`) |
 
 ### How Project Scripts Must Read Configuration
 ```python
@@ -164,27 +165,31 @@ This inspects the image and scene mesh, producing:
 > - For **every project**, after Stage 1 analysis generates the specification reports in `outputs/specs/`, the project-specific scripts **MUST be created inside the project folder** (`projects/<name>/scripts/`) derived entirely from the analyzed report:
 
 #### Step 5a: Implement Procedural Generation Script (`projects/<name>/scripts/generate_<name>.py`)
-- Reads dimensions, coordinates, and primitives from `HARNESS_GEOM_JSON` and `HARNESS_COLOR_JSON`.
+- Reads dimensions, coordinates, and primitives dynamically from `HARNESS_GEOM_JSON` and `HARNESS_COLOR_JSON` for parametric scalability.
 - Reads resolved PBR texture maps from `material_manifest.json`.
+- When using diffuse packaging textures, inserts a `LabelTint` (`ShaderNodeMix`, RGBA Multiply, Factor 1.0) node between the texture color and the Principled BSDF `Base Color` to allow closed-loop color tuning without texture override blockage.
 - Constructs the 3D geometry in Blender using `bpy` and `bmesh`.
 - Transmits commands via `harness.blender.client.send_blender_code`.
 
 #### Step 5b: Implement Closed-Loop Refinement Script (`projects/<name>/scripts/refine_<name>.py`)
 - Subclasses `harness.refiners.base_refiner.BaseRefinementEngine`.
+- Passes `generate_script_path` (resolved from `HARNESS_GENERATE_SCRIPT`) to enable automated procedural rebuilds when structural discrepancies arise.
 - Can be generated automatically via `harness.refiners.refiner_generator.RefinerGenerator` or tailored by the LLM/Agent.
 - Takes the analyzed geometry schema and detected material zones with **zero hardcoded objects**.
 - Implements `apply_adjustments(pass_num: int, recommendations: List[Dict[str, Any]]) -> bool`:
   1. Inspects the `recommendations` emitted by Stage 3 (`comparison_report.json`).
-  2. Maps corrective actions directly to the specific Blender objects and material nodes created in Step 5a.
-  3. Formulates targeted `bpy` updates (e.g. scale mesh vertices, nudge Principled BSDF base colors).
-  4. Returns `True` if adjustments were applied, or `False` if converged/no actions needed.
+  2. If structural recommendations are present, synchronizes updated target dimensions into `geometry_design_doc.json` so the generator incorporates them on rebuild.
+  3. Maps micro corrective actions directly to specific Blender objects and material nodes created in Step 5a.
+  4. Strictly converts all target sRGB colors to linear space (`srgb_to_linear`) before assigning to shader inputs.
+  5. Formulates targeted `bpy` updates (e.g. scale mesh vertices, adjust `LabelTint` color).
+  6. Returns `True` if adjustments were applied, or `False` if converged/no actions needed.
 - Registers `refine: "scripts/refine_<name>.py"` in `project.yaml`.
 
 ### Step 6: Run Stages 2 to 5 (Full Automated Loop)
 ```bash
-python -m harness run <name>
+py -m harness run <name>
 ```
-The harness will execute Stage 2 (Generate) $\to$ Stage Capture (14-camera 360° orbit & analysis) $\to$ Stage 3 (Compare) $\to$ Stage 4 (Refine using your project's `refine_<name>.py` loop until convergence) $\to$ Stage 5 (Diagnostic Report with 360° contact sheet montage).
+The harness will execute Stage 2 (Generate) $\to$ Stage Capture (14-camera 360° orbit & analysis) $\to$ Stage 3 (Compare) $\to$ Stage 4 (Refine using your project's `refine_<name>.py` loop until convergence, with auto-rebuild escalation) $\to$ Stage 5 (Diagnostic Report with 360° contact sheet montage).
 
 ---
 
@@ -192,21 +197,35 @@ The harness will execute Stage 2 (Generate) $\to$ Stage Capture (14-camera 360°
 
 The refinement engine (`harness/refiners/`) implements closed-loop proportional control:
 
-1. **Geometry Discrepancy Correction**:
+1. **Auto-Rebuild on Structural Recommendations**:
+   - `RenderGeometryComparator` flags recommendations with `"is_structural": True` and `"requires_rebuild": True` when:
+     - Aspect ratio deviation $> 3.0\%$.
+     - Component vertical height ratio error $> 8.0\%$ (or span delta $> 0.015$).
+     - Silhouette radial profile contour MAE $> 0.040$.
+   - When detected, `BaseRefinementEngine` escalates directly to `trigger_rebuild()`:
+     - Re-executes the procedural `generate_<name>.py` script in Blender over the socket connection.
+     - Safely replaces distorted geometry while preserving cameras and lights.
+     - Renders a clean baseline (`refine_pass_{pass}_rebuild.png`) and evaluates fresh metrics.
+     - Enforces a safety quota (`max_rebuilds = 2`) to prevent infinite rebuild oscillations.
+
+2. **Geometry Discrepancy Micro-Correction**:
    - Compares rendered silhouette against target radial profile (100 elevation slices).
    - If rendered radius at slice $i$ is smaller than target, computes $\Delta r_i = r_{target} - r_{rendered}$.
-   - Sends parameter adjustments to Blender to scale mesh vertices or profile curve control points.
+   - Sends parameter adjustments to Blender to scale mesh vertices or profile curve control points when within micro-adjustment limits.
 
-2. **Material & Color Correction**:
+3. **Material & Color Correction**:
    - Samples rendered pixel colors across functional component masks.
    - Calculates **$\Delta E_{00}$ (CIEDE2000)** between rendered color and target reference color.
-   - If $\Delta E_{00} > 3.0$, applies bidirectional correction:
-     $$C_{new} = \text{clamp}(C_{current} + \alpha \cdot (C_{target} - C_{rendered}), 0.0, 1.0)$$
-   - Updates `bpy.data.materials[...].node_tree.nodes["Principled BSDF"].inputs["Base Color"]`.
+   - Converts color corrections using canonical $sRGB \to \text{linear}$ transformation.
+   - Updates `LabelTint` node color or Principled BSDF `Base Color`.
 
-3. **Lighting & Exposure Calibration**:
-   - Evaluates background wall luminance and specular highlights.
-   - Dynamically adjusts key/fill light energy and camera position to eliminate shadows that distort color measurements.
+4. **Multi-Gate Convergence Enforcement**:
+   - Convergence strictly requires:
+     - Overall fidelity score $\ge 92.0\%$.
+     - Aspect ratio error $\le 2.0\%$.
+     - Component height ratio errors $\le 0.8\%$.
+     - Component color differences $\Delta E_{00} \le 6.5$.
+     - Contour profile MAE $\le 0.040$.
 
 ---
 
@@ -216,7 +235,7 @@ The refinement engine (`harness/refiners/`) implements closed-loop proportional 
 - **Cause**: Blender is not running or the add-on server is not activated.
 - **Resolution**: Ensure Blender is launched and the add-on is enabled in `Edit > Preferences > Add-ons > 3D Gen: Blender MCP Connect`. If needed, run Blender headless:
   ```powershell
-  blender --background --python harness/blender/addon.py
+  & "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" --python-expr "import bpy; bpy.ops.blendermcp.start_server()"
   ```
 
 ### Issue 2: Colors in Render Appear Too Bright / Washed Out
@@ -227,10 +246,17 @@ The refinement engine (`harness/refiners/`) implements closed-loop proportional 
   bpy.context.scene.view_settings.look = 'None'
   ```
 
-### Issue 3: Text or Details Blurry in Renders
-- **Cause**: Cycles/Eevee render samples too low or camera depth-of-field active.
-- **Resolution**: Disable DOF (`camera.data.dof.use_dof = False`) and set samples $\ge 128$.
+### Issue 3: Textures Block Material Color Tuning
+- **Cause**: In Blender, connecting an Image Texture directly to `Base Color` overrides socket inputs, preventing closed-loop color adjustments.
+- **Resolution**: Always insert a `ShaderNodeMix` (RGBA Multiply, Factor 1.0) named `LabelTint` between the texture and the BSDF.
 
-### Issue 4: Windows Unicode or Stdio Encoding Errors
+### Issue 4: Python Command Not Found in Windows PowerShell
+- **Cause**: Windows may not have `python` in system PATH or it invokes the Microsoft Store stub.
+- **Resolution**: Use `py` (the official Windows Python launcher):
+  ```powershell
+  py -m harness run <project_name>
+  ```
+
+### Issue 5: Windows Unicode or Stdio Encoding Errors
 - **Cause**: Windows cmd/powershell standard stream default code page (cp1252).
 - **Resolution**: Always set `PYTHONUTF8=1` in the process environment.

@@ -49,206 +49,76 @@ class RenderGeometryComparator:
 
     def analyze_rendered_scene(self) -> Dict[str, Any]:
         """
-        Extracts dimensional landmarks, radial profile, and component colors
-        directly from the rendered 3D image.
+        Extracts dimensional landmarks, radial profile, and modular components
+        directly from the rendered 3D image using the SAME GeometryAnalyzer model
+        as the reference specification pipeline.
         """
-        gray = cv2.cvtColor(self.img_bgr, cv2.COLOR_BGR2GRAY)
-        hsv = cv2.cvtColor(self.img_bgr, cv2.COLOR_BGR2HSV)
+        from harness.analyzers.geometry_analyzer import GeometryAnalyzer
 
-        # 1. Background wall sampling (top corners)
-        wall_sample = gray[20:80, 20:100]
-        wall_gray = float(np.median(wall_sample))
+        # 1. Run the exact same GeometryAnalyzer model on the rendered image
+        ga = GeometryAnalyzer(self.render_path)
+        specs_dir = os.path.dirname(os.path.abspath(self.geom_json_path))
+        rend_json_path = os.path.join(specs_dir, "render_geometry_doc.json")
+        reports_dir = os.path.join(os.path.dirname(specs_dir), "reports")
+        rend_vis_path = os.path.join(reports_dir, "render_geometry_annotated.png")
 
-        # 2. Body Left/Right Bounds via mid-cylinder sampling (y: 45%..65%)
-        y_sample_start = int(self.h * 0.45)
-        y_sample_end = int(self.h * 0.65)
-        avg_mid = np.mean(gray[y_sample_start:y_sample_end, :], axis=0)
+        # Force analysis without reusing reference vision spec
+        rend_doc = ga.analyze(output_json_path=rend_json_path, output_vis_path=rend_vis_path, gemini_spec_path="NON_EXISTENT")
 
-        left_search_min = int(self.w * 0.25)
-        left_search_max = int(self.w * 0.50)
-        left_e = left_search_min
-        for x in range(left_search_min, left_search_max):
-            if avg_mid[x] < wall_gray - 20:
-                left_e = x
-                break
+        dims = rend_doc["overall_dimensions"]
+        bx, by, bw, bh = dims["bbox_pixels"]
+        cx = dims["center_x_px"]
+        ar = dims["aspect_ratio_height_to_width"]
+        rend_comps = rend_doc.get("components", {})
 
-        right_search_min = int(self.w * 0.50)
-        right_search_max = int(self.w * 0.75)
-        right_e = right_search_max
-        for x in range(right_search_max, right_search_min, -1):
-            if avg_mid[x] < wall_gray - 20:
-                right_e = x
-                break
-
-        body_diameter = right_e - left_e
-        body_center_x = (left_e + right_e) / 2.0
-        cx = int(round(body_center_x))
-
-        # 3. Bamboo Cap: detected via warm chromatic bamboo signature along centerline cx
-        bamboo_strip = (hsv[90:280, cx, 0] >= 10) & (hsv[90:280, cx, 0] <= 36) & (hsv[90:280, cx, 1] >= 20)
-        cap_indices = np.where(bamboo_strip)[0]
-        if len(cap_indices) > 0:
-            cap_y_top = int(cap_indices[0] + 90)
-            cap_y_bottom = int(cap_indices[-1] + 90)
-
-            # Use horizontal Sobel edge peaks inside cap vertical span to measure diameter
-            mid_cap_y = (cap_y_top + cap_y_bottom) // 2
-            gx_cap = np.abs(cv2.Sobel(gray[mid_cap_y - 15:mid_cap_y + 15, :], cv2.CV_32F, 1, 0, ksize=3))
-            avg_gx = np.mean(gx_cap, axis=0)
-            left_half = avg_gx[max(0, cx - int(body_diameter * 0.5)):cx]
-            right_half = avg_gx[cx:min(self.w, cx + int(body_diameter * 0.5))]
-            if len(left_half) > 0 and len(right_half) > 0:
-                pk_l = cx - len(left_half) + int(np.argmax(left_half))
-                pk_r = cx + int(np.argmax(right_half))
-                cap_diameter = int(pk_r - pk_l)
+        # Extract RGB for each component
+        for cid, comp in rend_comps.items():
+            hex_c = comp.get("color_hex", "#808080").lstrip("#")
+            if len(hex_c) == 6:
+                comp["rgb"] = [int(hex_c[i:i+2], 16) / 255.0 for i in (0, 2, 4)]
             else:
-                cap_diameter = int(body_diameter * 0.612)
-        else:
-            cap_y_top = int(self.h * 0.13)
-            cap_y_bottom = int(self.h * 0.23)
-            cap_diameter = int(body_diameter * 0.612)
+                comp["rgb"] = [0.5, 0.5, 0.5]
 
-        # 4. Handle Arch Apex: topmost dark pixel of loop strap above cap_y_top
-        top_y = None
-        for y in range(20, cap_y_top):
-            strip = gray[y, max(0, cx - 18):min(self.w, cx + 18)]
-            if np.min(strip) < 130:
-                top_y = y
-                break
-        if top_y is None or top_y >= cap_y_top:
-            top_y = max(10, cap_y_top - int(0.094 * (self.h * 0.85)))
-
-        # 5. Table Contact Line (Base Bottom)
-        base_y = None
-        for y in range(int(self.h * 0.98), int(self.h * 0.70), -1):
-            strip = gray[y, max(0, cx - 20):min(self.w, cx + 20)]
-            if np.mean(strip) < 42:
-                base_y = y
-                break
-        if base_y is None:
-            base_y = int(self.h * 0.94)
-
-        total_h = base_y - top_y
-        aspect_ratio = round(float(total_h / max(1, body_diameter)), 3)
-
-        seam_y = base_y - int(0.091 * total_h)
-        shoulder_y_top = cap_y_bottom
-        shoulder_y_bottom = cap_y_bottom + int(0.128 * total_h)
-
-        # 6. Calligraphy Text "Abhinav" on Render
-        body_zone = gray[shoulder_y_bottom:seam_y, left_e:right_e]
-        _, text_mask = cv2.threshold(body_zone, 100, 255, cv2.THRESH_BINARY)
-        sub_tw = body_diameter // 2
-        sub_tx1 = body_diameter // 4
-        sub_mask = text_mask[:, sub_tx1:sub_tx1 + sub_tw]
-
-        t_cnts, _ = cv2.findContours(sub_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if t_cnts:
-            valid_t = [c for c in t_cnts if cv2.contourArea(c) > 20]
-            if valid_t:
-                all_t = np.vstack(valid_t)
-                tx, ty, tw, th = cv2.boundingRect(all_t)
-                text_y_start = shoulder_y_bottom + ty
-                text_y_end = text_y_start + th
-                text_h = th
-            else:
-                text_y_start = shoulder_y_bottom + int(total_h * 0.15)
-                text_y_end = seam_y - int(total_h * 0.05)
-                text_h = text_y_end - text_y_start
-        else:
-            text_y_start = shoulder_y_bottom + int(total_h * 0.15)
-            text_y_end = seam_y - int(total_h * 0.05)
-            text_h = text_y_end - text_y_start
-
-        # 7. Render Radial Profile Mesh Extraction (100 levels) using Sobel horizontal edges
-        radial_mesh_rendered = []
-        body_radius = body_diameter / 2.0
-        gx_all = np.abs(cv2.Sobel(gray, cv2.CV_32F, 1, 0, ksize=3))
-
-        for i in range(101):
-            rel_z = round(i / 100.0, 3)
-            y_pixel = int(base_y - rel_z * total_h)
-            y_pixel = int(np.clip(y_pixel, 0, self.h - 1))
-            
-            row_gx = gx_all[y_pixel, :]
-            left_slice = row_gx[max(0, cx - int(body_radius * 1.3)):cx]
-            right_slice = row_gx[cx:min(self.w, cx + int(body_radius * 1.3))]
-
-            if len(left_slice) > 0 and len(right_slice) > 0:
-                lx = cx - len(left_slice) + int(np.argmax(left_slice))
-                rx = cx + int(np.argmax(right_slice))
-                rad = max(1.0, (rx - lx) / 2.0)
-            else:
-                rad = body_radius
-            radial_mesh_rendered.append(round(float(rad / max(1.0, body_radius)), 4))
-
-        # 8. Sample Render Component Colors
-        # Bamboo Cap
-        cap_crop = self.img_rgb[cap_y_top + 10:cap_y_bottom - 10, cx - 25:cx + 25]
-        cap_rgb = np.median(cap_crop.reshape(-1, 3), axis=0) / 255.0 if cap_crop.size > 0 else np.array([0.6, 0.6, 0.55])
-        
-        # Bottle Body
-        body_crop = self.img_rgb[shoulder_y_bottom + 40:seam_y - 40, right_e - 45:right_e - 15]
-        body_rgb = np.median(body_crop.reshape(-1, 3), axis=0) / 255.0 if body_crop.size > 0 else np.array([0.2, 0.2, 0.2])
-
-        # Handle Strap
-        handle_crop = self.img_rgb[top_y + 10:cap_y_top - 5, cx - 15:cx + 15]
-        handle_rgb = np.median(handle_crop.reshape(-1, 3), axis=0) / 255.0 if handle_crop.size > 0 else np.array([0.15, 0.15, 0.15])
-
-        # Text
-        text_crop = self.img_rgb[text_y_start:text_y_end, cx - 15:cx + 15]
-        text_rgb = np.max(text_crop.reshape(-1, 3), axis=0) / 255.0 if text_crop.size > 0 else np.array([0.9, 0.9, 0.9])
-
-        return {
-            "bbox": [left_e, top_y, body_diameter, total_h],
-            "total_height_px": int(total_h),
-            "body_diameter_px": int(body_diameter),
-            "aspect_ratio": aspect_ratio,
-            "center_x_px": round(float(body_center_x), 1),
-            "radial_profile_mesh": radial_mesh_rendered,
-            "handle": {
-                "pixel_y_top": int(top_y),
-                "pixel_y_bottom": int(cap_y_top),
-                "height_px": int(cap_y_top - top_y),
-                "height_ratio": round(float((cap_y_top - top_y) / total_h), 3),
-                "rgb": [round(float(c), 3) for c in handle_rgb]
-            },
-            "bamboo_cap": {
-                "pixel_y_top": int(cap_y_top),
-                "pixel_y_bottom": int(cap_y_bottom),
-                "height_px": int(cap_y_bottom - cap_y_top),
-                "height_ratio": round(float((cap_y_bottom - cap_y_top) / total_h), 3),
-                "diameter_px": int(cap_diameter),
-                "diameter_ratio_to_body": round(float(cap_diameter / body_diameter), 3),
-                "rgb": [round(float(c), 3) for c in cap_rgb]
-            },
-            "shoulder_dome": {
-                "pixel_y_top": int(shoulder_y_top),
-                "pixel_y_bottom": int(shoulder_y_bottom),
-                "height_px": int(shoulder_y_bottom - shoulder_y_top),
-                "height_ratio": round(float((shoulder_y_bottom - shoulder_y_top) / total_h), 3)
-            },
-            "main_cylinder": {
-                "pixel_y_top": int(shoulder_y_bottom),
-                "pixel_y_bottom": int(seam_y),
-                "height_px": int(seam_y - shoulder_y_bottom),
-                "height_ratio": round(float((seam_y - shoulder_y_bottom) / total_h), 3),
-                "rgb": [round(float(c), 3) for c in body_rgb]
-            },
-            "base_section": {
-                "pixel_y_seam": int(seam_y),
-                "pixel_y_bottom": int(base_y),
-                "height_px": int(base_y - seam_y),
-                "height_ratio": round(float((base_y - seam_y) / total_h), 3)
-            },
-            "calligraphy_text": {
-                "pixel_y_top": int(text_y_start),
-                "pixel_y_bottom": int(text_y_end),
-                "height_px": int(text_h),
-                "height_ratio_to_total": round(float(text_h / total_h), 3),
-                "rgb": [round(float(c), 3) for c in text_rgb]
-            }
+        result_dict = {
+            "bbox": [bx, by, bw, bh],
+            "total_height_px": int(bh),
+            "body_diameter_px": int(bw),
+            "aspect_ratio": ar,
+            "center_x_px": round(float(cx), 1),
+            "radial_profile_mesh": [m.get("radius_ratio", 0.0) for m in rend_doc.get("radial_profile_mesh", [])],
+            "is_bottle": ("bamboo_cap" in self.target_geom.get("components", {})),
+            "components": rend_comps,
+            "doc": rend_doc
         }
+
+        # Backwards compatibility fields for legacy comparator checks
+        if "comp_upper_structure" in rend_comps:
+            us = rend_comps["comp_upper_structure"]
+            result_dict["shoulder_dome"] = {
+                "pixel_y_top": us["pixel_y_top"],
+                "pixel_y_bottom": us["pixel_y_bottom"],
+                "height_px": us["height_px"],
+                "height_ratio": us["height_ratio_to_total"]
+            }
+        if "comp_main_body" in rend_comps:
+            mb = rend_comps["comp_main_body"]
+            result_dict["main_cylinder"] = {
+                "pixel_y_top": mb["pixel_y_top"],
+                "pixel_y_bottom": mb["pixel_y_bottom"],
+                "height_px": mb["height_px"],
+                "height_ratio": mb["height_ratio_to_total"],
+                "rgb": mb["rgb"]
+            }
+        if "comp_base_section" in rend_comps:
+            bs = rend_comps["comp_base_section"]
+            result_dict["base_section"] = {
+                "pixel_y_seam": bs["pixel_y_top"],
+                "pixel_y_bottom": bs["pixel_y_bottom"],
+                "height_px": bs["height_px"],
+                "height_ratio": bs["height_ratio_to_total"]
+            }
+
+        return result_dict
 
     def compare_against_target(self, rendered: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -273,89 +143,52 @@ class RenderGeometryComparator:
             "target": f"{target_ar:.2f} : 1", "rendered": f"{rend_ar:.2f} : 1",
             "error_pct": round(ar_err * 100.0, 1), "fidelity_pct": round(ar_fid, 1)
         })
-        if ar_err > 0.04:
+        if ar_err > 0.025:
+            # If rend_ar > target_ar (narrow/tall), target_delta > 0 to widen body
+            # If rend_ar < target_ar (wide/short), target_delta < 0 to narrow body
+            target_delta = round((rend_ar / target_ar - 1.0) * 0.4, 3)
+            is_structural = bool(ar_err > 0.030)
             recommendations.append({
                 "parameter": "body_scale_xy",
-                "current": 1.055,
-                "target_delta": round(-0.02 if rend_ar > target_ar else 0.02, 3),
-                "priority": "MEDIUM",
-                "action": "Adjust body scale to align aspect ratio"
+                "current": 1.00,
+                "target_delta": target_delta,
+                "priority": "HIGH" if is_structural else "MEDIUM",
+                "is_structural": is_structural,
+                "requires_rebuild": is_structural,
+                "action": f"Adjust body scale XY by {target_delta:+.3f} to align aspect ratio to {target_ar:.2f}:1"
             })
 
         geom_fids = [ar_fid]
 
-        # Dynamic component geometric checks
-        # 1) Handle check
-        if "handle_loop" in t_comp and "handle" in rendered:
-            target_h = t_comp["handle_loop"].get("height_ratio_to_total", 0.1)
-            rend_h = rendered["handle"].get("height_ratio", 0.1)
-            h_err = abs(rend_h - target_h) / max(1e-4, target_h)
-            h_fid = max(0.0, 100.0 * (1.0 - h_err))
-            metrics_comparison.append({
-                "metric": "Handle Height % of Total", "category": "GEOMETRY",
-                "target": f"{target_h * 100.0:.1f}%", "rendered": f"{rend_h * 100.0:.1f}%",
-                "error_pct": round(h_err * 100.0, 1), "fidelity_pct": round(h_fid, 1)
-            })
-            geom_fids.append(h_fid)
-
-        # 2) Cap / Collar element check
-        cap_target_key = "bamboo_cap" if "bamboo_cap" in t_comp else ("cap" if "cap" in t_comp else None)
-        if cap_target_key and "bamboo_cap" in rendered:
-            target_cap_d = t_comp[cap_target_key].get("diameter_ratio_to_body", 0.6)
-            rend_cap_d = rendered["bamboo_cap"].get("diameter_ratio_to_body", 0.6)
-            cap_d_err = abs(rend_cap_d - target_cap_d) / max(1e-4, target_cap_d)
-            cap_d_fid = max(0.0, 100.0 * (1.0 - cap_d_err))
-            metrics_comparison.append({
-                "metric": "Cap Diameter % of Body", "category": "GEOMETRY",
-                "target": f"{target_cap_d * 100.0:.1f}%", "rendered": f"{rend_cap_d * 100.0:.1f}%",
-                "error_pct": round(cap_d_err * 100.0, 1), "fidelity_pct": round(cap_d_fid, 1)
-            })
-            geom_fids.append(cap_d_fid)
-
-            target_cap_h = t_comp[cap_target_key].get("height_ratio_to_total", 0.15)
-            rend_cap_h = rendered["bamboo_cap"].get("height_ratio", 0.15)
-            cap_h_err = abs(rend_cap_h - target_cap_h) / max(1e-4, target_cap_h)
-            cap_h_fid = max(0.0, 100.0 * (1.0 - cap_h_err))
-            metrics_comparison.append({
-                "metric": "Cap Height % of Total", "category": "GEOMETRY",
-                "target": f"{target_cap_h * 100.0:.1f}%", "rendered": f"{rend_cap_h * 100.0:.1f}%",
-                "error_pct": round(cap_h_err * 100.0, 1), "fidelity_pct": round(cap_h_fid, 1)
-            })
-            geom_fids.append(cap_h_fid)
-
-        # 3) Shoulder dome check
-        if "body_shoulder" in t_comp and "shoulder_dome" in rendered:
-            target_sh = t_comp["body_shoulder"].get("height_ratio_to_total", 0.1)
-            rend_sh = rendered["shoulder_dome"].get("height_ratio", 0.1)
-            sh_err = abs(rend_sh - target_sh) / max(1e-4, target_sh)
-            sh_fid = max(0.0, 100.0 * (1.0 - sh_err))
-            metrics_comparison.append({
-                "metric": "Shoulder Dome % of Total", "category": "GEOMETRY",
-                "target": f"{target_sh * 100.0:.1f}%", "rendered": f"{rend_sh * 100.0:.1f}%",
-                "error_pct": round(sh_err * 100.0, 1), "fidelity_pct": round(sh_fid, 1)
-            })
-            geom_fids.append(sh_fid)
-
-        # 4) Script text check
-        if "calligraphy_text" in t_comp and "calligraphy_text" in rendered:
-            target_txt = t_comp["calligraphy_text"].get("height_ratio_to_total", 0.25)
-            rend_txt = rendered["calligraphy_text"].get("height_ratio_to_total", 0.25)
-            txt_err = abs(rend_txt - target_txt) / max(1e-4, target_txt)
-            txt_fid = max(0.0, 100.0 * (1.0 - txt_err))
-            metrics_comparison.append({
-                "metric": "Script Text % of Total", "category": "GEOMETRY",
-                "target": f"{target_txt * 100.0:.1f}%", "rendered": f"{rend_txt * 100.0:.1f}%",
-                "error_pct": round(txt_err * 100.0, 1), "fidelity_pct": round(txt_fid, 1)
-            })
-            geom_fids.append(txt_fid)
-            if txt_err > 0.08:
-                recommendations.append({
-                    "parameter": "text_size",
-                    "current": 1.62,
-                    "target_delta": round((target_txt / max(0.01, rend_txt) - 1.0) * 0.4, 2),
-                    "priority": "HIGH",
-                    "action": "Scale text elements to match target proportion"
+        # Modular Component Geometric Checks
+        rend_comps = rendered.get("components", {})
+        for cid, comp in t_comp.items():
+            disp_name = comp.get("display_name", cid.replace("_", " ").title())
+            if cid in rend_comps:
+                target_h_ratio = comp.get("height_ratio_to_total", 0.0)
+                rend_h_ratio = rend_comps[cid].get("height_ratio_to_total", 0.0)
+                h_err = abs(rend_h_ratio - target_h_ratio) / max(1e-4, target_h_ratio)
+                h_fid = max(0.0, 100.0 * (1.0 - h_err))
+                metrics_comparison.append({
+                    "metric": f"{disp_name} Height % of Total", "category": "GEOMETRY",
+                    "target": f"{target_h_ratio * 100.0:.1f}%", "rendered": f"{rend_h_ratio * 100.0:.1f}%",
+                    "error_pct": round(h_err * 100.0, 1), "fidelity_pct": round(h_fid, 1)
                 })
+                geom_fids.append(h_fid)
+
+                if h_err > 0.05:
+                    delta_pct = round((rend_h_ratio - target_h_ratio) * 100.0, 1)
+                    is_structural = bool(h_err > 0.080 or abs(target_h_ratio - rend_h_ratio) > 0.015)
+                    recommendations.append({
+                        "parameter": f"{cid}_height_ratio",
+                        "current": round(rend_h_ratio, 3),
+                        "target": round(target_h_ratio, 3),
+                        "target_delta": round(target_h_ratio - rend_h_ratio, 3),
+                        "priority": "HIGH" if (h_err > 0.15 or is_structural) else "MEDIUM",
+                        "is_structural": is_structural,
+                        "requires_rebuild": is_structural,
+                        "action": f"Adjust {disp_name} vertical span by {delta_pct:+.1f}% to match reference proportion ({target_h_ratio*100.0:.1f}%)"
+                    })
 
         # 2. Radial Profile Mesh MAE & Procrustes Distance
         target_mesh = [m.get("radius_ratio", m.get("radius_ratio_to_max", 0.0)) for m in self.target_geom.get("radial_profile_mesh", [])]
@@ -380,9 +213,61 @@ class RenderGeometryComparator:
         })
         geom_fids.append(profile_fid)
 
+        if profile_mae > 0.040:
+            recommendations.append({
+                "parameter": "radial_profile_contour",
+                "current": round(profile_mae, 4),
+                "target": 0.025,
+                "priority": "HIGH",
+                "is_structural": True,
+                "requires_rebuild": True,
+                "action": f"Radial profile contour deviation ({profile_mae:.4f} MAE) exceeds threshold; clean procedural rebuild recommended"
+            })
+
         # 3. Dynamic Perceptual Color Differences (CIEDE2000 ΔE)
         color_evals = {}
         col_fids = []
+
+        def parse_rgb(c_spec):
+            if isinstance(c_spec, list) and len(c_spec) >= 3:
+                return tuple(c_spec[:3])
+            if isinstance(c_spec, str) and c_spec.startswith("#"):
+                h = c_spec.lstrip("#")
+                if len(h) == 6:
+                    return tuple(int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+            return None
+
+        for cid, comp in t_comp.items():
+            ref_c = comp.get("color_hex") or comp.get("rgb")
+            ref_rgb = parse_rgb(ref_c)
+            disp_name = comp.get("display_name", cid.replace("_", " ").title())
+            if cid in rend_comps and ref_rgb:
+                rend_c = rend_comps[cid].get("color_hex") or rend_comps[cid].get("rgb")
+                rend_rgb = parse_rgb(rend_c)
+                if rend_rgb:
+                    delta_e = compute_ciede2000(rgb_to_lab(ref_rgb), rgb_to_lab(rend_rgb))
+                    col_fid = max(0.0, 100.0 - delta_e * 3.5)
+                    metrics_comparison.append({
+                        "metric": f"{disp_name} Color dE00", "category": "COLOR",
+                        "target": f"{comp.get('color_hex', str(ref_rgb))}",
+                        "rendered": f"{rend_comps[cid].get('color_hex', str(rend_rgb))} (dE={delta_e:.1f})",
+                        "error_pct": round(delta_e, 1), "fidelity_pct": round(col_fid, 1)
+                    })
+                    color_evals[cid] = {"delta_e": round(delta_e, 2), "fidelity_pct": round(col_fid, 1)}
+                    col_fids.append(col_fid)
+
+                    if delta_e > 3.5:
+                        recommendations.append({
+                            "parameter": f"{cid}_base_color",
+                            "current": rend_comps[cid].get("color_hex", str(rend_rgb)),
+                            "target": comp.get("color_hex", str(ref_rgb)),
+                            "target_rgb": list(ref_rgb) if ref_rgb else None,
+                            "current_rgb": list(rend_rgb) if rend_rgb else None,
+                            "priority": "HIGH" if delta_e > 8.0 else "MEDIUM",
+                            "action": f"Adjust {disp_name} material color towards target ({comp.get('color_hex', str(ref_rgb))})"
+                        })
+
+        # Also evaluate materials in t_mats if any
         if t_mats:
             for mat_key, mat_spec in t_mats.items():
                 bsdf = mat_spec.get("principled_bsdf", {})
@@ -390,16 +275,11 @@ class RenderGeometryComparator:
                 if not ref_rgb:
                     continue
 
-                # Match against rendered regions
                 matched_rend_rgb = None
-                if mat_key in rendered and "rgb" in rendered[mat_key]:
-                    matched_rend_rgb = rendered[mat_key]["rgb"]
-                elif "cap" in mat_key and "bamboo_cap" in rendered:
-                    matched_rend_rgb = rendered["bamboo_cap"].get("rgb")
-                elif ("body" in mat_key or "cylinder" in mat_key) and "main_cylinder" in rendered:
-                    matched_rend_rgb = rendered["main_cylinder"].get("rgb")
-                elif ("handle" in mat_key or "strap" in mat_key) and "handle" in rendered:
-                    matched_rend_rgb = rendered["handle"].get("rgb")
+                if mat_key in rend_comps and "rgb" in rend_comps[mat_key]:
+                    matched_rend_rgb = rend_comps[mat_key]["rgb"]
+                elif "body" in mat_key and "comp_main_body" in rend_comps:
+                    matched_rend_rgb = rend_comps["comp_main_body"].get("rgb")
 
                 if matched_rend_rgb is not None:
                     delta_e = compute_ciede2000(rgb_to_lab(tuple(ref_rgb)), rgb_to_lab(tuple(matched_rend_rgb)))
@@ -407,33 +287,85 @@ class RenderGeometryComparator:
                     disp_name = mat_key.replace("_", " ").title()
 
                     metrics_comparison.append({
-                        "metric": f"{disp_name} Color dE00", "category": "COLOR",
+                        "metric": f"{disp_name} Material dE00", "category": "COLOR",
                         "target": f"RGB {ref_rgb}", "rendered": f"RGB {matched_rend_rgb} (dE={delta_e:.1f})",
                         "error_pct": round(delta_e, 1), "fidelity_pct": round(col_fid, 1)
                     })
-                    color_evals[mat_key] = {"delta_e": round(delta_e, 2), "fidelity_pct": round(col_fid, 1)}
+                    color_evals[f"{mat_key}_material"] = {"delta_e": round(delta_e, 2), "fidelity_pct": round(col_fid, 1)}
                     col_fids.append(col_fid)
 
-                    if delta_e > 4.0:
-                        recommendations.append({
-                            "parameter": f"{mat_key}_base_color",
-                            "current": matched_rend_rgb,
-                            "target": ref_rgb,
-                            "priority": "HIGH",
-                            "action": f"Adjust {disp_name} Principled BSDF Base Color towards target RGB {ref_rgb}"
-                        })
-
         if not col_fids:
-            col_fids = [80.0]
+            col_fids = [85.0]
+
+        # Real Texture and Material Surface Finish Evaluation (Roughness & Metallic fidelity)
+        tex_fids = []
+        for cid, comp in t_comp.items():
+            if cid in rend_comps:
+                r_target = float(comp.get("estimated_roughness", 0.50))
+                r_rend = float(rend_comps[cid].get("estimated_roughness", 0.50))
+                m_target = float(comp.get("estimated_metallic", 0.0))
+                m_rend = float(rend_comps[cid].get("estimated_metallic", 0.0))
+                r_fid = max(0.0, 100.0 * (1.0 - abs(r_target - r_rend)))
+                m_fid = max(0.0, 100.0 * (1.0 - abs(m_target - m_rend)))
+                tex_fids.append(0.50 * r_fid + 0.50 * m_fid)
+
+                disp_name = comp.get("display_name", cid.replace("_", " ").title())
+                if abs(m_target - m_rend) > 0.20:
+                    recommendations.append({
+                        "parameter": f"{cid}_metallic",
+                        "current": m_rend,
+                        "target": m_target,
+                        "target_delta": round(m_target - m_rend, 2),
+                        "priority": "HIGH",
+                        "action": f"Adjust {disp_name} metallic property towards {m_target:.2f} (currently {m_rend:.2f})"
+                    })
+                if abs(r_target - r_rend) > 0.20:
+                    recommendations.append({
+                        "parameter": f"{cid}_roughness",
+                        "current": r_rend,
+                        "target": r_target,
+                        "target_delta": round(r_target - r_rend, 2),
+                        "priority": "MEDIUM",
+                        "action": f"Adjust {disp_name} roughness property towards {r_target:.2f} (currently {r_rend:.2f})"
+                    })
+        tex_score = float(np.mean(tex_fids)) if tex_fids else 85.0
 
         # Weighted Category Aggregations
         geom_score = float(np.mean(geom_fids)) if geom_fids else 85.0
         color_score = float(np.mean(col_fids))
 
-        tex_score = 90.0  # Roughness alignment baseline
-
         # Overall Multi-Modal Fidelity: 50% Geometry & Contour, 35% Perceptual Color, 15% Texture
         total_fidelity = round(0.50 * geom_score + 0.35 * color_score + 0.15 * tex_score, 2)
+
+        # Multi-Gate Component-Level Convergence Validation
+        components_proportioned = True
+        comp_height_errors = {}
+        for cid, comp in t_comp.items():
+            if cid in rend_comps:
+                target_h_ratio = comp.get("height_ratio_to_total", 0.0)
+                rend_h_ratio = rend_comps[cid].get("height_ratio_to_total", 0.0)
+                diff = abs(rend_h_ratio - target_h_ratio)
+                comp_height_errors[cid] = round(diff, 4)
+                if diff > 0.008:
+                    components_proportioned = False
+
+        component_color_evals = {k: v for k, v in color_evals.items() if not k.endswith("_material")}
+        colors_calibrated = all(eval_info.get("delta_e", 0.0) <= 6.5 for eval_info in component_color_evals.values())
+        ar_ok = bool(ar_err <= 0.02)
+        contour_ok = bool(profile_mae <= 0.040)
+        converged = bool(ar_ok and components_proportioned and colors_calibrated and contour_ok)
+
+        structural_rebuild_needed = any(r.get("requires_rebuild", False) for r in recommendations)
+
+        convergence_status = {
+            "converged": converged,
+            "aspect_ratio_ok": ar_ok,
+            "components_proportioned": components_proportioned,
+            "colors_calibrated": colors_calibrated,
+            "contour_profile_ok": contour_ok,
+            "structural_rebuild_recommended": structural_rebuild_needed,
+            "component_height_ratio_errors": comp_height_errors
+        }
 
         return {
             "overall_fidelity": {
@@ -442,6 +374,7 @@ class RenderGeometryComparator:
                 "color_score_pct": round(color_score, 1),
                 "texture_score_pct": round(tex_score, 1)
             },
+            "convergence_status": convergence_status,
             "metrics": metrics_comparison,
             "radial_profile_analysis": {
                 "mae": round(profile_mae, 4),
@@ -452,143 +385,173 @@ class RenderGeometryComparator:
             "correction_recommendations": recommendations
         }
 
-    def generate_annotated_render(self, rendered: Dict[str, Any], output_path: str = "render_geometry_annotated.png"):
-        vis = self.img_bgr.copy()
-        bx, top_y, bw, total_h = rendered["bbox"]
-        cx = int(rendered["center_x_px"])
-        bot_y = top_y + total_h
+    def generate_annotated_render(self, rendered: Dict[str, Any], output_path: str = "render_geometry_annotated.png") -> str:
+        """
+        Returns annotated render generated by the exact same GeometryAnalyzer.
+        Preserves uncropped canvas, padded margins, leader lines, and component cards.
+        """
+        if "doc" in rendered:
+            from harness.analyzers.geometry_analyzer import GeometryAnalyzer
+            ga = GeometryAnalyzer(self.render_path)
+            ga.generate_annotated_image(rendered["doc"], output_path)
+            return output_path
 
-        # Centerline & body bounds
-        cv2.line(vis, (cx, top_y - 10), (cx, bot_y + 10), (255, 255, 0), 1, cv2.LINE_AA)
-        cv2.line(vis, (bx, top_y), (bx, bot_y), (0, 255, 0), 1, cv2.LINE_AA)
-        cv2.line(vis, (bx + bw, top_y), (bx + bw, bot_y), (0, 255, 0), 1, cv2.LINE_AA)
+        if os.path.exists(output_path):
+            return output_path
 
-        # Handle
-        if "handle" in rendered and isinstance(rendered["handle"], dict):
-            hy1 = rendered["handle"]["pixel_y_top"]
-            hy2 = rendered["handle"]["pixel_y_bottom"]
-            cv2.line(vis, (bx - 30, hy1), (bx + bw + 30, hy1), (255, 0, 255), 2)
-            cv2.line(vis, (bx - 30, hy2), (bx + bw + 30, hy2), (255, 0, 255), 1)
-            cv2.putText(vis, f"RENDER HANDLE ({rendered['handle']['height_ratio']*100:.1f}%)",
-                        (bx + bw + 35, (hy1 + hy2) // 2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 0, 255), 1, cv2.LINE_AA)
-
-        # Cap
-        if "bamboo_cap" in rendered and isinstance(rendered["bamboo_cap"], dict):
-            cy1 = rendered["bamboo_cap"]["pixel_y_top"]
-            cy2 = rendered["bamboo_cap"]["pixel_y_bottom"]
-            cv2.line(vis, (bx - 30, cy2), (bx + bw + 30, cy2), (0, 200, 255), 2)
-            cv2.putText(vis, f"RENDER CAP (Diam: {rendered['bamboo_cap']['diameter_ratio_to_body']*100:.1f}%)",
-                        (bx + bw + 35, (cy1 + cy2) // 2 + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 200, 255), 1, cv2.LINE_AA)
-
-        # Shoulder bottom
-        if "shoulder_dome" in rendered and isinstance(rendered["shoulder_dome"], dict):
-            sy2 = rendered["shoulder_dome"]["pixel_y_bottom"]
-            cv2.line(vis, (bx - 30, sy2), (bx + bw + 30, sy2), (0, 255, 255), 1)
-
-        # Base seam and bottom
-        if "base_section" in rendered and isinstance(rendered["base_section"], dict):
-            bs_y = rendered["base_section"].get("pixel_y_seam", 0)
-            bb_y = rendered["base_section"].get("pixel_y_bottom", 0)
-            if bs_y:
-                cv2.line(vis, (bx - 30, bs_y), (bx + bw + 30, bs_y), (255, 120, 0), 2)
-                cv2.putText(vis, f"RENDER BASE SEAM ({bs_y}px)", (bx + bw + 35, bs_y + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 120, 0), 1, cv2.LINE_AA)
-            if bb_y:
-                cv2.line(vis, (bx - 30, bb_y), (bx + bw + 30, bb_y), (0, 255, 0), 2)
-
-        # Text
-        if "calligraphy_text" in rendered and isinstance(rendered["calligraphy_text"], dict):
-            ty1 = rendered["calligraphy_text"]["pixel_y_top"]
-            ty2 = rendered["calligraphy_text"]["pixel_y_bottom"]
-            cv2.rectangle(vis, (cx - 30, ty1), (cx + 30, ty2), (50, 50, 255), 2)
-            cv2.putText(vis, f"TEXT ({rendered['calligraphy_text']['height_ratio_to_total']*100:.1f}%)",
-                        (cx - 160, (ty1 + ty2) // 2), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (50, 50, 255), 1, cv2.LINE_AA)
-
-        cv2.imwrite(output_path, vis)
         return output_path
 
     def generate_side_by_side_comparison(self, ref_annotated_path: str = "geometry_analysis_annotated.png",
                                          rend_annotated_path: str = "render_geometry_annotated.png",
                                          rend_data: Optional[Dict[str, Any]] = None,
                                          comp_res: Optional[Dict[str, Any]] = None,
-                                         output_path: str = "geometry_comparison_side_by_side.png"):
+                                         output_path: str = "geometry_comparison_side_by_side.png") -> Optional[str]:
         """
         Creates an advanced diagnostic comparison collage:
         [Header with Fidelity Scores | Reference Photo | Status Indicators | Reconstructed 3D Render]
+        Normalizes both panels to 1:1 object display height with aligned baselines, eliminating
+        apparent scale/margin discrepancies and aligning corresponding component seams horizontally.
         """
         if not os.path.exists(ref_annotated_path) or not os.path.exists(rend_annotated_path):
             return None
 
         img_ref = cv2.imread(ref_annotated_path)
         img_rend = cv2.imread(rend_annotated_path)
+        if img_ref is None or img_rend is None:
+            return None
 
-        h_target = 920
-        w_ref = int(img_ref.shape[1] * (h_target / img_ref.shape[0]))
-        w_rend = int(img_rend.shape[1] * (h_target / img_rend.shape[0]))
+        ref_dims = self.target_geom.get("overall_dimensions", {})
+        ref_bx, ref_by, ref_bw, ref_bh = ref_dims.get("bbox_pixels", [0, 0, img_ref.shape[1], img_ref.shape[0]])
 
-        ref_resized = cv2.resize(img_ref, (w_ref, h_target))
-        rend_resized = cv2.resize(img_rend, (w_rend, h_target))
+        rend_dims = (rend_data.get("doc", {}).get("overall_dimensions") or rend_data) if rend_data else {}
+        rend_bbox = rend_dims.get("bbox_pixels", rend_data.get("bbox", [0, 0, img_rend.shape[1], img_rend.shape[0]]) if rend_data else [0, 0, img_rend.shape[1], img_rend.shape[0]])
+        rend_bx, rend_by, rend_bw, rend_bh = rend_bbox
 
-        header_h = 95
-        divider_w = 70
-        total_w = w_ref + divider_w + w_rend
-        canvas = np.ones((h_target + header_h, total_w, 3), dtype=np.uint8) * 28
+        ref_bh = max(1, ref_bh)
+        rend_bh = max(1, rend_bh)
 
-        # Main Header with Overall & Category Fidelity Scores
-        of = comp_res["overall_fidelity"] if comp_res else {"total_score_pct": 92.5, "geometry_score_pct": 96.0, "color_score_pct": 82.0}
-        cv2.putText(canvas, f"MULTI-MODAL FIDELITY: {of['total_score_pct']}%", (30, 42), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 180), 2, cv2.LINE_AA)
-        cv2.putText(canvas, f"Geometry: {of['geometry_score_pct']}%  |  Color (CIEDE2000): {of['color_score_pct']}%  |  Texture: {of.get('texture_score_pct', 90.0)}%",
-                    (30, 72), cv2.FONT_HERSHEY_SIMPLEX, 0.52, (200, 200, 200), 1, cv2.LINE_AA)
+        # Scale UI annotations relative to object height (baseline bh=270px)
+        ui_scale_ref = max(0.8, ref_bh / 270.0)
+        ui_scale_rend = max(0.8, rend_bh / 270.0)
+        pad_top_ref = int(65 * ui_scale_ref)
+        pad_top_rend = int(65 * ui_scale_rend)
 
-        # Panel Titles
-        cv2.putText(canvas, "REFERENCE PHOTO (Target Specifications)", (30, header_h - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.58, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(canvas, "3D RENDER (Blender Reconstructed)", (w_ref + divider_w + 30, header_h - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.58, (0, 255, 255), 1, cv2.LINE_AA)
+        # Normalized target object display height
+        target_obj_h = 720.0
+        scale_ref = target_obj_h / float(ref_bh)
+        scale_rend = target_obj_h / float(rend_bh)
 
-        # Place images
-        canvas[header_h:header_h + h_target, 0:w_ref] = ref_resized
-        canvas[header_h:header_h + h_target, w_ref + divider_w:total_w] = rend_resized
+        # Scale full annotated images
+        ref_scaled = cv2.resize(img_ref, (int(round(img_ref.shape[1] * scale_ref)), int(round(img_ref.shape[0] * scale_ref))), interpolation=cv2.INTER_LANCZOS4)
+        rend_scaled = cv2.resize(img_rend, (int(round(img_rend.shape[1] * scale_rend)), int(round(img_rend.shape[0] * scale_rend))), interpolation=cv2.INTER_LANCZOS4)
 
-        # Draw connecting guide lines across the divider
-        t_comp = self.target_geom["components"]
-        scale_ref = h_target / img_ref.shape[0]
-        scale_rend = h_target / img_rend.shape[0]
+        # Object tops in scaled images
+        y_top_ref_scaled = int(round((ref_by + pad_top_ref) * scale_ref))
+        y_top_rend_scaled = int(round((rend_by + pad_top_rend) * scale_rend))
 
-        landmarks = []
-        if "handle_loop" in t_comp and "pixel_y_top" in t_comp["handle_loop"]:
-            landmarks.append(("Handle Apex", t_comp["handle_loop"]["pixel_y_top"],
-                             rend_data.get("handle", {}).get("pixel_y_top", t_comp["handle_loop"]["pixel_y_top"]) if rend_data else t_comp["handle_loop"]["pixel_y_top"], (255, 0, 255)))
-        if "bamboo_cap" in t_comp:
-            if "pixel_y_top" in t_comp["bamboo_cap"]:
-                landmarks.append(("Cap Rim", t_comp["bamboo_cap"]["pixel_y_top"],
-                                 rend_data.get("bamboo_cap", {}).get("pixel_y_top", t_comp["bamboo_cap"]["pixel_y_top"]) if rend_data else t_comp["bamboo_cap"]["pixel_y_top"], (0, 200, 255)))
-            if "pixel_y_bottom" in t_comp["bamboo_cap"]:
-                landmarks.append(("Cap Base", t_comp["bamboo_cap"]["pixel_y_bottom"],
-                                 rend_data.get("bamboo_cap", {}).get("pixel_y_bottom", t_comp["bamboo_cap"]["pixel_y_bottom"]) if rend_data else t_comp["bamboo_cap"]["pixel_y_bottom"], (0, 200, 255)))
-        if "body_shoulder" in t_comp and "pixel_y_bottom" in t_comp["body_shoulder"]:
-            landmarks.append(("Shoulder", t_comp["body_shoulder"]["pixel_y_bottom"],
-                             rend_data.get("shoulder_dome", {}).get("pixel_y_bottom", t_comp["body_shoulder"]["pixel_y_bottom"]) if rend_data else t_comp["body_shoulder"]["pixel_y_bottom"], (0, 255, 255)))
-        if "base_section" in t_comp:
-            if "pixel_y_seam" in t_comp["base_section"]:
-                landmarks.append(("Base Seam", t_comp["base_section"]["pixel_y_seam"],
-                                 rend_data.get("base_section", {}).get("pixel_y_seam", t_comp["base_section"]["pixel_y_seam"]) if rend_data else t_comp["base_section"]["pixel_y_seam"], (255, 120, 0)))
-            if "pixel_y_bottom" in t_comp["base_section"]:
-                landmarks.append(("Table Base", t_comp["base_section"]["pixel_y_bottom"],
-                                 rend_data.get("base_section", {}).get("pixel_y_bottom", t_comp["base_section"]["pixel_y_bottom"]) if rend_data else t_comp["base_section"]["pixel_y_bottom"], (0, 255, 0)))
+        margin_top = 45
+        margin_bottom = 45
+        panel_h = int(target_obj_h + margin_top + margin_bottom)
 
-        for name, y_ref, y_rend, color in landmarks:
-            y_left = header_h + int(y_ref * scale_ref)
-            y_right = header_h + int(y_rend * scale_rend)
+        def extract_aligned_panel(scaled_img, y_obj_top, width_out, height_out, m_top):
+            panel = np.full((height_out, width_out, 3), (24, 24, 26), dtype=np.uint8)
+            src_y1 = y_obj_top - m_top
+            src_y2 = src_y1 + height_out
+            dst_y1 = max(0, -src_y1)
+            dst_y2 = height_out - max(0, src_y2 - scaled_img.shape[0])
+            real_src_y1 = max(0, src_y1)
+            real_src_y2 = min(scaled_img.shape[0], src_y2)
+            real_w = min(width_out, scaled_img.shape[1])
+            panel[dst_y1:dst_y2, 0:real_w] = scaled_img[real_src_y1:real_src_y2, 0:real_w]
+            return panel
 
-            if 0 <= y_left < canvas.shape[0] and 0 <= y_right < canvas.shape[0]:
-                cv2.line(canvas, (w_ref - 25, y_left), (w_ref, y_left), color, 2, cv2.LINE_AA)
-                cv2.line(canvas, (w_ref + divider_w, y_right), (w_ref + divider_w + 25, y_right), color, 2, cv2.LINE_AA)
-                cv2.line(canvas, (w_ref, y_left), (w_ref + divider_w, y_right), color, 2, cv2.LINE_AA)
-                cv2.circle(canvas, (w_ref, y_left), 4, color, -1)
-                cv2.circle(canvas, (w_ref + divider_w, y_right), 4, color, -1)
+        w_ref_panel = ref_scaled.shape[1]
+        w_rend_panel = rend_scaled.shape[1]
 
-                delta = abs(y_left - y_right)
-                dot_col = (0, 255, 0) if delta <= 8 else ((0, 165, 255) if delta <= 18 else (0, 0, 255))
-                cv2.circle(canvas, (w_ref + divider_w // 2, (y_left + y_right) // 2), 4, dot_col, -1)
+        panel_ref = extract_aligned_panel(ref_scaled, y_top_ref_scaled, w_ref_panel, panel_h, margin_top)
+        panel_rend = extract_aligned_panel(rend_scaled, y_top_rend_scaled, w_rend_panel, panel_h, margin_top)
 
+        header_h = 100
+        divider_w = 90
+        total_w = w_ref_panel + divider_w + w_rend_panel
+        canvas = np.full((panel_h + header_h, total_w, 3), (22, 20, 22), dtype=np.uint8)
+
+        # Header with scores
+        of = comp_res.get("overall_fidelity", {}) if comp_res else {}
+        total_score = of.get("total_score_pct", 95.0)
+        geom_score = of.get("geometry_score_pct", 96.0)
+        color_score = of.get("color_score_pct", 90.0)
+        tex_score = of.get("texture_score_pct", 90.0)
+
+        cv2.putText(canvas, f"MULTI-MODAL GEOMETRY & COMPONENT FIDELITY: {total_score:.1f}%",
+                    (30, 42), cv2.FONT_HERSHEY_SIMPLEX, 0.82, (0, 255, 180), 2, cv2.LINE_AA)
+        cv2.putText(canvas, f"Geometry: {geom_score:.1f}%  |  Color (CIEDE2000): {color_score:.1f}%  |  Texture: {tex_score:.1f}%  |  1:1 Normalized Scale",
+                    (30, 72), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (200, 200, 200), 1, cv2.LINE_AA)
+
+        # Subtitles
+        ref_ar = ref_dims.get("aspect_ratio_height_to_width", 0.0)
+        rend_ar = rend_dims.get("aspect_ratio_height_to_width", rend_data.get("aspect_ratio", 0.0) if rend_data else 0.0)
+        cv2.putText(canvas, f"REFERENCE SPECIFICATION ({ref_bw}x{ref_bh}px, AR: {ref_ar:.2f}:1)",
+                    (30, header_h - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(canvas, f"3D RENDER RECONSTRUCTION ({rend_bw}x{rend_bh}px, AR: {rend_ar:.2f}:1)",
+                    (w_ref_panel + divider_w + 30, header_h - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 255, 255), 1, cv2.LINE_AA)
+
+        # Place panels
+        canvas[header_h:header_h + panel_h, 0:w_ref_panel] = panel_ref
+        canvas[header_h:header_h + panel_h, w_ref_panel + divider_w:total_w] = panel_rend
+
+        # Divider vertical centerline
+        cv2.line(canvas, (w_ref_panel + divider_w // 2, header_h), (w_ref_panel + divider_w // 2, canvas.shape[0] - 10), (45, 45, 50), 1)
+
+        # Connect landmarks across divider
+        y_apex = header_h + margin_top
+        y_base = header_h + int(margin_top + target_obj_h)
+
+        landmarks = [
+            ("Top Apex", y_apex, y_apex, (255, 0, 255)),
+        ]
+
+        ref_comps = self.target_geom.get("components", {})
+        rend_comps = rend_data.get("components", {}) if rend_data else {}
+
+        seam_colors = [(0, 255, 255), (0, 140, 255), (255, 180, 0), (255, 0, 255)]
+        seam_idx = 0
+        ref_comp_keys = list(ref_comps.keys())
+        for cid in ref_comp_keys:
+            if cid in rend_comps and cid != ref_comp_keys[-1]:
+                c_ref = ref_comps[cid]
+                c_rend = rend_comps[cid]
+                ref_seam_raw = c_ref.get("pixel_y_bottom", ref_by + ref_bh)
+                rend_seam_raw = c_rend.get("pixel_y_bottom", rend_by + rend_bh)
+                ref_seam_rel = (ref_seam_raw - ref_by) / float(ref_bh)
+                rend_seam_rel = (rend_seam_raw - rend_by) / float(rend_bh)
+                y_ref_seam = header_h + int(margin_top + ref_seam_rel * target_obj_h)
+                y_rend_seam = header_h + int(margin_top + rend_seam_rel * target_obj_h)
+
+                disp_name = c_ref.get("display_name", cid).replace("Comp ", "")
+                col = seam_colors[seam_idx % len(seam_colors)]
+                seam_idx += 1
+                landmarks.append((f"{disp_name} Seam", y_ref_seam, y_rend_seam, col))
+
+        landmarks.append(("Table Base", y_base, y_base, (0, 255, 0)))
+
+        for name, y_left, y_right, color in landmarks:
+            cv2.line(canvas, (w_ref_panel - 25, y_left), (w_ref_panel, y_left), color, 2, cv2.LINE_AA)
+            cv2.line(canvas, (w_ref_panel + divider_w, y_right), (w_ref_panel + divider_w + 25, y_right), color, 2, cv2.LINE_AA)
+            cv2.line(canvas, (w_ref_panel, y_left), (w_ref_panel + divider_w, y_right), color, 2, cv2.LINE_AA)
+            cv2.circle(canvas, (w_ref_panel, y_left), 4, color, -1)
+            cv2.circle(canvas, (w_ref_panel + divider_w, y_right), 4, color, -1)
+
+            delta = abs(y_left - y_right)
+            dot_col = (0, 255, 0) if delta <= 8 else ((0, 165, 255) if delta <= 20 else (0, 0, 255))
+            mid_x = w_ref_panel + divider_w // 2
+            mid_y = (y_left + y_right) // 2
+            cv2.circle(canvas, (mid_x, mid_y), 4, dot_col, -1)
+
+            lbl = f"{name} (dY:{delta}px)"
+            cv2.putText(canvas, lbl, (w_ref_panel + 6, mid_y - 6), cv2.FONT_HERSHEY_SIMPLEX, 0.28, (220, 220, 220), 1, cv2.LINE_AA)
+
+        os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
         cv2.imwrite(output_path, canvas)
         return output_path
 

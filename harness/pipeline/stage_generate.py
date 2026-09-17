@@ -41,6 +41,66 @@ def run_generation(project: ProjectDefinition, config: HarnessConfig) -> Dict[st
     with open(master_json, "r", encoding="utf-8") as f:
         master_spec = json.load(f)
 
+    # -------------------------------------------------------------
+    # Stage 2.1: Parametric 2D Graphic Surface & Packaging Art (PIPELINE_SOLUTIONS_SPEC.md § 6)
+    # -------------------------------------------------------------
+    try:
+        # Check if project has dedicated high-resolution label generation script
+        custom_label_script = None
+        for cand in ["generate_label_hires.py", "generate_label.py"]:
+            cand_p = os.path.join(project.project_dir, "scripts", cand)
+            if os.path.isfile(cand_p):
+                custom_label_script = cand_p
+                break
+
+        has_custom_label = False
+        if custom_label_script:
+            print(f"[Generate] Stage 2.1: Executing project high-resolution label script: {custom_label_script}")
+            try:
+                subprocess.run([sys.executable, custom_label_script], check=True, cwd=project.project_dir)
+                has_custom_label = True
+            except Exception as e_script:
+                print(f"[Generate] Notice: Custom label script execution returned: {e_script}")
+
+        from harness.generators.graphic_synthesizer import GraphicArtSynthesizer
+        synth = GraphicArtSynthesizer()
+        typo_manifest = master_spec.get("gemini_vision", {}).get("typography_and_labels", [])
+        geom_comps = master_spec.get("geometry", {}).get("components", {})
+
+        for cid, cdata in geom_comps.items():
+            cat = cdata.get("category", "")
+            # Synthesize if component is a substrate, decal layer, or has typography
+            if cat in ["substrate", "decal_layer"] or len(typo_manifest) > 0:
+                sub_dir = os.path.join(project.textures_dir, cid)
+                base_color = cdata.get("pbr_material", {}).get("base_color_hex") or cdata.get("color_hex", "#F0F0F0")
+                roughness = float(cdata.get("pbr_material", {}).get("roughness") or cdata.get("estimated_roughness", 0.45))
+                manifest = synth.synthesize_packaging(
+                    component_id=cid,
+                    geometry_spec=cdata,
+                    typography_manifest=typo_manifest,
+                    output_dir=sub_dir,
+                    reference_image_path=project.reference_image,
+                    substrate_color_hex=base_color,
+                    substrate_roughness=roughness
+                )
+                print(f"[Generate] Stage 2.1: Baked packaging textures for '{cid}' -> {sub_dir}")
+
+                # Sync to project root textures/ only if project does NOT have a dedicated vector label script
+                if not has_custom_label:
+                    proj_tex_root = os.path.join(project.project_dir, "textures")
+                    if os.path.isdir(proj_tex_root):
+                        import shutil
+                        for tex_file in ["label_diffuse.png", "label_roughness.png", "label_normal.png"]:
+                            src = os.path.join(sub_dir, tex_file)
+                            dst = os.path.join(proj_tex_root, tex_file)
+                            if os.path.isfile(src):
+                                try:
+                                    shutil.copyfile(src, dst)
+                                except Exception:
+                                    pass
+    except Exception as e:
+        print(f"[Generate] Stage 2.1 Packaging art synthesis note: {e}")
+
     # If the project has a custom generation script, execute it
     if project.generate_script and os.path.isfile(project.generate_script):
         print(f"[Generate] Executing project script: {project.generate_script}")

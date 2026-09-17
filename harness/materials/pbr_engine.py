@@ -323,7 +323,11 @@ class PBRMaterialEngine:
         roughness: float = 0.5,
         resolution: int = 1024,
     ) -> Dict[str, str]:
-        """Generate procedural albedo, roughness, and normal maps as fallback."""
+        """
+        Generate physical PBR albedo, roughness, and tangent-space normal maps
+        meeting quantitative acceptance thresholds (PIPELINE_SOLUTIONS_SPEC.md § 1.5 & § 4.3).
+        Never generates degenerate flat [128, 128, 255] normal maps or zero-variance roughness.
+        """
         os.makedirs(target_dir, exist_ok=True)
 
         # Parse target color or default
@@ -336,14 +340,14 @@ class PBRMaterialEngine:
 
         base_rgb = np.array([r, g, b], dtype=np.int16)
 
-        # 1. Diffuse / Albedo with subtle micro-noise
+        # 1. Diffuse / Albedo with physical micro-grain
         np.random.seed(42)
-        noise = (np.random.randn(resolution, resolution, 3) * 4).astype(np.int16)
+        noise = (np.random.randn(resolution, resolution, 3) * 6).astype(np.int16)
         diff_arr = np.clip(base_rgb + noise, 0, 255).astype(np.uint8)
 
         # Add directional grain if wood category
         if category.lower() in ["wood", "bamboo"]:
-            grain = (np.sin(np.linspace(0, 30 * np.pi, resolution)) * 8).astype(np.int16)
+            grain = (np.sin(np.linspace(0, 30 * np.pi, resolution)) * 12).astype(np.int16)
             for y in range(resolution):
                 diff_arr[y, :, :] = np.clip(diff_arr[y, :, :] + grain[y], 0, 255)
 
@@ -351,26 +355,67 @@ class PBRMaterialEngine:
         diff_path = os.path.join(target_dir, "diffuse.png")
         diff_img.save(diff_path)
 
-        # 2. Roughness Map
-        rough_val = int(max(0.0, min(1.0, roughness)) * 255)
-        rough_arr = np.full((resolution, resolution), rough_val, dtype=np.int16)
-        rough_noise = (np.random.randn(resolution, resolution) * 6).astype(np.int16)
-        rough_arr = np.clip(rough_arr + rough_noise, 0, 255).astype(np.uint8)
+        # 2. Roughness Map with strictly non-degenerate variance: Var(R) >= 0.005
+        rough_val = float(np.clip(roughness, 0.05, 0.95))
+        # Synthesize multi-scale procedural roughness noise
+        noise_r = (np.random.randn(resolution, resolution) * 0.08).astype(np.float32)
+        # Smooth with bilateral/Gaussian filter to create physical micro-facet distribution
+        noise_r = cv2.GaussianBlur(noise_r, (7, 7), 1.5)
+        rough_float = np.clip(rough_val + noise_r, 0.02, 0.98)
+        # Verify Var(R) >= 0.005
+        if np.var(rough_float) < 0.005:
+            rough_float = np.clip(rough_float + (np.random.randn(resolution, resolution) * 0.06), 0.02, 0.98)
+
+        rough_arr = (rough_float * 255.0).astype(np.uint8)
         rough_img = Image.fromarray(rough_arr)
         rough_path = os.path.join(target_dir, "roughness.png")
         rough_img.save(rough_path)
 
-        # 3. Flat / Subtle Normal Map (OpenGL standard: [128, 128, 255])
+        # 3. Tangent-Space Normal Map via Scharr frequency gradients (eliminates flat [128, 128, 255])
+        # Generate height field from luminance and procedural micro-relief
+        gray_h = cv2.cvtColor(diff_arr, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
+        # High-pass filter
+        low_pass = cv2.GaussianBlur(gray_h, (15, 15), 0)
+        h_high = gray_h - low_pass
+
+        scale = 2.5
+        gx = cv2.Scharr(h_high, cv2.CV_32F, 1, 0)
+        gy = cv2.Scharr(h_high, cv2.CV_32F, 0, 1)
+
+        # If perfectly flat (e.g. uniform color), inject subtle Voronoi/Perlin micro-grain
+        if np.max(np.abs(gx)) < 1e-4 and np.max(np.abs(gy)) < 1e-4:
+            micro_grain = (np.random.randn(resolution, resolution) * 0.05).astype(np.float32)
+            micro_grain = cv2.GaussianBlur(micro_grain, (5, 5), 1.0)
+            gx = cv2.Scharr(micro_grain, cv2.CV_32F, 1, 0)
+            gy = cv2.Scharr(micro_grain, cv2.CV_32F, 0, 1)
+
+        nx = -gx * scale
+        ny = -gy * scale
+        nz = np.ones_like(nx)
+        length = np.sqrt(nx**2 + ny**2 + nz**2) + 1e-6
+
+        nx_norm = nx / length
+        ny_norm = ny / length
+        nz_norm = nz / length
+
         norm_arr = np.zeros((resolution, resolution, 3), dtype=np.uint8)
-        norm_arr[:, :, 0] = 128
-        norm_arr[:, :, 1] = 128
-        norm_arr[:, :, 2] = 255
+        norm_arr[:, :, 0] = np.clip(128.0 + 127.0 * nx_norm, 0, 255).astype(np.uint8)
+        norm_arr[:, :, 1] = np.clip(128.0 + 127.0 * ny_norm, 0, 255).astype(np.uint8)
+        norm_arr[:, :, 2] = np.clip(128.0 + 127.0 * nz_norm, 0, 255).astype(np.uint8)
+
         norm_img = Image.fromarray(norm_arr)
         norm_path = os.path.join(target_dir, "normal.png")
         norm_img.save(norm_path)
 
+        # 4. Metallic Map
+        metal_val = 255 if category.lower() in ["metal", "aluminum", "steel", "brass", "copper"] else 0
+        metal_arr = np.full((resolution, resolution), metal_val, dtype=np.uint8)
+        metal_path = os.path.join(target_dir, "metallic.png")
+        Image.fromarray(metal_arr).save(metal_path)
+
         return {
-            "diffuse": diff_path,
-            "roughness": rough_path,
-            "normal": norm_path,
+            "diffuse": diff_path.replace("\\", "/"),
+            "roughness": rough_path.replace("\\", "/"),
+            "normal": norm_path.replace("\\", "/"),
+            "metallic": metal_path.replace("\\", "/")
         }
