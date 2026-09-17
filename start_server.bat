@@ -31,7 +31,7 @@ echo [OK] Dependencies ready.
 echo [3/3] Starting Server...
 echo Press Ctrl+C to stop the server.
 echo.
-call uv run src/blender_mcp/server.py
+call uv run server.py
 
 if %errorlevel% neq 0 (
     echo.
