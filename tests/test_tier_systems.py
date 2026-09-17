@@ -1,18 +1,23 @@
 """
 Automated Verification Test Suite: Multi-Tier SVBRDF, APU Optimization & Pipeline Spec Completion
 ==================================================================================================
+Portable and hermetic test suite designed for CI and cross-platform execution (NVIDIA, APU, Intel, CPU).
+
 Tests:
-  1. HardwareDeviceProber detection and environment override
+  1. HardwareDeviceProber detection, mocked hardware matrix, and environment override
   2. SVBRDFEngine end-to-end decomposition with acceptance gates and manifest metadata
   3. PBRMaterialEngine downloaded map gate validation (recovery of degenerate maps)
-  4. RenderGeometryComparator dynamic tolerance widening for snapping_confidence == 0.0
+  4. RenderGeometryComparator dynamic tolerance widening for snapping_confidence == 0.0 (hermetic fixture)
   5. material_node_builder Voronoi micro-bump shader injection conditioning
-  6. Hann window tiled patch inference for high-resolution crops
+  6. Hann window tiled patch inference for high-resolution crops (> 512x512)
 """
 
 import os
+import sys
 import shutil
 import tempfile
+import json
+from unittest import mock
 import numpy as np
 import cv2
 from PIL import Image
@@ -25,37 +30,85 @@ from harness.comparators.render_geometry_comparator import RenderGeometryCompara
 
 
 def test_1_hardware_prober():
-    print("\n--- Test 1: HardwareDeviceProber Detection ---")
+    print("\n--- Test 1: HardwareDeviceProber Detection & Decision Matrix ---")
+    
+    # 1. Live system probe: Verify schema and contract
     probe = HardwareDeviceProber.probe(force_refresh=True)
-    print(f"Active tier: {probe['active_tier']}")
-    print(f"Device summary: {probe['device_summary']}")
+    print(f"Live active tier: {probe['active_tier']}")
+    print(f"Device summary:   {probe['device_summary']}")
     print(f"OpenCL available: {probe['opencl_available']} (Device: {probe['opencl_device']})")
-    print(f"CUDA available: {probe['cuda_available']}")
-    print(f"UMA memory: {probe['uma_memory']}")
+    print(f"CUDA available:   {probe['cuda_available']}")
+    print(f"UMA memory:       {probe['uma_memory']}")
 
-    assert probe["active_tier"] == HardwareDeviceProber.TIER_3_APU_CPU, f"Expected tier_3_apu_cpu, got {probe['active_tier']}"
-    assert probe["cuda_available"] is False, "Expected CUDA to be False on APU"
-    assert probe["opencl_available"] is True, "Expected OpenCL to be True"
-    assert "gfx902" in str(probe["opencl_device"]), f"Expected gfx902 device, got {probe['opencl_device']}"
-    assert probe["uma_memory"] is True, "Expected UMA memory to be True on AMD APU"
+    valid_tiers = [
+        HardwareDeviceProber.TIER_1_GPU,
+        HardwareDeviceProber.TIER_2_CLOUD,
+        HardwareDeviceProber.TIER_3_APU_CPU,
+    ]
+    assert probe["active_tier"] in valid_tiers, f"Unknown tier {probe['active_tier']}"
+    assert isinstance(probe["cuda_available"], bool)
+    assert isinstance(probe["opencl_available"], bool)
+    assert isinstance(probe["uma_memory"], bool)
+    assert isinstance(probe["device_summary"], str)
 
-    # Test override
-    os.environ["SVBRDF_TIER_FORCE"] = "tier_2_cloud_api"
-    override_probe = HardwareDeviceProber.probe(force_refresh=True)
-    assert override_probe["active_tier"] == HardwareDeviceProber.TIER_2_CLOUD
+    # 2. Test environment variable override
+    for target_tier in valid_tiers:
+        os.environ["SVBRDF_TIER_FORCE"] = target_tier
+        override_probe = HardwareDeviceProber.probe(force_refresh=True)
+        assert override_probe["active_tier"] == target_tier, f"Failed override to {target_tier}"
     del os.environ["SVBRDF_TIER_FORCE"]
-    # Restore normal probe
+
+    # 3. Test hardware decision matrix via hermetic mocks
+    mock_torch_cuda = mock.MagicMock()
+    mock_torch_cuda.cuda.is_available.return_value = True
+    mock_torch_cuda.__version__ = "2.2.0"
+
+    mock_torch_no_cuda = mock.MagicMock()
+    mock_torch_no_cuda.cuda.is_available.return_value = False
+    mock_torch_no_cuda.__version__ = "2.2.0"
+
+    # Scenario A: CUDA available and neural weights present -> Tier 1
+    with mock.patch.dict(sys.modules, {"torch": mock_torch_cuda}), \
+         mock.patch("os.path.isfile", return_value=True):
+        p = HardwareDeviceProber.probe(weights_path="/dummy/weights.safetensors", force_refresh=True)
+        assert p["active_tier"] == HardwareDeviceProber.TIER_1_GPU
+        assert p["cuda_available"] is True
+
+    # Scenario B: No CUDA, but OpenCL available (APU / Intel / AMD) -> Tier 3
+    with mock.patch.dict(sys.modules, {"torch": mock_torch_no_cuda}), \
+         mock.patch("cv2.ocl.haveOpenCL", return_value=True), \
+         mock.patch("cv2.ocl.useOpenCL", return_value=True):
+        p = HardwareDeviceProber.probe(force_refresh=True)
+        assert p["active_tier"] == HardwareDeviceProber.TIER_3_APU_CPU
+        assert p["opencl_available"] is True
+
+    # Scenario C: Pure CPU (no CUDA, no OpenCL), HuggingFace token provided -> Tier 2
+    with mock.patch.dict(sys.modules, {"torch": mock_torch_no_cuda}), \
+         mock.patch("cv2.ocl.haveOpenCL", return_value=False), \
+         mock.patch.dict(os.environ, {"HUGGINGFACE_API_TOKEN": "hf_dummy_token"}, clear=True):
+        p = HardwareDeviceProber.probe(force_refresh=True)
+        assert p["active_tier"] == HardwareDeviceProber.TIER_2_CLOUD
+
+    # Scenario D: Pure CPU (no CUDA, no OpenCL), no cloud token -> Tier 3 CPU fallback
+    with mock.patch.dict(sys.modules, {"torch": mock_torch_no_cuda}), \
+         mock.patch("cv2.ocl.haveOpenCL", return_value=False), \
+         mock.patch.dict(os.environ, {}, clear=True):
+        p = HardwareDeviceProber.probe(force_refresh=True)
+        assert p["active_tier"] == HardwareDeviceProber.TIER_3_APU_CPU
+        assert p["opencl_available"] is False
+
+    # Restore live probe
     HardwareDeviceProber.probe(force_refresh=True)
-    print("Test 1 PASSED: Hardware prober correctly identified AMD APU & OpenCL acceleration.")
+    print("Test 1 PASSED: Hardware prober contract, overrides, and mock matrix verified.")
 
 
 def test_2_svbrdf_end_to_end():
-    print("\n--- Test 2: SVBRDF Tier 3 APU Decomposition End-to-End ---")
+    print("\n--- Test 2: SVBRDF End-to-End Decomposition ---")
     engine = SVBRDFEngine()
     temp_dir = tempfile.mkdtemp(prefix="test_svbrdf_")
 
     try:
-        # Create a test crop with some gradient & color
+        # Create a test crop with gradient and color
         h, w = 512, 512
         y, x = np.mgrid[0:h, 0:w]
         synthetic_crop = np.zeros((h, w, 3), dtype=np.uint8)
@@ -66,26 +119,27 @@ def test_2_svbrdf_end_to_end():
         manifest = engine.decompose_crop(
             crop_bgr=synthetic_crop,
             output_dir=temp_dir,
-            component_id="can_body_test",
+            component_id="portable_body_test",
             base_roughness_hint=0.35,
             base_metallic_hint=0.80,
         )
 
-        # Assert map existence
+        # Assert map existence and dimensions
         for map_key in ["diffuse", "roughness", "normal", "metallic"]:
             path = manifest["maps"][map_key]
             assert os.path.isfile(path), f"Missing output map: {path}"
             img = Image.open(path)
             assert img.size == (512, 512), f"Expected 512x512, got {img.size}"
 
-        # Assert manifest fields
-        assert manifest["execution_tier"] == "tier_3_apu_cpu"
-        assert manifest["opencl_accelerated"] is True
+        # Assert manifest contract (portable across any active tier)
+        valid_tiers = ["tier_1_local_gpu", "tier_2_cloud_api", "tier_3_apu_cpu"]
+        assert manifest["execution_tier"] in valid_tiers, f"Unexpected tier {manifest['execution_tier']}"
+        assert isinstance(manifest["opencl_accelerated"], bool)
         assert "inference_time_ms" in manifest
         assert manifest["normal_mode"] in ["valid_tangent", "photometric_scharr_fallback"]
         assert manifest["composite_confidence_q"] > 0.0
 
-        print(f"Manifest output: Tier={manifest['execution_tier']}, Time={manifest['inference_time_ms']}ms, NormalMode={manifest['normal_mode']}, Q={manifest['composite_confidence_q']}")
+        print(f"Manifest output: Tier={manifest['execution_tier']}, Time={manifest['inference_time_ms']}ms, OpenCL={manifest['opencl_accelerated']}, NormalMode={manifest['normal_mode']}, Q={manifest['composite_confidence_q']}")
         print("Test 2 PASSED: SVBRDF decomposition produced valid 4-map bundle with metadata.")
     finally:
         shutil.rmtree(temp_dir, ignore_errors=True)
@@ -108,7 +162,7 @@ def test_3_polyhaven_map_validation():
         rough_path = os.path.join(temp_dir, "roughness.png")
         cv2.imwrite(rough_path, flat_rough)
 
-        # 3. Diffuse map with pattern to allow Scharr recovery
+        # 3. Diffuse map with high-contrast pattern to allow Scharr normal recovery
         diff_arr = (np.random.rand(256, 256, 3) * 200 + 20).astype(np.uint8)
         diff_path = os.path.join(temp_dir, "diffuse.png")
         cv2.imwrite(diff_path, diff_arr)
@@ -126,13 +180,13 @@ def test_3_polyhaven_map_validation():
             category="metal",
         )
 
-        # Check recovered roughness
+        # Check recovered roughness variance
         rec_rough = cv2.imread(validated["roughness"], cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255.0
         rec_var = float(np.var(rec_rough))
         print(f"Recovered roughness variance: {rec_var:.5f} (Gate >= 0.005)")
         assert rec_var >= 0.005, f"Roughness recovery failed, variance {rec_var} < 0.005"
 
-        # Check recovered normal
+        # Check recovered normal flatness
         rec_norm_bgr = cv2.imread(validated["normal"])
         rec_norm_rgb = cv2.cvtColor(rec_norm_bgr, cv2.COLOR_BGR2RGB)
         rec_norm_float = (rec_norm_rgb.astype(np.float32) / 127.5) - 1.0
@@ -148,48 +202,65 @@ def test_3_polyhaven_map_validation():
 
 def test_4_dynamic_tolerance_widening():
     print("\n--- Test 4: Dynamic Tolerance Widening (snapping_confidence == 0.0) ---")
-    comparator = RenderGeometryComparator(
-        render_image_path="projects/pyana_reka_can/outputs/renders/can_front_render.png",
-        target_geom_json="projects/pyana_reka_can/outputs/specs/geometry_design_doc.json"
-    )
+    temp_dir = tempfile.mkdtemp(prefix="test_tolerance_")
 
-    # Set up synthetic components
-    comparator.target_geom = {
-        "overall_dimensions": {"aspect_ratio_height_to_width": 2.0},
-        "components": {
-            "part_unverified": {
-                "display_name": "Unverified Joint",
-                "height_ratio_to_total": 0.20,
-                "snapping_confidence": 0.0,  # Unverified prior
+    try:
+        # Create a self-contained dummy render image and minimal design documents
+        dummy_render_path = os.path.join(temp_dir, "dummy_render.png")
+        cv2.imwrite(dummy_render_path, np.full((128, 128, 3), 128, dtype=np.uint8))
+
+        dummy_geom_path = os.path.join(temp_dir, "dummy_geom.json")
+        target_geom = {
+            "overall_dimensions": {"aspect_ratio_height_to_width": 2.0},
+            "components": {
+                "part_unverified": {
+                    "display_name": "Unverified Joint",
+                    "height_ratio_to_total": 0.20,
+                    "snapping_confidence": 0.0,  # Unverified prior
+                },
+                "part_verified": {
+                    "display_name": "Verified Joint",
+                    "height_ratio_to_total": 0.20,
+                    "snapping_confidence": 1.0,  # Physical boundary verified
+                }
             },
-            "part_verified": {
-                "display_name": "Verified Joint",
-                "height_ratio_to_total": 0.20,
-                "snapping_confidence": 1.0,  # Physical boundary verified
-            }
-        },
-        "radial_profile_mesh": []
-    }
+            "radial_profile_mesh": []
+        }
+        with open(dummy_geom_path, "w", encoding="utf-8") as f:
+            json.dump(target_geom, f)
 
-    # Rendered result has 10% relative error (0.22 vs 0.20 -> h_err = 0.10)
-    # Standard threshold: 0.05 -> verified component exceeds it and flags recommendation
-    # Widened threshold: 0.05 * 2.5 = 0.125 -> unverified component passes and is absorbed
-    rendered_mock = {
-        "aspect_ratio": 2.0,
-        "components": {
-            "part_unverified": {"height_ratio_to_total": 0.22},
-            "part_verified": {"height_ratio_to_total": 0.22},
-        },
-        "radial_profile_mesh": []
-    }
+        dummy_color_path = os.path.join(temp_dir, "dummy_color.json")
+        with open(dummy_color_path, "w", encoding="utf-8") as f:
+            json.dump({}, f)
 
-    results = comparator.compare_against_target(rendered_mock)
-    recs = [r["parameter"] for r in results.get("correction_recommendations", [])]
-    print(f"Correction recommendations: {recs}")
+        # Initialize comparator with hermetic fixtures
+        comparator = RenderGeometryComparator(
+            render_image_path=dummy_render_path,
+            target_geom_json=dummy_geom_path,
+            target_color_json=dummy_color_path,
+        )
 
-    assert "part_verified_height_ratio" in recs, "Verified part with 10% error should trigger recommendation"
-    assert "part_unverified_height_ratio" not in recs, "Unverified part should be absorbed by 2.5x widened tolerance"
-    print("Test 4 PASSED: Dynamic tolerance widening correctly absorbs unverified boundary errors.")
+        # Rendered result has 10% relative error (0.22 vs 0.20 -> h_err = 0.10)
+        # Standard threshold: 0.05 -> verified component exceeds it and flags recommendation
+        # Widened threshold: 0.05 * 2.5 = 0.125 -> unverified component passes and is absorbed
+        rendered_mock = {
+            "aspect_ratio": 2.0,
+            "components": {
+                "part_unverified": {"height_ratio_to_total": 0.22},
+                "part_verified": {"height_ratio_to_total": 0.22},
+            },
+            "radial_profile_mesh": []
+        }
+
+        results = comparator.compare_against_target(rendered_mock)
+        recs = [r["parameter"] for r in results.get("correction_recommendations", [])]
+        print(f"Correction recommendations: {recs}")
+
+        assert "part_verified_height_ratio" in recs, "Verified part with 10% error should trigger recommendation"
+        assert "part_unverified_height_ratio" not in recs, "Unverified part should be absorbed by 2.5x widened tolerance"
+        print("Test 4 PASSED: Dynamic tolerance widening correctly absorbs unverified boundary errors.")
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
 
 
 def test_5_voronoi_micro_bump_shader_injection():
