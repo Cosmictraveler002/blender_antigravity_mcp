@@ -176,15 +176,32 @@ class RenderGeometryComparator:
                 })
                 geom_fids.append(h_fid)
 
-                if h_err > 0.05:
+                # Dynamic tolerance: widen by 2.5x for unverified semantic priors (§ 4.2 Step 3)
+                snap_conf = float(comp.get("snapping_confidence", 1.0))
+                base_h_err_threshold = 0.05
+                base_structural_threshold = 0.080
+                base_abs_diff_threshold = 0.015
+
+                if snap_conf == 0.0:
+                    h_err_threshold = base_h_err_threshold * 2.5        # 0.05 -> 0.125
+                    structural_threshold = base_structural_threshold * 2.5  # 0.080 -> 0.200
+                    abs_diff_threshold = base_abs_diff_threshold * 2.5  # 0.015 -> 0.0375
+                    print(f"[Tolerance] Joint '{cid}' has snapping_confidence=0.0; "
+                          f"widened tolerance by 2.5x (h_err: {h_err_threshold}, structural: {structural_threshold})")
+                else:
+                    h_err_threshold = base_h_err_threshold
+                    structural_threshold = base_structural_threshold
+                    abs_diff_threshold = base_abs_diff_threshold
+
+                if h_err > h_err_threshold:
                     delta_pct = round((rend_h_ratio - target_h_ratio) * 100.0, 1)
-                    is_structural = bool(h_err > 0.080 or abs(target_h_ratio - rend_h_ratio) > 0.015)
+                    is_structural = bool(h_err > structural_threshold or abs(target_h_ratio - rend_h_ratio) > abs_diff_threshold)
                     recommendations.append({
                         "parameter": f"{cid}_height_ratio",
                         "current": round(rend_h_ratio, 3),
                         "target": round(target_h_ratio, 3),
                         "target_delta": round(target_h_ratio - rend_h_ratio, 3),
-                        "priority": "HIGH" if (h_err > 0.15 or is_structural) else "MEDIUM",
+                        "priority": "HIGH" if (h_err > (0.15 * (2.5 if snap_conf == 0.0 else 1.0)) or is_structural) else "MEDIUM",
                         "is_structural": is_structural,
                         "requires_rebuild": is_structural,
                         "action": f"Adjust {disp_name} vertical span by {delta_pct:+.1f}% to match reference proportion ({target_h_ratio*100.0:.1f}%)"

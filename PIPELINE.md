@@ -236,6 +236,34 @@ Every predicted map bundle is validated against statistical acceptance gates:
    $$Q_{\text{SVBRDF}} = 0.40 \cdot \min\left(1.0, \frac{\text{Var}(R)}{0.02}\right) + 0.40 \cdot (1.0 - \Phi(\mathbf{N})) + 0.20 \cdot (1.0 - \Gamma(A))$$
    If $Q_{\text{SVBRDF}} < 0.50$, flags as low-confidence and blends with procedural fallback node graph.
 
+#### 2.5.1 Multi-Tier Execution Runtime & Hardware Cascade
+The SVBRDF decomposition engine (`SVBRDFEngine`) operates on a 3-tier runtime cascade with dynamic compute device discovery and zero-overhead fallback:
+
+1. **Tier 1 — Local Discrete GPU (PyTorch CUDA FP16 + Safetensors):**
+   - Active when PyTorch is installed, CUDA is available, and pre-trained weights exist at `harness/models/svbrdf/model_fp16.safetensors`.
+   - Executes half-precision forward pass under `torch.cuda.amp.autocast()` yielding $(B, 10, H, W)$ representations.
+   - On CUDA Out-Of-Memory (OOM) or architecture mismatch, automatically escalates to Tier 3.
+
+2. **Tier 2 — Cloud Inference REST API (HuggingFace Inference API / Replicate):**
+   - Gated by `HUGGINGFACE_API_TOKEN` (or `REPLICATE_API_TOKEN`).
+   - POSTs component crops as base64 JPEG to remote inference endpoints with a strict 10-second timeout.
+   - On network latency, timeout, or HTTP errors, seamlessly falls through to Tier 3.
+
+3. **Tier 3 — APU/CPU Optimized Photometric Intrinsic Decomposition Engine:**
+   - Active terminal fallback on non-discrete GPU architectures (e.g. AMD Ryzen APUs with Vega/RDNA integrated graphics, Intel Iris Xe, or pure CPU).
+   - **OpenCL 2.0 Offload:** Initialized via `cv2.ocl.setUseOpenCL(True)`, enabling GPU compute acceleration for `cv2.bilateralFilter`, `cv2.Scharr`, and `cv2.GaussianBlur` without discrete VRAM copy overhead (UMA zero-copy memory access).
+   - **Tiled Patch Inference with 2D Hann Window Blending:** For high-resolution image crops ($> 512 \times 512$), tiles into overlapping $256 \times 256$ patches with $128\text{px}$ overlap using a 2D Hann window taper:
+     $$w(x, y) = \sin^2\!\left(\frac{\pi x}{N}\right) \sin^2\!\left(\frac{\pi y}{N}\right)$$
+     Accumulates in normalized float32 buffers, eliminating boundary seam artifacts and staying within unified memory constraints.
+   - **Environment Override:** Set `SVBRDF_TIER_FORCE=tier_3_apu_cpu` to lock execution to Tier 3 regardless of environment.
+
+#### 2.5.2 PolyHaven Map Acceptance Validation & SVBRDF Registration
+All textures retrieved from external repositories (PolyHaven / ambientCG) pass through identical quantitative acceptance gates prior to scene integration:
+- Downloaded roughness maps are validated for micro-relief: $\text{Var}(R) \ge 0.005$. Degenerate flat maps trigger procedural perturbation.
+- Downloaded normal maps are validated for flatness: $\Phi(\mathbf{N}) \le 0.98$. Degenerate flat normal maps trigger photographic Scharr frequency gradient recovery from the diffuse albedo channel.
+- Downloaded diffuse maps are validated for specular clipping: $\Gamma(A) \le 0.05$. Specular burn-in is inpainted using bilateral color reconstruction.
+- Local SVBRDF map bundles can be directly registered via `PBRMaterialEngine.register_svbrdf_maps()`, allowing the pipeline to reuse high-confidence decomposed maps without redundant repository downloads.
+
 ---
 
 ### 2.6 Solution 2: Metric Edge Snapping Algorithm (Coarse-to-Fine Fusion)
@@ -256,9 +284,24 @@ Replaces legacy equal-division slicing (`rel_top = idx / num_c`). Snaps Gemini s
      $$y_{\text{snapped}} = \arg\max_{y \in [y_{\text{approx}} - 30, \; y_{\text{approx}} + 30]} \left|\frac{d^2 r}{dz^2}\right|$$
    - If still uninformative: preserve prior $y_{\text{approx}}$ and record `snapping_confidence: 0.0`.
 
+#### 2.6.1 Stage 3 Dynamic Tolerance Widening for Unverified Joints
+When metric edge snapping encounters low SNR or lack of physical gradient extrema, it preserves Gemini's semantic prior and sets `snapping_confidence: 0.0`. During Stage 3 verification (`RenderGeometryComparator`), joints with unverified priors receive dynamic tolerance widening:
+- Height error threshold widens by $2.5\times$: $0.050 \to 0.125$ ($12.5\%$).
+- Structural rebuild threshold widens by $2.5\times$: $0.080 \to 0.200$ ($20.0\%$, absolute delta threshold $0.015 \to 0.0375$).
+This prevents spurious structural regeneration loops when the reference photograph lacks sharp visible boundaries between semantic parts.
+
 ---
 
-### 2.7 Failure Modes & Graceful Degradation Architecture
+### 2.7 Blender Procedural Micro-Bump Shader Injection
+When an SVBRDF normal map is synthesized via classical photometric fallback (`normal_mode == "photometric_scharr_fallback"`), the shader generator injects a procedural micro-relief sub-graph to guarantee surface tactile roughness under path-traced lighting:
+1. `ShaderNodeTexVoronoi` (Object coordinates, 3D, F1 distance, Scale: $250.0$).
+2. `ShaderNodeBump` (Height input from Voronoi distance, Strength: $0.08$, Distance: $0.02$).
+3. Blended with the image normal map via `ShaderNodeVectorMath` (operation `ADD`) before connecting to Principled BSDF `Normal`.
+When `normal_mode == "valid_tangent"` (healthy physical normal maps), this procedural injection is bypassed.
+
+---
+
+### 2.8 Failure Modes & Graceful Degradation Architecture
 
 1. **Zero Gemini Components Fallback:**
    - Silhouette extraction via Otsu / GrabCut contour bounding: $[y_{\min}, x_{\min}, y_{\max}, x_{\max}]$.

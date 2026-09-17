@@ -3,10 +3,11 @@ Blender Material Node Graph Generator
 ======================================
 Synthesizes Blender Python (bpy) code to automatically wire complete
 PBR texture node graphs into Principled BSDF materials:
-  - TextureCoordinate (UV) -> Mapping -> ImageTextures
+  - TextureCoordinate (UV / Object) -> Mapping -> ImageTextures
   - Base Color (sRGB) with optional target color tinting
   - Roughness (Non-Color)
   - Normal Map (Non-Color via ShaderNodeNormalMap)
+  - Procedural Voronoi Micro-Bump injection for fallback normals (§ 4.3 Step 3)
   - Ambient Occlusion (AO)
   - Decal / Typography overlay layering
 """
@@ -24,6 +25,7 @@ def build_pbr_material_nodes(
     metallic: float = 0.0,
     uv_scale: Tuple[float, float, float] = (1.0, 1.0, 1.0),
     tint_factor: float = 0.0,
+    normal_mode: str = "valid_tangent",
 ) -> str:
     """
     Generates a Python (bpy) script string that wires a full PBR material in Blender.
@@ -37,6 +39,7 @@ def build_pbr_material_nodes(
         metallic: Metallic value [0, 1].
         uv_scale: Texture scale factor (x, y, z).
         tint_factor: 0.0 = pure texture, 1.0 = full tint to target_color_rgb.
+        normal_mode: Normal map state from SVBRDF manifest ('valid_tangent' or 'photometric_scharr_fallback').
 
     Returns:
         Python code string ready to execute in Blender.
@@ -48,6 +51,38 @@ def build_pbr_material_nodes(
     ao_path = maps.get("ao", "").replace("\\", "/")
 
     r, g, b = target_color_rgb if target_color_rgb else (0.8, 0.8, 0.8)
+
+    if normal_mode == "photometric_scharr_fallback":
+        voronoi_bump_block = """
+# Procedural Voronoi Micro-Bump Injection (PIPELINE_SOLUTIONS_SPEC § 4.3 Step 3)
+voronoi = nodes.new(type='ShaderNodeTexVoronoi')
+voronoi.location = (-200, -550)
+voronoi.inputs['Scale'].default_value = 250.0
+voronoi.voronoi_dimensions = '3D'
+voronoi.feature = 'F1'
+links.new(tex_coord.outputs['Object'], voronoi.inputs['Vector'])
+
+bump = nodes.new(type='ShaderNodeBump')
+bump.location = (50, -550)
+bump.inputs['Strength'].default_value = 0.08
+bump.inputs['Distance'].default_value = 0.02
+links.new(voronoi.outputs['Distance'], bump.inputs['Height'])
+
+if norm_path and os.path.exists(norm_path):
+    vec_math = nodes.new(type='ShaderNodeVectorMath')
+    vec_math.operation = 'ADD'
+    vec_math.location = (200, -450)
+    links.new(norm_map.outputs['Normal'], vec_math.inputs[0])
+    links.new(bump.outputs['Normal'], vec_math.inputs[1])
+    links.new(vec_math.outputs['Vector'], bsdf.inputs['Normal'])
+else:
+    links.new(bump.outputs['Normal'], bsdf.inputs['Normal'])
+"""
+    else:
+        voronoi_bump_block = """
+if norm_path and os.path.exists(norm_path):
+    links.new(norm_map.outputs['Normal'], bsdf.inputs['Normal'])
+"""
 
     bpy_code = f"""
 import bpy
@@ -133,7 +168,8 @@ if norm_path and os.path.exists(norm_path):
     norm_map.location = (50, -350)
     norm_map.inputs['Strength'].default_value = 1.0
     links.new(tex_norm.outputs['Color'], norm_map.inputs['Color'])
-    links.new(norm_map.outputs['Normal'], bsdf.inputs['Normal'])
+
+{voronoi_bump_block}
 
 # Assign material to object if specified
 obj_name = {repr(object_name)}

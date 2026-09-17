@@ -18,6 +18,7 @@ import urllib.request
 import urllib.parse
 from typing import Dict, Any, List, Optional, Tuple
 import numpy as np
+import cv2
 from PIL import Image
 
 
@@ -250,6 +251,7 @@ class PBRMaterialEngine:
             print(f"[PBREngine] Selected '{asset_id}' from PolyHaven (Score: {best_match['score']:.1f})")
             downloaded = self._download_polyhaven_asset(asset_id, target_dir, resolution=resolution)
             if downloaded:
+                downloaded = self._validate_downloaded_maps(downloaded, target_dir, category, target_color_hex)
                 return {
                     "component_id": component_id,
                     "status": "pbr_downloaded",
@@ -313,6 +315,131 @@ class PBRMaterialEngine:
             resolved_maps[map_type] = dest_file
 
         return resolved_maps if resolved_maps else None
+
+    def register_svbrdf_maps(
+        self,
+        component_id: str,
+        svbrdf_manifest: Dict[str, Any],
+        target_color_hex: Optional[str] = None,
+        estimated_roughness: float = 0.5,
+    ) -> Dict[str, Any]:
+        """
+        Directly registers locally-generated SVBRDF map bundle (from SVBRDFEngine.decompose_crop)
+        as the component's resolved material, bypassing repository search.
+        """
+        maps = svbrdf_manifest.get("maps", {})
+        return {
+            "component_id": component_id,
+            "status": "svbrdf_decomposed",
+            "source": "svbrdf_engine",
+            "asset_id": f"svbrdf_{component_id}",
+            "maps": maps,
+            "target_color_hex": target_color_hex,
+            "estimated_roughness": estimated_roughness,
+            "is_procedural_fallback": False,
+            "execution_tier": svbrdf_manifest.get("execution_tier", "tier_3_apu_cpu"),
+            "normal_mode": svbrdf_manifest.get("normal_mode", "valid_tangent"),
+            "composite_confidence_q": svbrdf_manifest.get("composite_confidence_q", 1.0),
+        }
+
+    def _validate_downloaded_maps(
+        self,
+        maps: Dict[str, str],
+        target_dir: str,
+        category: str,
+        target_color_hex: Optional[str] = None
+    ) -> Dict[str, str]:
+        """
+        Runs quantitative acceptance gates on downloaded PBR maps.
+        If a map fails, regenerates it using deterministic recovery (§ 1.5 & § 4.3).
+        """
+        # 1. Roughness gate: Var(R) >= 0.005
+        rough_path = maps.get("roughness")
+        if rough_path and os.path.isfile(rough_path):
+            try:
+                rough_img = cv2.imread(rough_path, cv2.IMREAD_GRAYSCALE)
+                if rough_img is not None:
+                    rough_float = rough_img.astype(np.float32) / 255.0
+                    r_var = float(np.var(rough_float))
+                    if r_var < 0.005:
+                        print(f"[PBREngine] Downloaded roughness failed variance gate ({r_var:.5f} < 0.005). Applying procedural micro-facet perturbation.")
+                        r_mean = float(np.mean(rough_float))
+                        np.random.seed(42)
+                        noise = np.random.randn(*rough_float.shape).astype(np.float32)
+                        noise_blurred = cv2.GaussianBlur(noise, (5, 5), 1.0)
+                        recovered_r = np.clip(r_mean + noise_blurred * 0.28, 0.02, 0.98)
+                        cv2.imwrite(rough_path, (recovered_r * 255.0).astype(np.uint8))
+            except Exception as e:
+                print(f"[PBREngine] Warning during roughness gate validation: {e}")
+
+        # 2. Normal flatness gate: Phi(N) <= 0.98
+        norm_path = maps.get("normal")
+        if norm_path and os.path.isfile(norm_path):
+            try:
+                norm_img = cv2.imread(norm_path, cv2.IMREAD_COLOR)
+                if norm_img is not None:
+                    norm_rgb = cv2.cvtColor(norm_img, cv2.COLOR_BGR2RGB)
+                    norm_float = (norm_rgb.astype(np.float32) / 127.5) - 1.0
+                    flat_diff = np.sqrt(norm_float[:, :, 0]**2 + norm_float[:, :, 1]**2 + (norm_float[:, :, 2] - 1.0)**2)
+                    flat_fraction = float(np.mean(flat_diff < 0.02))
+                    if flat_fraction > 0.98:
+                        print(f"[PBREngine] Downloaded normal map failed flatness gate ({flat_fraction:.3f} > 0.98). Recovering via Scharr frequency gradients.")
+                        # Recover from diffuse map if available
+                        diff_path = maps.get("diffuse")
+                        if diff_path and os.path.isfile(diff_path):
+                            diff_img = cv2.imread(diff_path, cv2.IMREAD_COLOR)
+                            diff_rgb = cv2.cvtColor(diff_img, cv2.COLOR_BGR2RGB)
+                        else:
+                            diff_rgb = np.full((norm_img.shape[0], norm_img.shape[1], 3), 128, dtype=np.uint8)
+
+                        # High-pass Scharr recovery
+                        gray = cv2.cvtColor(diff_rgb, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
+                        low_pass = cv2.GaussianBlur(gray, (15, 15), 0)
+                        h_high = gray - low_pass
+
+                        gx = cv2.Scharr(h_high, cv2.CV_32F, 1, 0)
+                        gy = cv2.Scharr(h_high, cv2.CV_32F, 0, 1)
+
+                        if np.max(np.abs(gx)) < 1e-4 and np.max(np.abs(gy)) < 1e-4:
+                            micro_grain = (np.random.randn(*gray.shape) * 0.05).astype(np.float32)
+                            micro_grain = cv2.GaussianBlur(micro_grain, (5, 5), 1.0)
+                            gx = cv2.Scharr(micro_grain, cv2.CV_32F, 1, 0)
+                            gy = cv2.Scharr(micro_grain, cv2.CV_32F, 0, 1)
+
+                        scale = 2.5
+                        nx = -gx * scale
+                        ny = -gy * scale
+                        nz = np.ones_like(nx)
+                        length = np.sqrt(nx**2 + ny**2 + nz**2) + 1e-6
+                        nx, ny, nz = nx / length, ny / length, nz / length
+
+                        rec_norm = np.zeros_like(norm_rgb)
+                        rec_norm[:, :, 0] = np.clip(128.0 + 127.0 * nx, 0, 255).astype(np.uint8)
+                        rec_norm[:, :, 1] = np.clip(128.0 + 127.0 * ny, 0, 255).astype(np.uint8)
+                        rec_norm[:, :, 2] = np.clip(128.0 + 127.0 * nz, 0, 255).astype(np.uint8)
+
+                        cv2.imwrite(norm_path, cv2.cvtColor(rec_norm, cv2.COLOR_RGB2BGR))
+            except Exception as e:
+                print(f"[PBREngine] Warning during normal flatness validation: {e}")
+
+        # 3. Albedo specular clipping gate: Gamma(A) <= 0.05
+        diff_path = maps.get("diffuse")
+        if diff_path and os.path.isfile(diff_path):
+            try:
+                diff_bgr = cv2.imread(diff_path, cv2.IMREAD_COLOR)
+                if diff_bgr is not None:
+                    diff_rgb = cv2.cvtColor(diff_bgr, cv2.COLOR_BGR2RGB)
+                    lum = 0.2126 * (diff_rgb[:, :, 0] / 255.0) + 0.7152 * (diff_rgb[:, :, 1] / 255.0) + 0.0722 * (diff_rgb[:, :, 2] / 255.0)
+                    clipped_fraction = float(np.mean(lum > 0.98))
+                    if clipped_fraction > 0.05:
+                        print(f"[PBREngine] Downloaded diffuse map failed specular clipping gate ({clipped_fraction:.3f} > 0.05). Inpainting specular highlights.")
+                        spec_mask = (lum > 0.95).astype(np.uint8) * 255
+                        inpainted_bgr = cv2.inpaint(diff_bgr, spec_mask, inpaintRadius=5, flags=cv2.INPAINT_TELEA)
+                        cv2.imwrite(diff_path, inpainted_bgr)
+            except Exception as e:
+                print(f"[PBREngine] Warning during albedo clipping validation: {e}")
+
+        return maps
 
     def _generate_procedural_pbr_maps(
         self,

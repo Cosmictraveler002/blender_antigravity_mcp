@@ -18,6 +18,9 @@ This repository is an **automated 2D image to 3D Blender reconstruction & closed
 - **NEVER run long-running Blender operations without socket timeout handling**. The socket client default timeout is 60 seconds.
 - **NEVER compare rendered images using raw RGB Euclidean distance**. Always use perceptual CIE $L^*a^*b^*$ and **CIEDE2000 ($\Delta E_{00}$)** from `harness.utils.color_math`.
 - **NEVER alter color math implementations in individual files**. Use canonical functions from `harness.utils.color_math`.
+- **APU ENVIRONMENT RULE**: On systems without discrete NVIDIA GPUs (e.g. AMD Ryzen APUs, Intel Iris Xe), the pipeline operates on Tier 3 with OpenCL acceleration. Do not attempt to force PyTorch CUDA or allocate GPU-exclusive VRAM.
+- **LOW-CONFIDENCE JOINT RULE**: When `snapping_confidence == 0.0` for a component (unverified semantic prior), Stage 3 verification automatically widens geometric tolerances by $2.5\times$ ($0.05 \to 0.125$ error, $0.08 \to 0.20$ structural). Do not trigger structural rebuilds on unverified boundaries unless the widened threshold is exceeded.
+- **SHADER GRAPH BUMP RULE**: When `normal_mode == "photometric_scharr_fallback"` in the SVBRDF manifest, `material_node_builder` automatically injects procedural Voronoi micro-bump (Scale: 250, Strength: 0.08) to guarantee physical micro-relief in rendered surfaces.
 
 ---
 
