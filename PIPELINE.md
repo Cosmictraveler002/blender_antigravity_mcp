@@ -118,6 +118,33 @@ flowchart TD
     ReportGen --> FinalMD & FinalJSON
 ```
 
+### 1.1 Hardcoded Pipeline Stage Execution Guardrails & Invariants
+
+To prevent pipeline fragmentation, specification drift, and invalid state transitions, all automated agents, CLI harnesses, and execution runners MUST strictly uphold the following 6 hardcoded execution invariants:
+
+1. **Strict Linear Stage Sequence**:
+   The execution graph is strictly feed-forward:
+   $$\text{Stage 1 (Analyze)} \longrightarrow \text{Stage 2 (Generate)} \longrightarrow \text{Stage Capture (Multi-Viewport)} \longrightarrow \text{Stage 3 (Compare)} \longrightarrow \text{Stage 4 (Refine)} \longrightarrow \text{Stage 5 (Report)}$$
+   - Skipping stages, executing stages out of order, or running comparison before generation is strictly prohibited.
+   - Stage Capture (14-camera orbit array) is a mandatory precondition for Stage 3 comparison and Stage 5 contact sheet generation.
+
+2. **Stage 1 Artifact Completeness Invariant**:
+   Stage 2 execution is strictly gated on the complete presence and mathematical integrity of all 9 specification artifacts in `projects/<name>/outputs/specs/`:
+   `geometry_design_doc.json`, `geometry_analysis_annotated.png`, `color_texture_design_doc.json`, `color_texture_swatches.png`, `placement_report.json`, `placement_report.md`, `structural_geometry_report.json`, `material_manifest.json`, `master_3d_design_specification.json`.
+   If any artifact is missing or invalid, the harness must halt and re-run Stage 1. Inventing dummy specifications is strictly prohibited.
+
+3. **Decoupled Generator & Refiner Scripts Contract**:
+   Before invoking Stage 2 or Stage 4, `projects/<name>/scripts/generate_<name>.py` and `projects/<name>/scripts/refine_<name>.py` (subclassing `BaseRefinementEngine`) must exist and be registered in `project.yaml`. All geometric parameters must be dynamically ingested from `HARNESS_GEOM_JSON` and `HARNESS_COLOR_JSON`. Zero hardcoded object names are permitted in `harness/`.
+
+4. **Dual Geometry Verification Invariant (Stage 3)**:
+   The Stage 2 3D render must be analyzed using the exact same `GeometryAnalyzer` that scanned the reference image, generating `render_geometry_doc.json` and `render_geometry_annotated.png`. Comparative scoring must evaluate decomposed radial profiles, aspect ratios, and CIEDE2000 ($\Delta E_{00}$) color errors—never raw unaligned RGB pixel matrices.
+
+5. **Structural Auto-Rebuild Escalation Invariant (Stage 4)**:
+   When `comparison_report.json` indicates structural failure (aspect error $> 3.0\%$, height ratio error $> 8.0\%$, or contour MAE $> 0.040$), the refiner must invoke `trigger_rebuild()` to regenerate geometry procedurally, respecting a maximum quota of 2 rebuilds before falling back to micro-vertex tweaking.
+
+6. **Convergence & Reporting Invariant (Stage 5)**:
+   Project completion strictly requires either meeting all multi-gate convergence criteria ($\ge 92.0\%$ fidelity, $\le 2.0\%$ aspect error, $\le 0.8\%$ height error, $\Delta E_{00} \le 6.5$, contour MAE $\le 0.040$) or exhausting `max_iterations`. Completion must always emit both `final_report.md` (embedding the 360° contact sheet) and `final_report.json`.
+
 ---
 
 ## 2. Mathematical Formulations & Algorithms
