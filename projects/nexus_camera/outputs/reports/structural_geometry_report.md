@@ -1,17 +1,27 @@
-# Structural Geometry Analysis Report: Cube
+# Structural Geometry Analysis Report: AFAssistWindow
 
 **Target Category**: `CAMERA` | **Aspect Ratio**: `1.0:1`
 
 ## 1. Tier-1 Global Envelope & Symmetry
-- **Dimensions**: `2.0 x 2.0 x 2.0` (W x D x H)
-- **Rotational Symmetry (Z)**: `NO` (Confidence: `85.0%`, Mean Circularity: `0.785`)
-- **Mirror Symmetry**: XZ Plane: `100.0%` | YZ Plane: `100.0%`
-- **Structural Segments**: `1` detected across `100` Z-slices
+- **Dimensions**: `4.9543 x 1.5 x 4.9543` (W x D x H)
+- **Rotational Symmetry (Z)**: `NO` (Confidence: `76.6%`, Mean Circularity: `0.672`)
+- **Mirror Symmetry**: XZ Plane: `0.0%` | YZ Plane: `0.0%`
+- **Structural Segments**: `11` detected across `100` Z-slices
 
 ## 2. Tier-2 Primitive Segments & Material Zones
 | Segment | Primitive Type | Rel Z Span | Height | Radius (Bot -> Top) | Material Slot |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `segment_01` | **CYLINDRICAL** | `0.00 - 1.00` | `2.0` | `1.41 -> 1.41` | `Material` |
+| `segment_01` | **CURVED_DOME** | `0.00 - 0.19` | `0.9508` | `0.00 -> 1.95` | `DialKnurled` |
+| `segment_02` | **TAPERED** | `0.20 - 0.25` | `0.2502` | `1.98 -> 2.13` | `DialKnurled` |
+| `segment_03` | **CURVED_DOME** | `0.26 - 0.36` | `0.5004` | `2.17 -> 2.37` | `DialKnurled` |
+| `segment_04` | **TAPERED** | `0.37 - 0.43` | `0.3002` | `2.38 -> 2.44` | `DialKnurled` |
+| `segment_05` | **CURVED_DOME** | `0.44 - 0.47` | `0.1` | `2.45 -> 2.48` | `DialKnurled` |
+| `segment_06` | **CYLINDRICAL** | `0.47 - 0.53` | `0.2502` | `2.49 -> 2.49` | `DialKnurled` |
+| `segment_07` | **CURVED_DOME** | `0.54 - 0.56` | `0.1` | `2.48 -> 2.45` | `DialKnurled` |
+| `segment_08` | **TAPERED** | `0.57 - 0.65` | `0.4003` | `2.44 -> 2.37` | `DialKnurled` |
+| `segment_09` | **CURVED_DOME** | `0.66 - 0.74` | `0.4003` | `2.37 -> 2.17` | `DialKnurled` |
+| `segment_10` | **TAPERED** | `0.75 - 0.80` | `0.2502` | `2.13 -> 1.98` | `DialKnurled` |
+| `segment_11` | **CURVED_DOME** | `0.81 - 1.00` | `0.9508` | `1.95 -> 0.55` | `DialKnurled` |
 
 ## 3. Morphological Schema Matching
 - **Category Schema**: `camera` (Matched: `NO`, Alignment Score: `100.0%`)

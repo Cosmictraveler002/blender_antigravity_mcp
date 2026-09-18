@@ -1,6 +1,6 @@
 # Final Quality Report: Nexus Mirrorless Camera
 
-**Generated**: 2026-09-18T10:54:28.206389
+**Generated**: 2026-09-18T11:50:51.660184
 **Version**: 1.0.0
 **Object Type**: camera
 **Overall Verdict**: **FAIL**
@@ -59,22 +59,21 @@
 
 ### Refinement Results
 
-| Phase | Iterations | Final Score | Converged |
-|-------|-----------|-------------|-----------|
-| Geometry | 0 | 0.00 | No |
-| Color | 0 | 0.00 | No |
+| Phase | Passes / Iterations | Final Score | Status / Converged |
+|:---|:---|:---|:---|
+| Unified Closed-Loop | 7 | 45.18% | No |
 
 ---
 
 ## Recommendations
 
-1. {'parameter': 'body_scale_xy', 'current': 1.0, 'target_delta': 0.02, 'priority': 'HIGH', 'is_structural': True, 'requires_rebuild': True, 'action': 'Adjust body scale XY by +0.020 to align aspect ratio to 0.75:1'}
-2. {'parameter': 'comp_upper_structure_height_ratio', 'current': 0.107, 'target': 0.159, 'target_delta': 0.052, 'priority': 'HIGH', 'is_structural': True, 'requires_rebuild': True, 'action': 'Adjust Upper Structure vertical span by -5.2% to match reference proportion (15.9%)'}
-3. {'parameter': 'comp_base_section_height_ratio', 'current': 0.102, 'target': 0.086, 'target_delta': -0.016, 'priority': 'HIGH', 'is_structural': True, 'requires_rebuild': True, 'action': 'Adjust Base Section vertical span by +1.6% to match reference proportion (8.6%)'}
-4. {'parameter': 'radial_profile_contour', 'current': 0.059, 'target': 0.025, 'priority': 'HIGH', 'is_structural': True, 'requires_rebuild': True, 'action': 'Radial profile contour deviation (0.0590 MAE) exceeds threshold; clean procedural rebuild recommended'}
-5. {'parameter': 'comp_upper_structure_base_color', 'current': '#4E4C51', 'target': '#747276', 'target_rgb': [0.4549019607843137, 0.4470588235294118, 0.4627450980392157], 'current_rgb': [0.3058823529411765, 0.2980392156862745, 0.3176470588235294], 'priority': 'HIGH', 'action': 'Adjust Upper Structure material color towards target (#747276)'}
-6. {'parameter': 'comp_base_section_base_color', 'current': '#FDFBFF', 'target': '#ABA9AF', 'target_rgb': [0.6705882352941176, 0.6627450980392157, 0.6862745098039216], 'current_rgb': [0.9921568627450981, 0.984313725490196, 1.0], 'priority': 'HIGH', 'action': 'Adjust Base Section material color towards target (#ABA9AF)'}
-7. {'parameter': 'comp_main_body_metallic', 'current': 0.95, 'target': 0.0, 'target_delta': -0.95, 'priority': 'HIGH', 'action': 'Adjust Main Body metallic property towards 0.00 (currently 0.95)'}
+1. **[HIGH]** Adjust body scale XY by +0.020 to align aspect ratio to 0.75:1
+2. **[HIGH]** Adjust Upper Structure vertical span by -5.2% to match reference proportion (15.9%)
+3. **[HIGH]** Adjust Base Section vertical span by +1.6% to match reference proportion (8.6%)
+4. **[HIGH]** Radial profile contour deviation (0.0590 MAE) exceeds threshold; clean procedural rebuild recommended
+5. **[HIGH]** Adjust Upper Structure material color towards target (#747276)
+6. **[HIGH]** Adjust Base Section material color towards target (#ABA9AF)
+7. **[HIGH]** Adjust Main Body metallic property towards 0.00 (currently 0.95)
 
 ---
 

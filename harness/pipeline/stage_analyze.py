@@ -84,6 +84,34 @@ def run_analysis(project: ProjectDefinition, config: HarnessConfig) -> Dict[str,
     for t in gemini_doc.get("typography_and_labels", []):
         print(f"  - Text '{t.get('text')}': {t.get('font_style')} on {t.get('target_component')} ({t.get('orientation')})")
 
+    if gemini_doc.get("decomposition_mode") == "classical_cv_fallback":
+        print("\n" + "!" * 76)
+        print(" [Stage 1.1 DIAGNOSTIC] CLASSICAL CV FALLBACK WAS USED FOR COMPONENT SPECIFICATION")
+        print("  Confidence is marked 'low'. Semantic vision analysis was not performed.")
+        print("  For complex non-axisymmetric objects (cameras, electronics, multi-part assemblies),")
+        print("  component boundaries and material estimates are heuristics.")
+        print("!" * 76 + "\n")
+
+    # 1.1b Multi-POV Objective Synthesis & Execution (Inheriting from root BaseObjective)
+    print("\n>>> STAGE 1.1b: MULTI-POV OBJECTIVE SPECIFICATION SYNTHESIS (BASEOBJECTIVE)")
+    from harness.analyzers.objective_generator import ObjectiveGenerator
+    obj_script = ObjectiveGenerator.generate_project_objective(project, gemini_doc=gemini_doc)
+    multi_pov_spec = {}
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("project_objective", obj_script)
+        if spec and spec.loader:
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            for attr_name in dir(mod):
+                attr = getattr(mod, attr_name)
+                if isinstance(attr, type) and issubclass(attr, mod.BaseObjective) and attr is not mod.BaseObjective:
+                    engine_instance = attr(project_dir=project.project_dir)
+                    multi_pov_spec = engine_instance.run()
+                    break
+    except Exception as e:
+        print(f"[Stage 1.1b] Multi-POV execution notice: {e}")
+
     # 2. Geometry Analysis
     print("\n>>> STAGE 1.2: GEOMETRIC PROPORTIONS, RADIAL PROFILE MESH & SILHOUETTE")
     geom_engine = GeometryAnalyzer(image_path)
@@ -174,6 +202,7 @@ def run_analysis(project: ProjectDefinition, config: HarnessConfig) -> Dict[str,
             ]
         },
         "gemini_vision": gemini_doc,
+        "multi_pov_photogrammetry": multi_pov_spec,
         "geometry": geom_doc,
         "materials_and_colors": color_doc,
         "placement_and_viewpoints": placement_doc,
@@ -194,7 +223,8 @@ def run_analysis(project: ProjectDefinition, config: HarnessConfig) -> Dict[str,
     print("\n" + "=" * 76)
     print(" ANALYSIS COMPLETE — DESIGN SPECIFICATION & PBR TEXTURES GENERATED")
     print(f" 1. Gemini Vision Analysis    : {gemini_json}")
-    print(f" 2. Geometry Design Doc       : {geom_json}")
+    print(f" 2. Multi-POV Objective Spec  : {os.path.join(output_dir, 'multi_pov_dimensional_specification.json')}")
+    print(f" 3. Geometry Design Doc       : {geom_json}")
     print(f" 3. Geometry Annotation Image : {geom_vis}")
     print(f" 4. Color & Texture Doc       : {color_json}")
     print(f" 5. Color Swatches Image      : {color_vis}")

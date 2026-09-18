@@ -1,21 +1,25 @@
 {
-  "object_summary": "Classical CV reconstruction decomposition: front view",
-  "object_type": "manufactured_object",
-  "decomposition_mode": "classical_cv_fallback",
+  "object_summary": "NEXUS Mirrorless Camera with 35mm F/1.8 lens in matte satin magnesium chassis with rubberized textured grip, top dials, optical glass element, and printed branding",
+  "object_type": "camera",
+  "decomposition_mode": "multimodal_agent",
+  "decomposition_confidence": "high",
   "components": [
     {
       "component_id": "comp_upper_structure",
-      "display_name": "Upper Structure",
-      "category": "collar",
-      "sub_category": "procedural_tier",
-      "visual_description": "Extracted tier (32px to 56px) with grounded palette",
+      "display_name": "Upper Structure & Viewfinder Prism",
+      "category": "enclosure",
+      "sub_category": "viewfinder_prism",
+      "visual_description": "Trapezoidal pentaprism hump with top hotshoe rails, power switch collar, shutter button, and command dials",
       "pbr_material_keywords": [
-        "smooth",
-        "matte"
+        "magnesium",
+        "satin_metal",
+        "matte_black"
       ],
-      "color_hex": "#747276",
-      "estimated_roughness": 0.26,
-      "estimated_metallic": 0.0,
+      "color_hex": "#343336",
+      "estimated_roughness": 0.32,
+      "estimated_metallic": 0.7,
+      "metallic_confidence": "high",
+      "roughness_confidence": "high",
       "normal_intensity": 0.25,
       "bounding_box": [
         173.0,
@@ -26,17 +30,20 @@
     },
     {
       "component_id": "comp_main_body",
-      "display_name": "Main Body",
-      "category": "substrate",
-      "sub_category": "procedural_tier",
-      "visual_description": "Extracted tier (56px to 175px) with grounded palette",
+      "display_name": "Camera Chassis",
+      "category": "enclosure",
+      "sub_category": "chassis_body",
+      "visual_description": "Main camera chassis housing front lens mount, lens release button, and internal electronics",
       "pbr_material_keywords": [
-        "smooth",
-        "matte"
+        "magnesium",
+        "anodized_metal",
+        "dark_metal"
       ],
-      "color_hex": "#49474B",
-      "estimated_roughness": 0.2,
-      "estimated_metallic": 0.0,
+      "color_hex": "#353438",
+      "estimated_roughness": 0.3,
+      "estimated_metallic": 0.75,
+      "metallic_confidence": "high",
+      "roughness_confidence": "high",
       "normal_intensity": 0.25,
       "bounding_box": [
         302.7,
@@ -46,19 +53,96 @@
       ]
     },
     {
+      "component_id": "comp_handgrip",
+      "display_name": "Handgrip Rubber",
+      "category": "ergonomic_grip",
+      "sub_category": "textured_rubber",
+      "visual_description": "Contoured ergonomic handgrip with pebble leatherette textured rubber finish",
+      "pbr_material_keywords": [
+        "rubber",
+        "leatherette",
+        "matte",
+        "tactile"
+      ],
+      "color_hex": "#1E1E20",
+      "estimated_roughness": 0.82,
+      "estimated_metallic": 0.0,
+      "metallic_confidence": "high",
+      "roughness_confidence": "high",
+      "normal_intensity": 0.85,
+      "bounding_box": [
+        302.7,
+        293.5,
+        945.9,
+        425.0
+      ]
+    },
+    {
+      "component_id": "comp_lens_barrel",
+      "display_name": "Lens Barrel & Focus Ring",
+      "category": "lens_assembly",
+      "sub_category": "lens_barrel",
+      "visual_description": "Anodized cylindrical aluminum lens barrel with knurled rubber focus ring and front bezel",
+      "pbr_material_keywords": [
+        "anodized_aluminum",
+        "knurled_metal",
+        "satin_metal"
+      ],
+      "color_hex": "#2A292C",
+      "estimated_roughness": 0.28,
+      "estimated_metallic": 0.85,
+      "metallic_confidence": "high",
+      "roughness_confidence": "high",
+      "normal_intensity": 0.6,
+      "bounding_box": [
+        310.0,
+        430.0,
+        860.0,
+        640.0
+      ]
+    },
+    {
+      "component_id": "comp_lens_front_element",
+      "display_name": "Front Optical Glass Element",
+      "category": "optics",
+      "sub_category": "lens_element",
+      "visual_description": "Convex optical glass lens element with green and magenta multi-coating anti-reflection sheen",
+      "pbr_material_keywords": [
+        "optical_glass",
+        "ar_coating",
+        "dielectric",
+        "smooth"
+      ],
+      "color_hex": "#18241D",
+      "estimated_roughness": 0.02,
+      "estimated_metallic": 0.0,
+      "metallic_confidence": "high",
+      "roughness_confidence": "high",
+      "normal_intensity": 0.05,
+      "bounding_box": [
+        360.0,
+        455.0,
+        810.0,
+        615.0
+      ]
+    },
+    {
       "component_id": "comp_base_section",
       "display_name": "Base Section",
       "category": "structural_base",
-      "sub_category": "procedural_tier",
-      "visual_description": "Extracted tier (175px to 183px) with grounded palette",
+      "sub_category": "baseplate",
+      "visual_description": "Bottom baseplate trim with tripod mount socket collar and battery door seam",
       "pbr_material_keywords": [
-        "smooth",
-        "matte"
+        "magnesium",
+        "aluminum",
+        "dark_metal"
       ],
-      "color_hex": "#ABA9AF",
-      "estimated_roughness": 0.23,
-      "estimated_metallic": 0.0,
-      "normal_intensity": 0.25,
+      "color_hex": "#353438",
+      "estimated_roughness": 0.3,
+      "estimated_metallic": 0.75,
+      "metallic_confidence": "high",
+      "roughness_confidence": "high",
+      "normal_intensity": 0.2,
       "bounding_box": [
         945.9,
         293.5,
@@ -67,14 +151,70 @@
       ]
     }
   ],
-  "typography_and_labels": [],
+  "typography_and_labels": [
+    {
+      "text": "NEXUS",
+      "target_component": "comp_upper_structure",
+      "placement": "pentaprism_front_top",
+      "orientation": "horizontal",
+      "font_style": "bold modern sans-serif",
+      "color_hex": "#FFFFFF",
+      "application_method": "white_enamel_inlay"
+    },
+    {
+      "text": "PRO FX",
+      "target_component": "comp_upper_structure",
+      "placement": "pentaprism_front_sub",
+      "orientation": "horizontal",
+      "font_style": "light technical sans-serif",
+      "color_hex": "#D0D0D4",
+      "application_method": "white_enamel_inlay"
+    },
+    {
+      "text": "\u03b1",
+      "target_component": "comp_main_body",
+      "placement": "upper_right_chassis",
+      "orientation": "horizontal",
+      "font_style": "greek emblem sans-serif",
+      "color_hex": "#F2F0F5",
+      "application_method": "chrome_metal_badge"
+    },
+    {
+      "text": "35mm F/1.8",
+      "target_component": "comp_lens_barrel",
+      "placement": "front_lens_bezel_top",
+      "orientation": "curved_radial",
+      "font_style": "clean technical sans-serif",
+      "color_hex": "#FFFFFF",
+      "application_method": "laser_engraved_paint_filled"
+    },
+    {
+      "text": "\u00d855",
+      "target_component": "comp_lens_barrel",
+      "placement": "front_lens_bezel_left",
+      "orientation": "curved_radial",
+      "font_style": "technical sans-serif",
+      "color_hex": "#CCCCCC",
+      "application_method": "laser_engraved"
+    },
+    {
+      "text": "NEXUS OPTICS",
+      "target_component": "comp_lens_barrel",
+      "placement": "front_lens_bezel_right",
+      "orientation": "curved_radial",
+      "font_style": "sans-serif uppercase",
+      "color_hex": "#EEEEEE",
+      "application_method": "laser_engraved"
+    }
+  ],
   "lighting_and_environment": {
     "recommended_hdri_type": "studio",
     "recommended_hdri_keywords": [
-      "studio",
-      "white",
-      "softbox"
+      "studio_neutral",
+      "softbox",
+      "overhead_key",
+      "light_grey_cyclorama"
     ],
-    "key_light_direction": "front_left"
+    "key_light_direction": "front_left_overhead"
   }
 }

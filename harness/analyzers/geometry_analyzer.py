@@ -481,6 +481,8 @@ class GeometryAnalyzer:
             color_hex = c_meta.get("color_hex", "#A0A0A0")
             roughness = float(c_meta.get("estimated_roughness", 0.50))
             metallic = float(c_meta.get("estimated_metallic", 0.0))
+            metallic_conf = c_meta.get("metallic_confidence", "low")
+            roughness_conf = c_meta.get("roughness_confidence", "low")
 
             components[cid] = {
                 "display_name": c_meta.get("display_name", cid.replace("_", " ").title()),
@@ -512,6 +514,8 @@ class GeometryAnalyzer:
                 "color_hex": color_hex,
                 "estimated_roughness": roughness,
                 "estimated_metallic": metallic,
+                "metallic_confidence": metallic_conf,
+                "roughness_confidence": roughness_conf,
                 "pbr_material_keywords": c_meta.get("pbr_material_keywords", [matched_cat])
             }
 

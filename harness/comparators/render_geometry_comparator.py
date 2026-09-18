@@ -327,25 +327,36 @@ class RenderGeometryComparator:
                 tex_fids.append(0.50 * r_fid + 0.50 * m_fid)
 
                 disp_name = comp.get("display_name", cid.replace("_", " ").title())
-                if abs(m_target - m_rend) > 0.20:
+                m_conf = comp.get("metallic_confidence", "low" if self.target_geom.get("decomposition_mode") == "classical_cv_fallback" else "high")
+                m_threshold = 0.60 if m_conf == "low" else 0.20
+                if abs(m_target - m_rend) > m_threshold:
                     recommendations.append({
                         "parameter": f"{cid}_metallic",
                         "current": m_rend,
                         "target": m_target,
                         "target_delta": round(m_target - m_rend, 2),
-                        "priority": "HIGH",
+                        "priority": "HIGH" if m_conf == "high" else "LOW",
+                        "confidence": m_conf,
                         "action": f"Adjust {disp_name} metallic property towards {m_target:.2f} (currently {m_rend:.2f})"
                     })
-                if abs(r_target - r_rend) > 0.20:
+                r_conf = comp.get("roughness_confidence", "high")
+                r_threshold = 0.40 if r_conf == "low" else 0.20
+                if abs(r_target - r_rend) > r_threshold:
                     recommendations.append({
                         "parameter": f"{cid}_roughness",
                         "current": r_rend,
                         "target": r_target,
                         "target_delta": round(r_target - r_rend, 2),
                         "priority": "MEDIUM",
+                        "confidence": r_conf,
                         "action": f"Adjust {disp_name} roughness property towards {r_target:.2f} (currently {r_rend:.2f})"
                     })
         tex_score = float(np.mean(tex_fids)) if tex_fids else 85.0
+
+        for r in recommendations:
+            param = r.get("parameter", "unknown")
+            tgt = r.get("target") if r.get("target") is not None else r.get("target_delta", "")
+            r["recommendation_id"] = f"{param}:{tgt}"
 
         # Weighted Category Aggregations
         geom_score = float(np.mean(geom_fids)) if geom_fids else 85.0

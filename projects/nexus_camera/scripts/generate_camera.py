@@ -59,26 +59,26 @@ if os.path.isfile(geom_json):
     except Exception as e:
         print(f"[Generator] Warning loading geometry spec: {e}")
 
-# Dimensions in millimeters (1 BU = 1 mm) - Calibrated to 0.75:1 aspect ratio
-BODY_W = 134.0
-BODY_H = 78.0
-BODY_D = 46.0
+# Dimensions in millimeters (1 BU = 1 mm) - Multi-POV Photogrammetric Calibration (v4.1.0)
+BODY_W = 146.6
+BODY_H = 83.0
+BODY_D = 51.9
 
-GRIP_W = 34.0
-GRIP_H = 78.0
-GRIP_PROTRUSION = 24.0
+GRIP_W = 34.6
+GRIP_H = 83.0
+GRIP_PROTRUSION = 24.2
 
-PRISM_W = 34.0
-PRISM_H = 19.0
-PRISM_D = 38.0
+PRISM_W = 36.0
+PRISM_H = 22.1
+PRISM_D = 37.3
 
 LENS_DIAMETER = 65.0
-LENS_LENGTH = 73.0
-LENS_CX = 7.0   # Optical center offset relative to chassis origin
-LENS_CZ = -4.0
+LENS_LENGTH = 74.7
+LENS_CX = 17.3   # Optical center offset relative to chassis origin (25 px)
+LENS_CZ = 1.4    # Optical center elevation (42.9 mm above bottom baseplate plane)
 
-LCD_W = 74.0
-LCD_H = 50.0
+LCD_W = 73.3
+LCD_H = 49.8
 
 def clean_scene():
     """Clear previous scene objects and materials."""

@@ -4,7 +4,7 @@
   "execution_tier": "tier_3_apu_cpu",
   "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
   "opencl_accelerated": true,
-  "inference_time_ms": 31.37,
+  "inference_time_ms": 35.86,
   "normal_mode": "valid_tangent",
   "acceptance_gates": {
     "roughness_variance": {
@@ -14,7 +14,7 @@
       "mode": "procedural_perturbed"
     },
     "normal_flatness": {
-      "value": 0.4258,
+      "value": 0.4917,
       "threshold": "<= 0.98",
       "status": "PASS",
       "mode": "valid_tangent"
@@ -26,7 +26,7 @@
       "mode": "delit_clean"
     }
   },
-  "composite_confidence_q": 0.561,
+  "composite_confidence_q": 0.534,
   "maps": {
     "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/diffuse.png",
     "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/roughness.png",

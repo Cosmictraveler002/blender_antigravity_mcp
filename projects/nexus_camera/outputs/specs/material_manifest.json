@@ -3,7 +3,7 @@
     "component_id": "comp_upper_structure",
     "status": "pbr_downloaded",
     "source": "polyhaven",
-    "asset_id": "smooth_concrete_floor",
+    "asset_id": "metal_plate_02",
     "maps": {
       "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\diffuse.jpg",
       "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\roughness.jpg",
@@ -11,16 +11,16 @@
       "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\ao.jpg",
       "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\displacement.jpg"
     },
-    "target_color_hex": "#747276",
+    "target_color_hex": "#343336",
     "estimated_roughness": 0.22,
-    "estimated_metallic": 0.0,
+    "estimated_metallic": 0.17,
     "is_procedural_fallback": false
   },
   "comp_main_body": {
     "component_id": "comp_main_body",
     "status": "pbr_downloaded",
     "source": "polyhaven",
-    "asset_id": "smooth_concrete_floor",
+    "asset_id": "metal_plate_02",
     "maps": {
       "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\diffuse.jpg",
       "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\roughness.jpg",
@@ -28,8 +28,59 @@
       "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\ao.jpg",
       "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\displacement.jpg"
     },
-    "target_color_hex": "#49474B",
-    "estimated_roughness": 0.43,
+    "target_color_hex": "#353438",
+    "estimated_roughness": 0.17,
+    "estimated_metallic": 0.47,
+    "is_procedural_fallback": false
+  },
+  "comp_handgrip": {
+    "component_id": "comp_handgrip",
+    "status": "pbr_downloaded",
+    "source": "polyhaven",
+    "asset_id": "rubberized_track",
+    "maps": {
+      "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_handgrip\\diffuse.jpg",
+      "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_handgrip\\roughness.jpg",
+      "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_handgrip\\normal.jpg",
+      "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_handgrip\\ao.jpg",
+      "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_handgrip\\displacement.jpg"
+    },
+    "target_color_hex": "#1E1E20",
+    "estimated_roughness": 0.5,
+    "estimated_metallic": 0.0,
+    "is_procedural_fallback": false
+  },
+  "comp_lens_barrel": {
+    "component_id": "comp_lens_barrel",
+    "status": "pbr_downloaded",
+    "source": "polyhaven",
+    "asset_id": "metal_plate_02",
+    "maps": {
+      "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_barrel\\diffuse.jpg",
+      "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_barrel\\roughness.jpg",
+      "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_barrel\\normal.jpg",
+      "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_barrel\\ao.jpg",
+      "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_barrel\\displacement.jpg"
+    },
+    "target_color_hex": "#2A292C",
+    "estimated_roughness": 0.5,
+    "estimated_metallic": 0.85,
+    "is_procedural_fallback": false
+  },
+  "comp_lens_front_element": {
+    "component_id": "comp_lens_front_element",
+    "status": "pbr_downloaded",
+    "source": "polyhaven",
+    "asset_id": "smooth_concrete_floor",
+    "maps": {
+      "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_front_element\\diffuse.jpg",
+      "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_front_element\\roughness.jpg",
+      "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_front_element\\normal.jpg",
+      "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_front_element\\ao.jpg",
+      "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_lens_front_element\\displacement.jpg"
+    },
+    "target_color_hex": "#18241D",
+    "estimated_roughness": 0.5,
     "estimated_metallic": 0.0,
     "is_procedural_fallback": false
   },
@@ -37,7 +88,7 @@
     "component_id": "comp_base_section",
     "status": "pbr_downloaded",
     "source": "polyhaven",
-    "asset_id": "smooth_concrete_floor",
+    "asset_id": "metal_plate_02",
     "maps": {
       "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\diffuse.jpg",
       "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\roughness.jpg",
@@ -45,9 +96,9 @@
       "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\ao.jpg",
       "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\displacement.jpg"
     },
-    "target_color_hex": "#ABA9AF",
+    "target_color_hex": "#353438",
     "estimated_roughness": 0.5,
-    "estimated_metallic": 0.0,
+    "estimated_metallic": 0.75,
     "is_procedural_fallback": false
   }
 }

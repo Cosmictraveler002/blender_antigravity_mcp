@@ -22,7 +22,7 @@ This repository is an **automated 2D image to 3D Blender reconstruction & closed
 - **LOW-CONFIDENCE JOINT RULE**: When `snapping_confidence == 0.0` for a component (unverified semantic prior), Stage 3 verification automatically widens geometric tolerances by $2.5\times$ ($0.05 \to 0.125$ error, $0.08 \to 0.20$ structural). Do not trigger structural rebuilds on unverified boundaries unless the widened threshold is exceeded.
 - **SHADER GRAPH BUMP RULE**: When `normal_mode == "photometric_scharr_fallback"` in the SVBRDF manifest, `material_node_builder` automatically injects procedural Voronoi micro-bump (Scale: 250, Strength: 0.08) to guarantee physical micro-relief in rendered surfaces.
 - **STAGE SEQUENCE GUARDRAIL**: Pipeline stages MUST be executed in strictly linear order: `Stage 1 (Analyze)` $\to$ `Stage 2 (Generate)` $\to$ `Stage Capture (Multi-Viewport)` $\to$ `Stage 3 (Compare)` $\to$ `Stage 4 (Refine)` $\to$ `Stage 5 (Report)`. Never skip or reorder stages.
-- **STAGE 1 ARTIFACT INVARIANT**: Stage 2 generation is strictly blocked until all 9 Stage 1 specification artifacts exist in `outputs/specs/` (`geometry_design_doc.json`, `geometry_analysis_annotated.png`, `color_texture_design_doc.json`, `color_texture_swatches.png`, `placement_report.json`, `placement_report.md`, `structural_geometry_report.json`, `material_manifest.json`, `master_3d_design_specification.json`).
+- **STAGE 1 ARTIFACT INVARIANT**: Stage 2 generation is strictly blocked until all Stage 1 specification artifacts exist in `outputs/specs/` (`multi_pov_dimensional_specification.json`, `multi_pov_dimensional_report.md`, `geometry_design_doc.json`, `geometry_analysis_annotated.png`, `color_texture_design_doc.json`, `color_texture_swatches.png`, `placement_report.json`, `placement_report.md`, `structural_geometry_report.json`, `material_manifest.json`, `master_3d_design_specification.json`). Crucially, `master_3d_design_specification.json` is synthesized directly from `multi_pov_dimensional_specification.json` (alongside vision, geometry, color/texture, and structural analysis) and serves as the single source of truth used for generating the 3D model in Stage 2.
 - **STAGE 3 DUAL GEOMETRY INVARIANT**: In Stage 3, the rendered image MUST be analyzed with the exact same `GeometryAnalyzer` used on the reference image, outputting `render_geometry_doc.json` and `render_geometry_annotated.png`. Raw pixel-only comparisons without dual geometric decomposition are forbidden.
 - **STAGE 4 AUTO-REBUILD ESCALATION**: When `comparison_report.json` flags structural recommendations (`requires_rebuild == True`, aspect error $> 3.0\%$, height error $> 8.0\%$, or contour MAE $> 0.040$), the refiner MUST escalate to `trigger_rebuild()` to regenerate geometry procedurally (max 2 rebuilds) before attempting micro-vertex tweaks.
 - **STAGE 5 COMPLETION INVARIANT**: A project is only complete when all multi-gate convergence thresholds are met (Fidelity $\ge 92.0\%$, Aspect $\le 2.0\%$, Height $\le 0.8\%$, $\Delta E_{00} \le 6.5$, Contour MAE $\le 0.040$) or max iterations exhausted, and Stage 5 has emitted `final_report.md` (with 360° contact sheet) and `final_report.json`.
@@ -49,14 +49,17 @@ Every 3D reconstruction follows this deterministic sequence:
 
 ```mermaid
 graph TD
-    Ref[Reference Image] --> S1[Stage 1: Analyze]
-    S1 --> Specs[Design Specs JSON]
-    Specs --> S2[Stage 2: Generate]
+    Ref[Reference Images Multi-POV] --> S1[Stage 1: Analyze]
+    S1 --> MultiPOVSpec[multi_pov_dimensional_specification.json]
+    S1 --> SubSpecs[Analyzers: Geometry, Color, Placement, Structural]
+    MultiPOVSpec --> MasterSpec[master_3d_design_specification.json]
+    SubSpecs --> MasterSpec
+    MasterSpec -->|Primary Blueprint for Model Generation| S2[Stage 2: Generate 3D Model]
     S2 --> Render[Initial Render PNG]
     Render --> S_Cap[Stage: Capture]
     S_Cap --> VP_Renders[14 Viewport PNGs & Contact Sheet]
     VP_Renders --> S3[Stage 3: Compare]
-    Specs --> S3
+    MasterSpec --> S3
     S3 --> CompReport[Comparison Report & Scores]
     CompReport --> S4[Stage 4: Refine]
     S4 -->|Iterate until convergence| S2
@@ -91,6 +94,8 @@ When Stage 2 (`generate`) or Stage 4 (`refine`) invokes a project script in Blen
 | Variable | Description |
 | :--- | :--- |
 | `HARNESS_SPEC_DIR` | Absolute path to `projects/<project>/outputs/specs/` |
+| `HARNESS_MASTER_SPEC_JSON` | Absolute path to `master_3d_design_specification.json` (compiled blueprint for model generation) |
+| `HARNESS_MULTI_POV_JSON` | Absolute path to `multi_pov_dimensional_specification.json` (multi-viewpoint photogrammetry) |
 | `HARNESS_GEOM_JSON` | Absolute path to `geometry_design_doc.json` |
 | `HARNESS_COLOR_JSON` | Absolute path to `color_texture_design_doc.json` |
 | `HARNESS_RENDER_DIR` | Absolute path to `projects/<project>/outputs/renders/` |
@@ -103,13 +108,21 @@ When Stage 2 (`generate`) or Stage 4 (`refine`) invokes a project script in Blen
 import os
 import json
 
-geom_path = os.environ.get("HARNESS_GEOM_JSON")
-if not geom_path or not os.path.exists(geom_path):
-    # Fallback to relative project structure
-    geom_path = os.path.join(os.path.dirname(__file__), "..", "outputs", "specs", "geometry_design_doc.json")
+# Primary: Ingest the unified master 3D design specification (created from multi_pov_dimensional_specification.json)
+master_spec_path = os.environ.get("HARNESS_MASTER_SPEC_JSON")
+if not master_spec_path or not os.path.exists(master_spec_path):
+    master_spec_path = os.path.join(os.path.dirname(__file__), "..", "outputs", "specs", "master_3d_design_specification.json")
 
-with open(geom_path, "r", encoding="utf-8") as f:
-    geom_spec = json.load(f)
+with open(master_spec_path, "r", encoding="utf-8") as f:
+    master_spec = json.load(f)
+
+# Extract calibrated multi-POV photogrammetry and procedural constants for 3D model generation
+multi_pov_data = master_spec.get("multi_pov_photogrammetry", {})
+gen_constants = multi_pov_data.get("procedural_generator_constants", {})
+
+# Auxiliary geometry & color access if needed
+geom_spec = master_spec.get("geometry", {})
+color_spec = master_spec.get("materials_and_colors", {})
 ```
 
 ---
@@ -159,12 +172,13 @@ python -m harness run <name> --stage analyze
 ```
 This inspects the image and scene mesh, producing:
 - `gemini_vision_analysis.json` (semantic breakdown, identified components, typography)
+- `multi_pov_dimensional_specification.json` & `multi_pov_dimensional_report.md` (multi-viewpoint photogrammetric calibration, mm/px scale, cross-view coherence, procedural generator constants)
 - `geometry_design_doc.json` (aspect ratios, radial mesh, component bounds)
 - `structural_geometry_report.json` / `.md` (7-step structural profiling: Z-slices, symmetry, primitives, material zones, category, schema match)
 - `color_texture_design_doc.json` (CIE L\*a\*b\* dominant clusters, Principled BSDF parameters, Gabor textures)
 - `placement_report.json` / `placement_report.md` (6-view spatial coordinates)
 - `material_manifest.json` (PolyHaven/ambientCG PBR downloaded texture maps)
-- `master_3d_design_specification.json` (merged blueprint)
+- `master_3d_design_specification.json` (**Unified Master Blueprint**: Created directly by merging `multi_pov_dimensional_specification.json` with the vision, geometry, color, placement, and structural outputs)
 
 ### Step 5: Post-Stage 1 Requirement (Project-Level Script Creation from Analyzed Specs)
 > [!IMPORTANT]
@@ -173,8 +187,9 @@ This inspects the image and scene mesh, producing:
 > - For **every project**, after Stage 1 analysis generates the specification reports in `outputs/specs/`, the project-specific scripts **MUST be created inside the project folder** (`projects/<name>/scripts/`) derived entirely from the analyzed report:
 
 #### Step 5a: Implement Procedural Generation Script (`projects/<name>/scripts/generate_<name>.py`)
-- Reads dimensions, coordinates, and primitives dynamically from `HARNESS_GEOM_JSON` and `HARNESS_COLOR_JSON` for parametric scalability.
-- Reads resolved PBR texture maps from `material_manifest.json`.
+- **Primary Data Source**: Reads `master_3d_design_specification.json` (which incorporates `multi_pov_dimensional_specification.json`'s procedural constants, calibrated dimensions, and component bounding boxes) as the definitive specification for generating the 3D model.
+- Ingests dimensions, coordinates, and primitives dynamically from `master_spec["multi_pov_photogrammetry"]` and `master_spec["geometry"]` for parametric accuracy.
+- Reads resolved PBR texture maps from `material_manifest.json` (or `master_spec["pbr_materials"]`).
 - When using diffuse packaging textures, inserts a `LabelTint` (`ShaderNodeMix`, RGBA Multiply, Factor 1.0) node between the texture color and the Principled BSDF `Base Color` to allow closed-loop color tuning without texture override blockage.
 - Constructs the 3D geometry in Blender using `bpy` and `bmesh`.
 - Transmits commands via `harness.blender.client.send_blender_code`.

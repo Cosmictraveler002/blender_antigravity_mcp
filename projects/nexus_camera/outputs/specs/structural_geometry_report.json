@@ -1,37 +1,37 @@
 {
   "tier1": {
-    "object_name": "Cube",
+    "object_name": "AFAssistWindow",
     "bounding_box": {
-      "x_min": -1.0,
-      "x_max": 1.0,
-      "width": 2.0,
-      "y_min": -1.0,
-      "y_max": 1.0,
-      "depth": 2.0,
-      "z_min": -1.0,
-      "z_max": 1.0,
-      "height": 2.0
+      "x_min": 38.5229,
+      "x_max": 43.4771,
+      "width": 4.9543,
+      "y_min": -24.35,
+      "y_max": -22.85,
+      "depth": 1.5,
+      "z_min": 14.5229,
+      "z_max": 19.4771,
+      "height": 4.9543
     },
     "aspect_ratio_height_to_width": 1.0,
-    "aspect_ratio_height_to_depth": 1.0,
+    "aspect_ratio_height_to_depth": 3.303,
     "symmetry": {
       "rotational_z": {
         "is_symmetric": false,
-        "confidence": 0.85,
-        "mean_circularity": 0.785,
+        "confidence": 0.766,
+        "mean_circularity": 0.672,
         "symmetry_order": "none"
       },
       "mirror_xz": {
-        "is_symmetric": true,
-        "confidence": 1.0
+        "is_symmetric": false,
+        "confidence": 0.0
       },
       "mirror_yz": {
-        "is_symmetric": true,
-        "confidence": 1.0
+        "is_symmetric": false,
+        "confidence": 0.0
       }
     },
     "dominant_category": "camera",
-    "primitive_segment_count": 1,
+    "primitive_segment_count": 11,
     "material_slot_count": 1
   },
   "tier2": {
@@ -40,1737 +40,2057 @@
       {
         "slice_index": 0,
         "rel_z": 0.0,
-        "world_z": -1.0,
+        "world_z": 14.5229,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -24.15
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
+        "radius_mean": 0.0,
+        "radius_min": 0.0,
+        "radius_max": 0.0,
         "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "area": 0.0,
+        "perimeter": 0.0,
+        "circularity": 0.0,
+        "point_count": 3
       },
       {
         "slice_index": 1,
         "rel_z": 0.0101,
-        "world_z": -0.9798,
+        "world_z": 14.5729,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 0.6752,
+        "radius_min": 0.6609,
+        "radius_max": 0.6888,
+        "radius_var": 0.00013,
+        "area": 0.9264,
+        "perimeter": 3.7849,
+        "circularity": 0.8127,
+        "point_count": 12
       },
       {
         "slice_index": 2,
         "rel_z": 0.0202,
-        "world_z": -0.9596,
+        "world_z": 14.6229,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 0.7677,
+        "radius_min": 0.7149,
+        "radius_max": 0.8274,
+        "radius_var": 0.002131,
+        "area": 1.64,
+        "perimeter": 4.8021,
+        "circularity": 0.8937,
+        "point_count": 12
       },
       {
         "slice_index": 3,
         "rel_z": 0.0303,
-        "world_z": -0.9394,
+        "world_z": 14.673,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 0.9013,
+        "radius_min": 0.7358,
+        "radius_max": 0.9942,
+        "radius_var": 0.010548,
+        "area": 2.2778,
+        "perimeter": 5.6722,
+        "circularity": 0.8897,
+        "point_count": 16
       },
       {
         "slice_index": 4,
         "rel_z": 0.0404,
-        "world_z": -0.9192,
+        "world_z": 14.723,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.0278,
+        "radius_min": 0.7561,
+        "radius_max": 1.1182,
+        "radius_var": 0.018813,
+        "area": 2.7571,
+        "perimeter": 6.3331,
+        "circularity": 0.8639,
+        "point_count": 20
       },
       {
         "slice_index": 5,
         "rel_z": 0.0505,
-        "world_z": -0.899,
+        "world_z": 14.7731,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.0811,
+        "radius_min": 0.8267,
+        "radius_max": 1.2012,
+        "radius_var": 0.023092,
+        "area": 3.0866,
+        "perimeter": 6.7681,
+        "circularity": 0.8467,
+        "point_count": 16
       },
       {
         "slice_index": 6,
         "rel_z": 0.0606,
-        "world_z": -0.8788,
+        "world_z": 14.8231,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.1679,
+        "radius_min": 0.96,
+        "radius_max": 1.2797,
+        "radius_var": 0.013507,
+        "area": 3.3714,
+        "perimeter": 7.124,
+        "circularity": 0.8348,
+        "point_count": 20
       },
       {
         "slice_index": 7,
         "rel_z": 0.0707,
-        "world_z": -0.8586,
+        "world_z": 14.8732,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.2231,
+        "radius_min": 1.1342,
+        "radius_max": 1.3477,
+        "radius_var": 0.008355,
+        "area": 3.6067,
+        "perimeter": 7.4311,
+        "circularity": 0.8207,
+        "point_count": 20
       },
       {
         "slice_index": 8,
         "rel_z": 0.0808,
-        "world_z": -0.8384,
+        "world_z": 14.9232,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.336,
+        "radius_min": 1.2067,
+        "radius_max": 1.4164,
+        "radius_var": 0.008524,
+        "area": 3.8315,
+        "perimeter": 7.7315,
+        "circularity": 0.8055,
+        "point_count": 12
       },
       {
         "slice_index": 9,
         "rel_z": 0.0909,
-        "world_z": -0.8182,
+        "world_z": 14.9732,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.4007,
+        "radius_min": 1.2662,
+        "radius_max": 1.4857,
+        "radius_var": 0.009255,
+        "area": 4.0561,
+        "perimeter": 8.0311,
+        "circularity": 0.7903,
+        "point_count": 12
       },
       {
         "slice_index": 10,
         "rel_z": 0.101,
-        "world_z": -0.798,
+        "world_z": 15.0233,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.4664,
+        "radius_min": 1.3273,
+        "radius_max": 1.5555,
+        "radius_var": 0.009934,
+        "area": 4.2808,
+        "perimeter": 8.3307,
+        "circularity": 0.7751,
+        "point_count": 12
       },
       {
         "slice_index": 11,
         "rel_z": 0.1111,
-        "world_z": -0.7778,
+        "world_z": 15.0733,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.533,
+        "radius_min": 1.3897,
+        "radius_max": 1.6258,
+        "radius_var": 0.010563,
+        "area": 4.5055,
+        "perimeter": 8.6303,
+        "circularity": 0.7602,
+        "point_count": 12
       },
       {
         "slice_index": 12,
         "rel_z": 0.1212,
-        "world_z": -0.7576,
+        "world_z": 15.1234,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.6239,
+        "radius_min": 1.4533,
+        "radius_max": 1.6958,
+        "radius_var": 0.010022,
+        "area": 4.7286,
+        "perimeter": 8.9283,
+        "circularity": 0.7454,
+        "point_count": 16
       },
       {
         "slice_index": 13,
         "rel_z": 0.1313,
-        "world_z": -0.7374,
+        "world_z": 15.1734,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.6819,
+        "radius_min": 1.518,
+        "radius_max": 1.7517,
+        "radius_var": 0.009091,
+        "area": 4.9158,
+        "perimeter": 9.1937,
+        "circularity": 0.7308,
+        "point_count": 16
       },
       {
         "slice_index": 14,
         "rel_z": 0.1414,
-        "world_z": -0.7172,
+        "world_z": 15.2235,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.7392,
+        "radius_min": 1.5835,
+        "radius_max": 1.8079,
+        "radius_var": 0.0082,
+        "area": 5.099,
+        "perimeter": 9.455,
+        "circularity": 0.7168,
+        "point_count": 16
       },
       {
         "slice_index": 15,
         "rel_z": 0.1515,
-        "world_z": -0.697,
+        "world_z": 15.2735,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.786,
+        "radius_min": 1.6499,
+        "radius_max": 1.8579,
+        "radius_var": 0.007168,
+        "area": 5.2599,
+        "perimeter": 9.6849,
+        "circularity": 0.7047,
+        "point_count": 16
       },
       {
         "slice_index": 16,
         "rel_z": 0.1616,
-        "world_z": -0.6768,
+        "world_z": 15.3235,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.8218,
+        "radius_min": 1.7169,
+        "radius_max": 1.8968,
+        "radius_var": 0.00565,
+        "area": 5.3903,
+        "perimeter": 9.8578,
+        "circularity": 0.6971,
+        "point_count": 16
       },
       {
         "slice_index": 17,
         "rel_z": 0.1717,
-        "world_z": -0.6566,
+        "world_z": 15.3736,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.8622,
+        "radius_min": 1.7846,
+        "radius_max": 1.9374,
+        "radius_var": 0.004415,
+        "area": 5.5195,
+        "perimeter": 10.0302,
+        "circularity": 0.6894,
+        "point_count": 24
       },
       {
         "slice_index": 18,
         "rel_z": 0.1818,
-        "world_z": -0.6364,
+        "world_z": 15.4236,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.9142,
+        "radius_min": 1.8171,
+        "radius_max": 1.9738,
+        "radius_var": 0.004798,
+        "area": 5.6306,
+        "perimeter": 10.172,
+        "circularity": 0.6838,
+        "point_count": 12
       },
       {
         "slice_index": 19,
         "rel_z": 0.1919,
-        "world_z": -0.6162,
+        "world_z": 15.4737,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.9456,
+        "radius_min": 1.8476,
+        "radius_max": 2.006,
+        "radius_var": 0.004883,
+        "area": 5.7309,
+        "perimeter": 10.3058,
+        "circularity": 0.6781,
+        "point_count": 12
       },
       {
         "slice_index": 20,
         "rel_z": 0.202,
-        "world_z": -0.596,
+        "world_z": 15.5237,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.9769,
+        "radius_min": 1.8782,
+        "radius_max": 2.0381,
+        "radius_var": 0.004965,
+        "area": 5.8312,
+        "perimeter": 10.4395,
+        "circularity": 0.6724,
+        "point_count": 12
       },
       {
         "slice_index": 21,
         "rel_z": 0.2121,
-        "world_z": -0.5758,
+        "world_z": 15.5738,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.0084,
+        "radius_min": 1.9089,
+        "radius_max": 2.0704,
+        "radius_var": 0.005046,
+        "area": 5.9316,
+        "perimeter": 10.5733,
+        "circularity": 0.6667,
+        "point_count": 12
       },
       {
         "slice_index": 22,
         "rel_z": 0.2222,
-        "world_z": -0.5556,
+        "world_z": 15.6238,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.0399,
+        "radius_min": 1.9397,
+        "radius_max": 2.1026,
+        "radius_var": 0.005124,
+        "area": 6.0319,
+        "perimeter": 10.707,
+        "circularity": 0.6612,
+        "point_count": 12
       },
       {
         "slice_index": 23,
         "rel_z": 0.2323,
-        "world_z": -0.5354,
+        "world_z": 15.6739,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.0715,
+        "radius_min": 1.9706,
+        "radius_max": 2.1349,
+        "radius_var": 0.005201,
+        "area": 6.1322,
+        "perimeter": 10.8408,
+        "circularity": 0.6557,
+        "point_count": 12
       },
       {
         "slice_index": 24,
         "rel_z": 0.2424,
-        "world_z": -0.5152,
+        "world_z": 15.7239,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1031,
+        "radius_min": 2.0016,
+        "radius_max": 2.1672,
+        "radius_var": 0.005275,
+        "area": 6.2325,
+        "perimeter": 10.9745,
+        "circularity": 0.6503,
+        "point_count": 12
       },
       {
         "slice_index": 25,
         "rel_z": 0.2525,
-        "world_z": -0.4949,
+        "world_z": 15.7739,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1348,
+        "radius_min": 2.0326,
+        "radius_max": 2.1996,
+        "radius_var": 0.005348,
+        "area": 6.3328,
+        "perimeter": 11.1083,
+        "circularity": 0.6449,
+        "point_count": 12
       },
       {
         "slice_index": 26,
         "rel_z": 0.2626,
-        "world_z": -0.4747,
+        "world_z": 15.824,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1666,
+        "radius_min": 2.0637,
+        "radius_max": 2.232,
+        "radius_var": 0.005418,
+        "area": 6.4331,
+        "perimeter": 11.2421,
+        "circularity": 0.6396,
+        "point_count": 12
       },
       {
         "slice_index": 27,
         "rel_z": 0.2727,
-        "world_z": -0.4545,
+        "world_z": 15.874,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1984,
+        "radius_min": 2.0949,
+        "radius_max": 2.2644,
+        "radius_var": 0.005487,
+        "area": 6.5334,
+        "perimeter": 11.3758,
+        "circularity": 0.6344,
+        "point_count": 12
       },
       {
         "slice_index": 28,
         "rel_z": 0.2828,
-        "world_z": -0.4343,
+        "world_z": 15.9241,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.2413,
+        "radius_min": 2.1262,
+        "radius_max": 2.2898,
+        "radius_var": 0.004482,
+        "area": 6.6168,
+        "perimeter": 11.4978,
+        "circularity": 0.629,
+        "point_count": 16
       },
       {
         "slice_index": 29,
         "rel_z": 0.2929,
-        "world_z": -0.4141,
+        "world_z": 15.9741,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.2679,
+        "radius_min": 2.1575,
+        "radius_max": 2.3148,
+        "radius_var": 0.004103,
+        "area": 6.697,
+        "perimeter": 11.619,
+        "circularity": 0.6234,
+        "point_count": 16
       },
       {
         "slice_index": 30,
         "rel_z": 0.303,
-        "world_z": -0.3939,
+        "world_z": 16.0242,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.2862,
+        "radius_min": 2.1889,
+        "radius_max": 2.3398,
+        "radius_var": 0.003619,
+        "area": 6.7768,
+        "perimeter": 11.724,
+        "circularity": 0.6196,
+        "point_count": 16
       },
       {
         "slice_index": 31,
         "rel_z": 0.3131,
-        "world_z": -0.3737,
+        "world_z": 16.0742,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3018,
+        "radius_min": 2.2203,
+        "radius_max": 2.3607,
+        "radius_var": 0.003692,
+        "area": 6.8429,
+        "perimeter": 11.8191,
+        "circularity": 0.6156,
+        "point_count": 16
       },
       {
         "slice_index": 32,
         "rel_z": 0.3232,
-        "world_z": -0.3535,
+        "world_z": 16.1242,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3133,
+        "radius_min": 2.2505,
+        "radius_max": 2.3763,
+        "radius_var": 0.00355,
+        "area": 6.892,
+        "perimeter": 11.8884,
+        "circularity": 0.6128,
+        "point_count": 16
       },
       {
         "slice_index": 33,
         "rel_z": 0.3333,
-        "world_z": -0.3333,
+        "world_z": 16.1743,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3524,
+        "radius_min": 2.2599,
+        "radius_max": 2.3919,
+        "radius_var": 0.002881,
+        "area": 6.9398,
+        "perimeter": 11.9523,
+        "circularity": 0.6105,
+        "point_count": 16
       },
       {
         "slice_index": 34,
         "rel_z": 0.3434,
-        "world_z": -0.3131,
+        "world_z": 16.2243,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3672,
+        "radius_min": 2.2693,
+        "radius_max": 2.4075,
+        "radius_var": 0.003247,
+        "area": 6.9852,
+        "perimeter": 12.0011,
+        "circularity": 0.6095,
+        "point_count": 16
       },
       {
         "slice_index": 35,
         "rel_z": 0.3535,
-        "world_z": -0.2929,
+        "world_z": 16.2744,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3652,
+        "radius_min": 2.2787,
+        "radius_max": 2.419,
+        "radius_var": 0.003813,
+        "area": 7.0192,
+        "perimeter": 12.0436,
+        "circularity": 0.6081,
+        "point_count": 12
       },
       {
         "slice_index": 36,
         "rel_z": 0.3636,
-        "world_z": -0.2727,
+        "world_z": 16.3244,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3747,
+        "radius_min": 2.2881,
+        "radius_max": 2.4287,
+        "radius_var": 0.003826,
+        "area": 7.0491,
+        "perimeter": 12.0834,
+        "circularity": 0.6067,
+        "point_count": 12
       },
       {
         "slice_index": 37,
         "rel_z": 0.3737,
-        "world_z": -0.2525,
+        "world_z": 16.3745,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3843,
+        "radius_min": 2.2975,
+        "radius_max": 2.4384,
+        "radius_var": 0.00384,
+        "area": 7.0789,
+        "perimeter": 12.1232,
+        "circularity": 0.6053,
+        "point_count": 12
       },
       {
         "slice_index": 38,
         "rel_z": 0.3838,
-        "world_z": -0.2323,
+        "world_z": 16.4245,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3938,
+        "radius_min": 2.3069,
+        "radius_max": 2.4481,
+        "radius_var": 0.003853,
+        "area": 7.1088,
+        "perimeter": 12.163,
+        "circularity": 0.6038,
+        "point_count": 12
       },
       {
         "slice_index": 39,
         "rel_z": 0.3939,
-        "world_z": -0.2121,
+        "world_z": 16.4745,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4034,
+        "radius_min": 2.3163,
+        "radius_max": 2.4578,
+        "radius_var": 0.003866,
+        "area": 7.1387,
+        "perimeter": 12.2029,
+        "circularity": 0.6024,
+        "point_count": 12
       },
       {
         "slice_index": 40,
         "rel_z": 0.404,
-        "world_z": -0.1919,
+        "world_z": 16.5246,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4129,
+        "radius_min": 2.3258,
+        "radius_max": 2.4675,
+        "radius_var": 0.003879,
+        "area": 7.1685,
+        "perimeter": 12.2427,
+        "circularity": 0.601,
+        "point_count": 12
       },
       {
         "slice_index": 41,
         "rel_z": 0.4141,
-        "world_z": -0.1717,
+        "world_z": 16.5746,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4225,
+        "radius_min": 2.3352,
+        "radius_max": 2.4772,
+        "radius_var": 0.003892,
+        "area": 7.1984,
+        "perimeter": 12.2825,
+        "circularity": 0.5996,
+        "point_count": 12
       },
       {
         "slice_index": 42,
         "rel_z": 0.4242,
-        "world_z": -0.1515,
+        "world_z": 16.6247,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.432,
+        "radius_min": 2.3446,
+        "radius_max": 2.4869,
+        "radius_var": 0.003905,
+        "area": 7.2283,
+        "perimeter": 12.3223,
+        "circularity": 0.5982,
+        "point_count": 12
       },
       {
         "slice_index": 43,
         "rel_z": 0.4343,
-        "world_z": -0.1313,
+        "world_z": 16.6747,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4416,
+        "radius_min": 2.3541,
+        "radius_max": 2.4966,
+        "radius_var": 0.003918,
+        "area": 7.2581,
+        "perimeter": 12.3621,
+        "circularity": 0.5968,
+        "point_count": 12
       },
       {
         "slice_index": 44,
         "rel_z": 0.4444,
-        "world_z": -0.1111,
+        "world_z": 16.7248,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4512,
+        "radius_min": 2.3635,
+        "radius_max": 2.5063,
+        "radius_var": 0.00393,
+        "area": 7.288,
+        "perimeter": 12.4019,
+        "circularity": 0.5954,
+        "point_count": 12
       },
       {
         "slice_index": 45,
         "rel_z": 0.4545,
-        "world_z": -0.0909,
+        "world_z": 16.7748,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4608,
+        "radius_min": 2.3729,
+        "radius_max": 2.5161,
+        "radius_var": 0.003943,
+        "area": 7.3178,
+        "perimeter": 12.4418,
+        "circularity": 0.5941,
+        "point_count": 12
       },
       {
         "slice_index": 46,
         "rel_z": 0.4646,
-        "world_z": -0.0707,
+        "world_z": 16.8248,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.482,
+        "radius_min": 2.3824,
+        "radius_max": 2.5234,
+        "radius_var": 0.003371,
+        "area": 7.3422,
+        "perimeter": 12.4781,
+        "circularity": 0.5926,
+        "point_count": 16
       },
       {
         "slice_index": 47,
         "rel_z": 0.4747,
-        "world_z": -0.0505,
+        "world_z": 16.8749,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.487,
+        "radius_min": 2.3918,
+        "radius_max": 2.5274,
+        "radius_var": 0.003052,
+        "area": 7.3575,
+        "perimeter": 12.5095,
+        "circularity": 0.5908,
+        "point_count": 16
       },
       {
         "slice_index": 48,
         "rel_z": 0.4848,
-        "world_z": -0.0303,
+        "world_z": 16.9249,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4853,
+        "radius_min": 2.4013,
+        "radius_max": 2.5314,
+        "radius_var": 0.002638,
+        "area": 7.3718,
+        "perimeter": 12.5315,
+        "circularity": 0.5899,
+        "point_count": 16
       },
       {
         "slice_index": 49,
         "rel_z": 0.4949,
-        "world_z": -0.0101,
+        "world_z": 16.975,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4793,
+        "radius_min": 2.4107,
+        "radius_max": 2.5355,
+        "radius_var": 0.003074,
+        "area": 7.3842,
+        "perimeter": 12.5485,
+        "circularity": 0.5893,
+        "point_count": 16
       },
       {
         "slice_index": 50,
         "rel_z": 0.5051,
-        "world_z": 0.0101,
+        "world_z": 17.025,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4793,
+        "radius_min": 2.4107,
+        "radius_max": 2.5355,
+        "radius_var": 0.003074,
+        "area": 7.3842,
+        "perimeter": 12.5485,
+        "circularity": 0.5893,
+        "point_count": 16
       },
       {
         "slice_index": 51,
         "rel_z": 0.5152,
-        "world_z": 0.0303,
+        "world_z": 17.0751,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4853,
+        "radius_min": 2.4013,
+        "radius_max": 2.5314,
+        "radius_var": 0.002638,
+        "area": 7.3718,
+        "perimeter": 12.5315,
+        "circularity": 0.5899,
+        "point_count": 16
       },
       {
         "slice_index": 52,
         "rel_z": 0.5253,
-        "world_z": 0.0505,
+        "world_z": 17.1251,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.487,
+        "radius_min": 2.3918,
+        "radius_max": 2.5274,
+        "radius_var": 0.003052,
+        "area": 7.3575,
+        "perimeter": 12.5095,
+        "circularity": 0.5908,
+        "point_count": 16
       },
       {
         "slice_index": 53,
         "rel_z": 0.5354,
-        "world_z": 0.0707,
+        "world_z": 17.1752,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.482,
+        "radius_min": 2.3824,
+        "radius_max": 2.5234,
+        "radius_var": 0.003371,
+        "area": 7.3422,
+        "perimeter": 12.4781,
+        "circularity": 0.5926,
+        "point_count": 16
       },
       {
         "slice_index": 54,
         "rel_z": 0.5455,
-        "world_z": 0.0909,
+        "world_z": 17.2252,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4608,
+        "radius_min": 2.3729,
+        "radius_max": 2.5161,
+        "radius_var": 0.003943,
+        "area": 7.3178,
+        "perimeter": 12.4418,
+        "circularity": 0.5941,
+        "point_count": 12
       },
       {
         "slice_index": 55,
         "rel_z": 0.5556,
-        "world_z": 0.1111,
+        "world_z": 17.2752,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4512,
+        "radius_min": 2.3635,
+        "radius_max": 2.5063,
+        "radius_var": 0.00393,
+        "area": 7.288,
+        "perimeter": 12.4019,
+        "circularity": 0.5954,
+        "point_count": 12
       },
       {
         "slice_index": 56,
         "rel_z": 0.5657,
-        "world_z": 0.1313,
+        "world_z": 17.3253,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4416,
+        "radius_min": 2.3541,
+        "radius_max": 2.4966,
+        "radius_var": 0.003918,
+        "area": 7.2581,
+        "perimeter": 12.3621,
+        "circularity": 0.5968,
+        "point_count": 12
       },
       {
         "slice_index": 57,
         "rel_z": 0.5758,
-        "world_z": 0.1515,
+        "world_z": 17.3753,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.432,
+        "radius_min": 2.3446,
+        "radius_max": 2.4869,
+        "radius_var": 0.003905,
+        "area": 7.2283,
+        "perimeter": 12.3223,
+        "circularity": 0.5982,
+        "point_count": 12
       },
       {
         "slice_index": 58,
         "rel_z": 0.5859,
-        "world_z": 0.1717,
+        "world_z": 17.4254,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4225,
+        "radius_min": 2.3352,
+        "radius_max": 2.4772,
+        "radius_var": 0.003892,
+        "area": 7.1984,
+        "perimeter": 12.2825,
+        "circularity": 0.5996,
+        "point_count": 12
       },
       {
         "slice_index": 59,
         "rel_z": 0.596,
-        "world_z": 0.1919,
+        "world_z": 17.4754,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4129,
+        "radius_min": 2.3258,
+        "radius_max": 2.4675,
+        "radius_var": 0.003879,
+        "area": 7.1685,
+        "perimeter": 12.2427,
+        "circularity": 0.601,
+        "point_count": 12
       },
       {
         "slice_index": 60,
         "rel_z": 0.6061,
-        "world_z": 0.2121,
+        "world_z": 17.5255,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.4034,
+        "radius_min": 2.3163,
+        "radius_max": 2.4578,
+        "radius_var": 0.003866,
+        "area": 7.1387,
+        "perimeter": 12.2029,
+        "circularity": 0.6024,
+        "point_count": 12
       },
       {
         "slice_index": 61,
         "rel_z": 0.6162,
-        "world_z": 0.2323,
+        "world_z": 17.5755,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3938,
+        "radius_min": 2.3069,
+        "radius_max": 2.4481,
+        "radius_var": 0.003853,
+        "area": 7.1088,
+        "perimeter": 12.163,
+        "circularity": 0.6038,
+        "point_count": 12
       },
       {
         "slice_index": 62,
         "rel_z": 0.6263,
-        "world_z": 0.2525,
+        "world_z": 17.6255,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3843,
+        "radius_min": 2.2975,
+        "radius_max": 2.4384,
+        "radius_var": 0.00384,
+        "area": 7.0789,
+        "perimeter": 12.1232,
+        "circularity": 0.6053,
+        "point_count": 12
       },
       {
         "slice_index": 63,
         "rel_z": 0.6364,
-        "world_z": 0.2727,
+        "world_z": 17.6756,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3747,
+        "radius_min": 2.2881,
+        "radius_max": 2.4287,
+        "radius_var": 0.003826,
+        "area": 7.0491,
+        "perimeter": 12.0834,
+        "circularity": 0.6067,
+        "point_count": 12
       },
       {
         "slice_index": 64,
         "rel_z": 0.6465,
-        "world_z": 0.2929,
+        "world_z": 17.7256,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3652,
+        "radius_min": 2.2787,
+        "radius_max": 2.419,
+        "radius_var": 0.003813,
+        "area": 7.0192,
+        "perimeter": 12.0436,
+        "circularity": 0.6081,
+        "point_count": 12
       },
       {
         "slice_index": 65,
         "rel_z": 0.6566,
-        "world_z": 0.3131,
+        "world_z": 17.7757,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3672,
+        "radius_min": 2.2693,
+        "radius_max": 2.4075,
+        "radius_var": 0.003247,
+        "area": 6.9852,
+        "perimeter": 12.0011,
+        "circularity": 0.6095,
+        "point_count": 16
       },
       {
         "slice_index": 66,
         "rel_z": 0.6667,
-        "world_z": 0.3333,
+        "world_z": 17.8257,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3524,
+        "radius_min": 2.2599,
+        "radius_max": 2.3919,
+        "radius_var": 0.002881,
+        "area": 6.9398,
+        "perimeter": 11.9523,
+        "circularity": 0.6105,
+        "point_count": 16
       },
       {
         "slice_index": 67,
         "rel_z": 0.6768,
-        "world_z": 0.3535,
+        "world_z": 17.8758,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3133,
+        "radius_min": 2.2505,
+        "radius_max": 2.3763,
+        "radius_var": 0.00355,
+        "area": 6.892,
+        "perimeter": 11.8884,
+        "circularity": 0.6128,
+        "point_count": 16
       },
       {
         "slice_index": 68,
         "rel_z": 0.6869,
-        "world_z": 0.3737,
+        "world_z": 17.9258,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.3018,
+        "radius_min": 2.2203,
+        "radius_max": 2.3607,
+        "radius_var": 0.003692,
+        "area": 6.8429,
+        "perimeter": 11.8191,
+        "circularity": 0.6156,
+        "point_count": 16
       },
       {
         "slice_index": 69,
         "rel_z": 0.697,
-        "world_z": 0.3939,
+        "world_z": 17.9758,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.2862,
+        "radius_min": 2.1889,
+        "radius_max": 2.3398,
+        "radius_var": 0.003619,
+        "area": 6.7768,
+        "perimeter": 11.724,
+        "circularity": 0.6196,
+        "point_count": 16
       },
       {
         "slice_index": 70,
         "rel_z": 0.7071,
-        "world_z": 0.4141,
+        "world_z": 18.0259,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.2679,
+        "radius_min": 2.1575,
+        "radius_max": 2.3148,
+        "radius_var": 0.004103,
+        "area": 6.697,
+        "perimeter": 11.619,
+        "circularity": 0.6234,
+        "point_count": 16
       },
       {
         "slice_index": 71,
         "rel_z": 0.7172,
-        "world_z": 0.4343,
+        "world_z": 18.0759,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.2413,
+        "radius_min": 2.1262,
+        "radius_max": 2.2898,
+        "radius_var": 0.004482,
+        "area": 6.6168,
+        "perimeter": 11.4978,
+        "circularity": 0.629,
+        "point_count": 16
       },
       {
         "slice_index": 72,
         "rel_z": 0.7273,
-        "world_z": 0.4545,
+        "world_z": 18.126,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1984,
+        "radius_min": 2.0949,
+        "radius_max": 2.2644,
+        "radius_var": 0.005487,
+        "area": 6.5334,
+        "perimeter": 11.3758,
+        "circularity": 0.6344,
+        "point_count": 12
       },
       {
         "slice_index": 73,
         "rel_z": 0.7374,
-        "world_z": 0.4747,
+        "world_z": 18.176,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1666,
+        "radius_min": 2.0637,
+        "radius_max": 2.232,
+        "radius_var": 0.005418,
+        "area": 6.4331,
+        "perimeter": 11.2421,
+        "circularity": 0.6396,
+        "point_count": 12
       },
       {
         "slice_index": 74,
         "rel_z": 0.7475,
-        "world_z": 0.4949,
+        "world_z": 18.2261,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1348,
+        "radius_min": 2.0326,
+        "radius_max": 2.1996,
+        "radius_var": 0.005348,
+        "area": 6.3328,
+        "perimeter": 11.1083,
+        "circularity": 0.6449,
+        "point_count": 12
       },
       {
         "slice_index": 75,
         "rel_z": 0.7576,
-        "world_z": 0.5152,
+        "world_z": 18.2761,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.1031,
+        "radius_min": 2.0016,
+        "radius_max": 2.1672,
+        "radius_var": 0.005275,
+        "area": 6.2325,
+        "perimeter": 10.9745,
+        "circularity": 0.6503,
+        "point_count": 12
       },
       {
         "slice_index": 76,
         "rel_z": 0.7677,
-        "world_z": 0.5354,
+        "world_z": 18.3261,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.0715,
+        "radius_min": 1.9706,
+        "radius_max": 2.1349,
+        "radius_var": 0.005201,
+        "area": 6.1322,
+        "perimeter": 10.8408,
+        "circularity": 0.6557,
+        "point_count": 12
       },
       {
         "slice_index": 77,
         "rel_z": 0.7778,
-        "world_z": 0.5556,
+        "world_z": 18.3762,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.0399,
+        "radius_min": 1.9397,
+        "radius_max": 2.1026,
+        "radius_var": 0.005124,
+        "area": 6.0319,
+        "perimeter": 10.707,
+        "circularity": 0.6612,
+        "point_count": 12
       },
       {
         "slice_index": 78,
         "rel_z": 0.7879,
-        "world_z": 0.5758,
+        "world_z": 18.4262,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 2.0084,
+        "radius_min": 1.9089,
+        "radius_max": 2.0704,
+        "radius_var": 0.005046,
+        "area": 5.9316,
+        "perimeter": 10.5733,
+        "circularity": 0.6667,
+        "point_count": 12
       },
       {
         "slice_index": 79,
         "rel_z": 0.798,
-        "world_z": 0.596,
+        "world_z": 18.4763,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.9769,
+        "radius_min": 1.8782,
+        "radius_max": 2.0381,
+        "radius_var": 0.004965,
+        "area": 5.8312,
+        "perimeter": 10.4395,
+        "circularity": 0.6724,
+        "point_count": 12
       },
       {
         "slice_index": 80,
         "rel_z": 0.8081,
-        "world_z": 0.6162,
+        "world_z": 18.5263,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.9456,
+        "radius_min": 1.8476,
+        "radius_max": 2.006,
+        "radius_var": 0.004883,
+        "area": 5.7309,
+        "perimeter": 10.3058,
+        "circularity": 0.6781,
+        "point_count": 12
       },
       {
         "slice_index": 81,
         "rel_z": 0.8182,
-        "world_z": 0.6364,
+        "world_z": 18.5764,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.9142,
+        "radius_min": 1.8171,
+        "radius_max": 1.9738,
+        "radius_var": 0.004798,
+        "area": 5.6306,
+        "perimeter": 10.172,
+        "circularity": 0.6838,
+        "point_count": 12
       },
       {
         "slice_index": 82,
         "rel_z": 0.8283,
-        "world_z": 0.6566,
+        "world_z": 18.6264,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.8622,
+        "radius_min": 1.7846,
+        "radius_max": 1.9374,
+        "radius_var": 0.004415,
+        "area": 5.5195,
+        "perimeter": 10.0302,
+        "circularity": 0.6894,
+        "point_count": 24
       },
       {
         "slice_index": 83,
         "rel_z": 0.8384,
-        "world_z": 0.6768,
+        "world_z": 18.6765,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.8218,
+        "radius_min": 1.7169,
+        "radius_max": 1.8968,
+        "radius_var": 0.00565,
+        "area": 5.3903,
+        "perimeter": 9.8578,
+        "circularity": 0.6971,
+        "point_count": 16
       },
       {
         "slice_index": 84,
         "rel_z": 0.8485,
-        "world_z": 0.697,
+        "world_z": 18.7265,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.786,
+        "radius_min": 1.6499,
+        "radius_max": 1.8579,
+        "radius_var": 0.007168,
+        "area": 5.2599,
+        "perimeter": 9.6849,
+        "circularity": 0.7047,
+        "point_count": 16
       },
       {
         "slice_index": 85,
         "rel_z": 0.8586,
-        "world_z": 0.7172,
+        "world_z": 18.7765,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.7392,
+        "radius_min": 1.5835,
+        "radius_max": 1.8079,
+        "radius_var": 0.0082,
+        "area": 5.099,
+        "perimeter": 9.455,
+        "circularity": 0.7168,
+        "point_count": 16
       },
       {
         "slice_index": 86,
         "rel_z": 0.8687,
-        "world_z": 0.7374,
+        "world_z": 18.8266,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.6819,
+        "radius_min": 1.518,
+        "radius_max": 1.7517,
+        "radius_var": 0.009091,
+        "area": 4.9158,
+        "perimeter": 9.1938,
+        "circularity": 0.7308,
+        "point_count": 16
       },
       {
         "slice_index": 87,
         "rel_z": 0.8788,
-        "world_z": 0.7576,
+        "world_z": 18.8766,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.6239,
+        "radius_min": 1.4533,
+        "radius_max": 1.6958,
+        "radius_var": 0.010022,
+        "area": 4.7286,
+        "perimeter": 8.9283,
+        "circularity": 0.7454,
+        "point_count": 16
       },
       {
         "slice_index": 88,
         "rel_z": 0.8889,
-        "world_z": 0.7778,
+        "world_z": 18.9267,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.533,
+        "radius_min": 1.3897,
+        "radius_max": 1.6258,
+        "radius_var": 0.010563,
+        "area": 4.5055,
+        "perimeter": 8.6303,
+        "circularity": 0.7602,
+        "point_count": 12
       },
       {
         "slice_index": 89,
         "rel_z": 0.899,
-        "world_z": 0.798,
+        "world_z": 18.9767,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.4664,
+        "radius_min": 1.3273,
+        "radius_max": 1.5555,
+        "radius_var": 0.009934,
+        "area": 4.2808,
+        "perimeter": 8.3307,
+        "circularity": 0.7751,
+        "point_count": 12
       },
       {
         "slice_index": 90,
         "rel_z": 0.9091,
-        "world_z": 0.8182,
+        "world_z": 19.0268,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.4007,
+        "radius_min": 1.2662,
+        "radius_max": 1.4857,
+        "radius_var": 0.009255,
+        "area": 4.0561,
+        "perimeter": 8.0311,
+        "circularity": 0.7903,
+        "point_count": 12
       },
       {
         "slice_index": 91,
         "rel_z": 0.9192,
-        "world_z": 0.8384,
+        "world_z": 19.0768,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.336,
+        "radius_min": 1.2067,
+        "radius_max": 1.4164,
+        "radius_var": 0.008524,
+        "area": 3.8315,
+        "perimeter": 7.7315,
+        "circularity": 0.8055,
+        "point_count": 12
       },
       {
         "slice_index": 92,
         "rel_z": 0.9293,
-        "world_z": 0.8586,
+        "world_z": 19.1268,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.2231,
+        "radius_min": 1.1342,
+        "radius_max": 1.3477,
+        "radius_var": 0.008355,
+        "area": 3.6067,
+        "perimeter": 7.4311,
+        "circularity": 0.8207,
+        "point_count": 20
       },
       {
         "slice_index": 93,
         "rel_z": 0.9394,
-        "world_z": 0.8788,
+        "world_z": 19.1769,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.1679,
+        "radius_min": 0.96,
+        "radius_max": 1.2797,
+        "radius_var": 0.013507,
+        "area": 3.3714,
+        "perimeter": 7.124,
+        "circularity": 0.8348,
+        "point_count": 20
       },
       {
         "slice_index": 94,
         "rel_z": 0.9495,
-        "world_z": 0.899,
+        "world_z": 19.2269,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.0811,
+        "radius_min": 0.8267,
+        "radius_max": 1.2012,
+        "radius_var": 0.023092,
+        "area": 3.0866,
+        "perimeter": 6.7681,
+        "circularity": 0.8467,
+        "point_count": 16
       },
       {
         "slice_index": 95,
         "rel_z": 0.9596,
-        "world_z": 0.9192,
+        "world_z": 19.277,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 1.0278,
+        "radius_min": 0.7561,
+        "radius_max": 1.1182,
+        "radius_var": 0.018813,
+        "area": 2.7571,
+        "perimeter": 6.3331,
+        "circularity": 0.8639,
+        "point_count": 20
       },
       {
         "slice_index": 96,
         "rel_z": 0.9697,
-        "world_z": 0.9394,
+        "world_z": 19.327,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 0.9013,
+        "radius_min": 0.7358,
+        "radius_max": 0.9942,
+        "radius_var": 0.010548,
+        "area": 2.2778,
+        "perimeter": 5.6722,
+        "circularity": 0.8897,
+        "point_count": 16
       },
       {
         "slice_index": 97,
         "rel_z": 0.9798,
-        "world_z": 0.9596,
+        "world_z": 19.3771,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 0.7677,
+        "radius_min": 0.7149,
+        "radius_max": 0.8274,
+        "radius_var": 0.002131,
+        "area": 1.64,
+        "perimeter": 4.8021,
+        "circularity": 0.8937,
+        "point_count": 12
       },
       {
         "slice_index": 98,
         "rel_z": 0.9899,
-        "world_z": 0.9798,
+        "world_z": 19.4271,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
-        "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "radius_mean": 0.6752,
+        "radius_min": 0.6609,
+        "radius_max": 0.6888,
+        "radius_var": 0.00013,
+        "area": 0.9264,
+        "perimeter": 3.7849,
+        "circularity": 0.8127,
+        "point_count": 12
       },
       {
         "slice_index": 99,
         "rel_z": 1.0,
-        "world_z": 1.0,
+        "world_z": 19.4771,
         "centroid": [
-          0.0,
-          0.0
+          41.0,
+          -23.6
         ],
-        "radius_mean": 1.4142,
-        "radius_min": 1.4142,
-        "radius_max": 1.4142,
+        "radius_mean": 0.55,
+        "radius_min": 0.55,
+        "radius_max": 0.55,
         "radius_var": 0.0,
-        "area": 4.0,
-        "perimeter": 8.0,
-        "circularity": 0.7854,
-        "point_count": 4
+        "area": 0.0,
+        "perimeter": 2.2,
+        "circularity": 0.0,
+        "point_count": 6
       }
     ],
     "primitive_segments": [
       {
         "segment_id": "segment_01",
-        "primitive_type": "CYLINDRICAL",
+        "primitive_type": "CURVED_DOME",
         "z_range_world": [
-          -1.0,
-          1.0
+          14.5229,
+          15.4737
         ],
         "rel_z_span": [
           0.0,
-          1.0
+          0.192
         ],
-        "height": 2.0,
-        "radius_bottom": 1.4142,
-        "radius_top": 1.4142,
-        "radius_mean": 1.4142,
-        "taper_angle_deg": 0.0,
+        "height": 0.9508,
+        "radius_bottom": 0.0,
+        "radius_top": 1.9456,
+        "radius_mean": 1.3478,
+        "taper_angle_deg": 64.0,
         "slice_indices": [
           0,
+          19
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_02",
+        "primitive_type": "TAPERED",
+        "z_range_world": [
+          15.5237,
+          15.7739
+        ],
+        "rel_z_span": [
+          0.202,
+          0.253
+        ],
+        "height": 0.2502,
+        "radius_bottom": 1.9769,
+        "radius_top": 2.1348,
+        "radius_mean": 2.0558,
+        "taper_angle_deg": 32.3,
+        "slice_indices": [
+          20,
+          25
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_03",
+        "primitive_type": "CURVED_DOME",
+        "z_range_world": [
+          15.824,
+          16.3244
+        ],
+        "rel_z_span": [
+          0.263,
+          0.364
+        ],
+        "height": 0.5004,
+        "radius_bottom": 2.1666,
+        "radius_top": 2.3747,
+        "radius_mean": 2.2941,
+        "taper_angle_deg": 22.6,
+        "slice_indices": [
+          26,
+          36
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_04",
+        "primitive_type": "TAPERED",
+        "z_range_world": [
+          16.3745,
+          16.6747
+        ],
+        "rel_z_span": [
+          0.374,
+          0.434
+        ],
+        "height": 0.3002,
+        "radius_bottom": 2.3843,
+        "radius_top": 2.4416,
+        "radius_mean": 2.4129,
+        "taper_angle_deg": 10.8,
+        "slice_indices": [
+          37,
+          43
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_05",
+        "primitive_type": "CURVED_DOME",
+        "z_range_world": [
+          16.7248,
+          16.8248
+        ],
+        "rel_z_span": [
+          0.444,
+          0.465
+        ],
+        "height": 0.1,
+        "radius_bottom": 2.4512,
+        "radius_top": 2.482,
+        "radius_mean": 2.4647,
+        "taper_angle_deg": 17.1,
+        "slice_indices": [
+          44,
+          46
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_06",
+        "primitive_type": "CYLINDRICAL",
+        "z_range_world": [
+          16.8749,
+          17.1251
+        ],
+        "rel_z_span": [
+          0.475,
+          0.525
+        ],
+        "height": 0.2502,
+        "radius_bottom": 2.487,
+        "radius_top": 2.487,
+        "radius_mean": 2.4839,
+        "taper_angle_deg": 0.0,
+        "slice_indices": [
+          47,
+          52
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_07",
+        "primitive_type": "CURVED_DOME",
+        "z_range_world": [
+          17.1752,
+          17.2752
+        ],
+        "rel_z_span": [
+          0.535,
+          0.556
+        ],
+        "height": 0.1,
+        "radius_bottom": 2.482,
+        "radius_top": 2.4512,
+        "radius_mean": 2.4647,
+        "taper_angle_deg": 17.1,
+        "slice_indices": [
+          53,
+          55
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_08",
+        "primitive_type": "TAPERED",
+        "z_range_world": [
+          17.3253,
+          17.7256
+        ],
+        "rel_z_span": [
+          0.566,
+          0.646
+        ],
+        "height": 0.4003,
+        "radius_bottom": 2.4416,
+        "radius_top": 2.3652,
+        "radius_mean": 2.4034,
+        "taper_angle_deg": 10.8,
+        "slice_indices": [
+          56,
+          64
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_09",
+        "primitive_type": "CURVED_DOME",
+        "z_range_world": [
+          17.7757,
+          18.176
+        ],
+        "rel_z_span": [
+          0.657,
+          0.737
+        ],
+        "height": 0.4003,
+        "radius_bottom": 2.3672,
+        "radius_top": 2.1666,
+        "radius_mean": 2.2772,
+        "taper_angle_deg": 26.6,
+        "slice_indices": [
+          65,
+          73
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_10",
+        "primitive_type": "TAPERED",
+        "z_range_world": [
+          18.2261,
+          18.4763
+        ],
+        "rel_z_span": [
+          0.748,
+          0.798
+        ],
+        "height": 0.2502,
+        "radius_bottom": 2.1348,
+        "radius_top": 1.9769,
+        "radius_mean": 2.0558,
+        "taper_angle_deg": 32.3,
+        "slice_indices": [
+          74,
+          79
+        ],
+        "material_slot_index": 0,
+        "material_name": "DialKnurled"
+      },
+      {
+        "segment_id": "segment_11",
+        "primitive_type": "CURVED_DOME",
+        "z_range_world": [
+          18.5263,
+          19.4771
+        ],
+        "rel_z_span": [
+          0.808,
+          1.0
+        ],
+        "height": 0.9508,
+        "radius_bottom": 1.9456,
+        "radius_top": 0.55,
+        "radius_mean": 1.3752,
+        "taper_angle_deg": 55.7,
+        "slice_indices": [
+          80,
           99
         ],
         "material_slot_index": 0,
-        "material_name": "Material"
+        "material_name": "DialKnurled"
       }
     ],
     "material_zones": [
       {
         "segment_id": "segment_01",
-        "material_name": "Material",
+        "material_name": "DialKnurled",
         "material_slot_index": 0,
         "z_range": [
-          -1.0,
-          1.0
+          14.5229,
+          15.4737
+        ]
+      },
+      {
+        "segment_id": "segment_02",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          15.5237,
+          15.7739
+        ]
+      },
+      {
+        "segment_id": "segment_03",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          15.824,
+          16.3244
+        ]
+      },
+      {
+        "segment_id": "segment_04",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          16.3745,
+          16.6747
+        ]
+      },
+      {
+        "segment_id": "segment_05",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          16.7248,
+          16.8248
+        ]
+      },
+      {
+        "segment_id": "segment_06",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          16.8749,
+          17.1251
+        ]
+      },
+      {
+        "segment_id": "segment_07",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          17.1752,
+          17.2752
+        ]
+      },
+      {
+        "segment_id": "segment_08",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          17.3253,
+          17.7256
+        ]
+      },
+      {
+        "segment_id": "segment_09",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          17.7757,
+          18.176
+        ]
+      },
+      {
+        "segment_id": "segment_10",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          18.2261,
+          18.4763
+        ]
+      },
+      {
+        "segment_id": "segment_11",
+        "material_name": "DialKnurled",
+        "material_slot_index": 0,
+        "z_range": [
+          18.5263,
+          19.4771
         ]
       }
     ]

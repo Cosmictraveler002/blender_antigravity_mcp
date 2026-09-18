@@ -4,7 +4,7 @@
   "execution_tier": "tier_3_apu_cpu",
   "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
   "opencl_accelerated": true,
-  "inference_time_ms": 233.37,
+  "inference_time_ms": 232.45,
   "normal_mode": "valid_tangent",
   "acceptance_gates": {
     "roughness_variance": {

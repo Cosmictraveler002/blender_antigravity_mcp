@@ -111,13 +111,17 @@ class GeminiVisionAnalyzer:
         if not os.path.isfile(image_path):
             raise FileNotFoundError(f"Reference image not found: {image_path}")
 
-        # 1. Check if agent-seeded analysis already exists
+        # 1. Check if agent-seeded semantic analysis already exists
         if existing_spec_path and os.path.isfile(existing_spec_path):
-            print(f"[GeminiVision] Loading existing vision analysis from: {existing_spec_path}")
-            with open(existing_spec_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            if self._validate_analysis(data):
-                return data
+            try:
+                with open(existing_spec_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if self._validate_analysis(data):
+                    mode = data.get("decomposition_mode", "agent_seeded")
+                    print(f"[GeminiVision] Validated semantic vision analysis loaded from: {existing_spec_path} (mode: {mode})")
+                    return data
+            except Exception as e:
+                print(f"[GeminiVision] Warning reading existing spec: {e}")
 
         # 2. If API key is available, call Gemini API
         if self.api_key:
@@ -128,10 +132,55 @@ class GeminiVisionAnalyzer:
                     return result
             except Exception as e:
                 print(f"[GeminiVision] WARNING: Gemini API call failed: {e}")
+        else:
+            print("[GeminiVision] NOTICE: No GEMINI_API_KEY or GOOGLE_API_KEY detected in environment.")
+
+        # Emit prompt template file for multimodal AI agent seeding
+        if existing_spec_path:
+            prompt_dir = os.path.dirname(existing_spec_path)
+            os.makedirs(prompt_dir, exist_ok=True)
+            prompt_file = os.path.join(prompt_dir, "multimodal_vision_prompt.md")
+            try:
+                clean_prompt = self.get_vision_prompt(image_path)
+                with open(prompt_file, "w", encoding="utf-8") as pf:
+                    pf.write(clean_prompt)
+                print(f"[GeminiVision] Clean multimodal vision prompt exported for AI agent -> {prompt_file}")
+            except Exception as e:
+                pass
 
         # 3. Fallback: synthesize baseline descriptors from image
-        print("[GeminiVision] Generating baseline semantic descriptors...")
+        print("!" * 76)
+        print("[GeminiVision] WARNING: Falling back to Classical CV Decomposition.")
+        print("  Semantic vision analysis was NOT performed (API key unavailable or API call failed).")
+        print("  As an agentic multimodal model, you can view the reference image and save")
+        print(f"  a high-fidelity 'gemini_vision_analysis.json' to {existing_spec_path or 'specs'}.")
+        print("!" * 76)
         return self._generate_fallback_analysis(image_path)
+
+    def get_vision_prompt(self, image_path: str) -> str:
+        """Returns clean multimodal prompt and schema for an agent or direct API invocation."""
+        return (
+            "# Multimodal Vision Reference Analysis Prompt\n\n"
+            f"**Target Image**: `{image_path}`\n\n"
+            "## Instructions for Multimodal Model:\n"
+            "Analyze this 3D product reference photograph for automated 3D reconstruction in Blender.\n"
+            "Identify all physical components, materials, surface finishes, PBR search keywords for PolyHaven/ambientCG,\n"
+            "all visible text/branding typography with exact text, orientation, and font style, and studio lighting setup.\n"
+            "Set `decomposition_mode`: 'multimodal_agent' and `decomposition_confidence`: 'high'.\n\n"
+            "## Target Output Schema (JSON):\n"
+            "```json\n"
+            + json.dumps(GEMINI_ANALYSIS_SCHEMA, indent=2)
+            + "\n```\n"
+        )
+
+    def generate_project_objective(self, project_or_dir: Any, gemini_doc: Optional[Dict[str, Any]] = None) -> str:
+        """
+        Synthesize a project-specific objective script inheriting from the root BaseObjective
+        based on this analyzer's vision analysis.
+        """
+        from harness.analyzers.objective_generator import ObjectiveGenerator
+        return ObjectiveGenerator.generate_project_objective(project_or_dir, gemini_doc=gemini_doc)
+
 
     def _call_gemini_api(self, image_path: str) -> Optional[Dict[str, Any]]:
         """Query the Gemini REST API with image and structured prompt."""
@@ -182,7 +231,13 @@ class GeminiVisionAnalyzer:
             resp_data = json.loads(resp.read().decode("utf-8"))
 
         text_content = resp_data["candidates"][0]["content"]["parts"][0]["text"]
-        return json.loads(text_content)
+        parsed = json.loads(text_content)
+        parsed["decomposition_mode"] = "gemini_api"
+        parsed["decomposition_confidence"] = "high"
+        for c in parsed.get("components", []):
+            c.setdefault("metallic_confidence", "high")
+            c.setdefault("roughness_confidence", "high")
+        return parsed
 
     def _validate_analysis(self, data: Dict[str, Any]) -> bool:
         """Quick check for required schema keys and reject legacy ungrounded fallbacks."""
@@ -192,8 +247,8 @@ class GeminiVisionAnalyzer:
         comps = data.get("components", [])
         if len(comps) == 1 and comps[0].get("color_hex", "").upper() == "#202022":
             return False
-        # Reject single-component classical fallback to enforce physical modular tiers
-        if data.get("decomposition_mode") == "classical_cv_fallback" and len(comps) <= 1:
+        # Reject previous classical fallback so true semantic vision analysis (API or multimodal agent) takes precedence
+        if data.get("decomposition_mode") == "classical_cv_fallback":
             return False
         return True
 
@@ -376,15 +431,15 @@ class GeminiVisionAnalyzer:
                         bright_mask = (lum >= np.percentile(lum, 60)) & (lum <= np.percentile(lum, 92))
                         med_rgb = np.median(fg_px[bright_mask], axis=0).astype(int) if np.any(bright_mask) else np.median(fg_px, axis=0).astype(int)
                     est_roughness = round(estimate_physical_roughness(crop_rgb=crop), 2)
-                    est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=cat), 2)
+                    est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=None), 2)
                 else:
                     med_rgb = np.median(fg_px, axis=0).astype(int)
                     est_roughness = round(estimate_physical_roughness(crop_rgb=crop), 2)
-                    est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=cat), 2)
+                    est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=None), 2)
             else:
                 med_rgb = np.median(crop.reshape(-1, 3), axis=0).astype(int)
                 est_roughness = round(estimate_physical_roughness(crop_rgb=crop), 2)
-                est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=cat), 2)
+                est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=None), 2)
 
             hex_color = f"#{int(med_rgb[0]):02X}{int(med_rgb[1]):02X}{int(med_rgb[2]):02X}"
             display_name = name.replace("_", " ").title()
@@ -399,6 +454,8 @@ class GeminiVisionAnalyzer:
                 "color_hex": hex_color,
                 "estimated_roughness": est_roughness,
                 "estimated_metallic": est_metallic,
+                "metallic_confidence": "low",
+                "roughness_confidence": "low",
                 "normal_intensity": 0.25,
                 "bounding_box": [
                     round(ty1 / float(h) * 1000.0, 1),
@@ -413,6 +470,7 @@ class GeminiVisionAnalyzer:
             "object_summary": f"Classical CV reconstruction decomposition: {base_name}",
             "object_type": "manufactured_object",
             "decomposition_mode": "classical_cv_fallback",
+            "decomposition_confidence": "low",
             "components": components,
             "typography_and_labels": [],
             "lighting_and_environment": {

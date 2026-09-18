@@ -6,6 +6,7 @@ blender_scripts:
   generate: scripts/generate_camera.py
   refine: scripts/refine_camera.py
   verify: scripts/verify_camera.py
+  objective: scripts/objective_camera.py
 convergence:
   max_iterations: 5
   ciede2000_threshold: 3.5

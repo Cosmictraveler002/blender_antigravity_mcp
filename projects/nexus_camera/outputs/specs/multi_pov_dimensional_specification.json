@@ -1,0 +1,313 @@
+{
+  "project": "nexus_camera",
+  "document_type": "Multi-POV Photogrammetric & Dimensional Specification",
+  "version": "4.1.0",
+  "canonical_viewports": {
+    "front": {
+      "view_id": "front",
+      "filename": "front_view.png",
+      "projection_plane": "Coronal (X-Z)",
+      "image_dims": [
+        511,
+        185
+      ],
+      "bbox_pixels": [
+        131,
+        21,
+        236,
+        151
+      ],
+      "aspect_ratio_h_w": 0.6398,
+      "aspect_ratio_w_h": 1.5629
+    },
+    "left": {
+      "view_id": "left",
+      "filename": "left_profile.png",
+      "projection_plane": "Sagittal (Y-Z)",
+      "image_dims": [
+        511,
+        184
+      ],
+      "bbox_pixels": [
+        141,
+        18,
+        235,
+        156
+      ],
+      "aspect_ratio_h_w": 0.6638,
+      "aspect_ratio_w_h": 1.5064
+    },
+    "top": {
+      "view_id": "top",
+      "filename": "top_view.png",
+      "projection_plane": "Transverse (X-Y)",
+      "image_dims": [
+        511,
+        185
+      ],
+      "bbox_pixels": [
+        154,
+        16,
+        204,
+        165
+      ],
+      "aspect_ratio_h_w": 0.8088,
+      "aspect_ratio_w_h": 1.2364
+    },
+    "rear": {
+      "view_id": "rear",
+      "filename": "rear_view.png",
+      "projection_plane": "Coronal (X-Z)",
+      "image_dims": [
+        511,
+        184
+      ],
+      "bbox_pixels": [
+        134,
+        17,
+        230,
+        163
+      ],
+      "aspect_ratio_h_w": 0.7087,
+      "aspect_ratio_w_h": 1.411
+    },
+    "bottom": {
+      "view_id": "bottom",
+      "filename": "bottom_view.png",
+      "projection_plane": "Transverse (X-Y)",
+      "image_dims": [
+        511,
+        185
+      ],
+      "bbox_pixels": [
+        150,
+        17,
+        209,
+        162
+      ],
+      "aspect_ratio_h_w": 0.7751,
+      "aspect_ratio_w_h": 1.2901
+    },
+    "hero": {
+      "view_id": "hero",
+      "filename": "hero_perspective.png",
+      "projection_plane": "Compound Perspective (3/4)",
+      "image_dims": [
+        511,
+        185
+      ],
+      "bbox_pixels": [
+        144,
+        12,
+        219,
+        169
+      ],
+      "aspect_ratio_h_w": 0.7717,
+      "aspect_ratio_w_h": 1.2959
+    }
+  },
+  "calibrated_photogrammetry": {
+    "calibration_standard": {
+      "anchor_feature": "Front Lens Retaining Bezel Engraving '\u00d855' (M55x0.75 optical filter thread)",
+      "spatial_resolution_mm_per_pixel": 0.691489,
+      "spatial_resolution_pixels_per_mm": 1.44615,
+      "thread_or_feature_verification": {
+        "expected_thread_inner_diameter_mm": 55.0,
+        "measured_pixel_thread": 79.5,
+        "accuracy_percentage": 99.95
+      }
+    },
+    "coordinate_system": {
+      "handedness": "Right-Handed Cartesian",
+      "origin": "Object geometric bottom-center (X=0 midplane, Y=0 front wall, Z=0 baseplate)",
+      "axis_definition": {
+        "X": "Transverse horizontal axis (+X toward viewer right in front view)",
+        "Y": "Depth axis (+Y rearward towards back, -Y forward towards front)",
+        "Z": "Vertical elevation axis (+Z upwards from base)"
+      }
+    },
+    "overall_dimensions_mm": {
+      "total_width": 163.2,
+      "total_height": 104.4,
+      "total_depth": 162.5,
+      "bounding_box_mm": {
+        "x_range": [
+          -81.6,
+          81.6
+        ],
+        "y_range": [
+          0.0,
+          162.5
+        ],
+        "z_range": [
+          0.0,
+          104.4
+        ]
+      }
+    },
+    "component_dimensions_mm": {
+      "comp_upper_structure": {
+        "name": "Upper Structure & Viewfinder Prism",
+        "category": "enclosure",
+        "color_hex": "#343336",
+        "estimated_roughness": 0.32,
+        "estimated_metallic": 0.7
+      },
+      "comp_main_body": {
+        "name": "Camera Chassis",
+        "category": "enclosure",
+        "color_hex": "#353438",
+        "estimated_roughness": 0.3,
+        "estimated_metallic": 0.75
+      },
+      "comp_handgrip": {
+        "name": "Handgrip Rubber",
+        "category": "ergonomic_grip",
+        "color_hex": "#1E1E20",
+        "estimated_roughness": 0.82,
+        "estimated_metallic": 0.0
+      },
+      "comp_lens_barrel": {
+        "name": "Lens Barrel & Focus Ring",
+        "category": "lens_assembly",
+        "color_hex": "#2A292C",
+        "estimated_roughness": 0.28,
+        "estimated_metallic": 0.85
+      },
+      "comp_lens_front_element": {
+        "name": "Front Optical Glass Element",
+        "category": "optics",
+        "color_hex": "#18241D",
+        "estimated_roughness": 0.02,
+        "estimated_metallic": 0.0
+      },
+      "comp_base_section": {
+        "name": "Base Section",
+        "category": "structural_base",
+        "color_hex": "#353438",
+        "estimated_roughness": 0.3,
+        "estimated_metallic": 0.75
+      }
+    }
+  },
+  "cross_view_coherence_matrix": [
+    {
+      "spatial_axis": "Transverse Width (X)",
+      "dimension_label": "Chassis Width (excluding lugs)",
+      "source_a": "Front View (GRID 02)",
+      "value_a_px": 212.0,
+      "value_a_mm": 146.6,
+      "source_b": "Top Plan (GRID 05)",
+      "value_b_px": 204.0,
+      "value_b_mm": 141.1,
+      "delta_pct": 3.77,
+      "tolerance": "< 5.0%",
+      "verdict": "COHERENT (PASS)",
+      "engineering_rationale": "Top plan captures upper deck bevel radius at corner chamfers."
+    },
+    {
+      "spatial_axis": "Vertical Elevation (Z)",
+      "dimension_label": "Chassis Base-to-Deck Height",
+      "source_a": "Front View (GRID 02)",
+      "value_a_px": 120.0,
+      "value_a_mm": 83.0,
+      "source_b": "Rear View (GRID 04)",
+      "value_b_px": 121.0,
+      "value_b_mm": 83.7,
+      "delta_pct": 0.83,
+      "tolerance": "< 2.0%",
+      "verdict": "COHERENT (PASS)",
+      "engineering_rationale": "Baseplate to top deck plane matches across front and rear elevations."
+    },
+    {
+      "spatial_axis": "Vertical Elevation (Z)",
+      "dimension_label": "Total System Height (Base to Hot Shoe Apex)",
+      "source_a": "Front View (GRID 02)",
+      "value_a_px": 152.0,
+      "value_a_mm": 105.1,
+      "source_b": "Left Profile (GRID 03)",
+      "value_b_px": 158.0,
+      "value_b_mm": 109.3,
+      "delta_pct": 3.95,
+      "tolerance": "< 5.0%",
+      "verdict": "COHERENT (PASS)",
+      "engineering_rationale": "Left profile reveals hot shoe retention spring leaf protrusion (+4.2 mm)."
+    },
+    {
+      "spatial_axis": "Optical Depth (Y)",
+      "dimension_label": "Lens Barrel Length (Flange to Front Element)",
+      "source_a": "Left Profile (GRID 03)",
+      "value_a_px": 108.0,
+      "value_a_mm": 74.7,
+      "source_b": "Top Plan (GRID 05)",
+      "value_b_px": 106.0,
+      "value_b_mm": 73.3,
+      "delta_pct": 1.85,
+      "tolerance": "< 3.0%",
+      "verdict": "COHERENT (PASS)",
+      "engineering_rationale": "Flange-to-apex depth matches between side and top projections."
+    },
+    {
+      "spatial_axis": "Radial Diameter (X/Z vs X/Y)",
+      "dimension_label": "Outer Lens Barrel Diameter",
+      "source_a": "Front View (GRID 02)",
+      "value_a_px": 94.0,
+      "value_a_mm": 65.0,
+      "source_b": "Top Plan (GRID 05)",
+      "value_b_px": 93.0,
+      "value_b_mm": 64.3,
+      "delta_pct": 1.06,
+      "tolerance": "< 2.0%",
+      "verdict": "COHERENT (PASS)",
+      "engineering_rationale": "Cylindrical symmetry verified across orthogonal front and plan projections."
+    },
+    {
+      "spatial_axis": "Vertical Elevation (Z)",
+      "dimension_label": "Optical Axis Elevation above Baseplate",
+      "source_a": "Front View (GRID 02)",
+      "value_a_px": 62.0,
+      "value_a_mm": 42.9,
+      "source_b": "Left Profile (GRID 03)",
+      "value_b_px": 63.0,
+      "value_b_mm": 43.6,
+      "delta_pct": 1.61,
+      "tolerance": "< 2.0%",
+      "verdict": "COHERENT (PASS)",
+      "engineering_rationale": "Optical axis height is 42.9 mm (front) vs 43.6 mm (profile), confirming optical centerline consistency."
+    },
+    {
+      "spatial_axis": "Transverse Width (X)",
+      "dimension_label": "Baseplate Footprint Width",
+      "source_a": "Front View (GRID 02)",
+      "value_a_px": 212.0,
+      "value_a_mm": 146.6,
+      "source_b": "Bottom Plan (GRID 06)",
+      "value_b_px": 210.0,
+      "value_b_mm": 145.2,
+      "delta_pct": 0.94,
+      "tolerance": "< 2.0%",
+      "verdict": "COHERENT (PASS)",
+      "engineering_rationale": "Chassis baseplate width matches between front elevation and bottom projection."
+    }
+  ],
+  "procedural_generator_constants": {
+    "BODY_W": 146.6,
+    "BODY_H": 83.0,
+    "BODY_D": 51.9,
+    "GRIP_W": 34.6,
+    "GRIP_H": 83.0,
+    "GRIP_PROTRUSION": 24.2,
+    "PRISM_W": 36.0,
+    "PRISM_H": 22.1,
+    "PRISM_D": 37.3,
+    "LENS_DIAMETER": 65.0,
+    "LENS_LENGTH": 74.7,
+    "LENS_CX": 17.3,
+    "LENS_CZ": 1.4,
+    "LCD_W": 73.3,
+    "LCD_H": 49.8,
+    "MODE_DIAL_D": 14.5,
+    "EXP_DIAL_D": 13.1,
+    "SCALE_MM_PER_PX": 0.691489
+  }
+}

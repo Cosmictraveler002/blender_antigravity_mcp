@@ -13,8 +13,10 @@ flowchart TD
         ProjCfg["Project Manifest\n(project.yaml)"]
     end
 
-    subgraph Stage1["Stage 1: Multi-Modal Analysis"]
+    subgraph Stage1["Stage 1: Multi-Modal Analysis & Photogrammetry"]
         Stage1_1["Stage 1.1: Gemini Vision Semantic Scan\n- Semantic identities, coarse bboxes\n- Packaging typography & material tags"]
+
+        Stage1_1b["Stage 1.1b: Multi-POV Photogrammetry & Dimensional Calibration (BaseObjective)\n- Multi-viewpoint spatial resolution (mm/px, px/mm)\n- Cross-view coherence verification matrix\n- Emits multi_pov_dimensional_specification.json"]
         
         Stage1_2["Stage 1.2: Geometry Analyzer & Metric Snapping [SOLUTION 2]\n- 100-level radial elevation mesh\n- Sobel Gy gradient & radial curvature snapping\n- Writes geometry_analysis_annotated.png"]
         
@@ -26,10 +28,12 @@ flowchart TD
         
         Stage1_6["Stage 1.6: Structural BMesh Profiling\n- 7-step rotational symmetry & profile analysis"]
         
-        Stage1_7["Stage 1.7: Master Spec Merge\n- Assembles master_3d_design_specification.json\n- Modular Component Object Blueprint"]
+        Stage1_7["Stage 1.7: Master Spec Synthesis & Merge\n- Compiles multi_pov_dimensional_specification.json + sub-specs\n- Emits master_3d_design_specification.json\n- Authoritative Blueprint for 3D Model Generation"]
     end
 
     subgraph Stage1Outputs["Stage 1 Artifacts (outputs/specs/)"]
+        MultiPOVSpec["multi_pov_dimensional_specification.json"]
+        MultiPOVMd["multi_pov_dimensional_report.md"]
         GDoc["geometry_design_doc.json"]
         GVis["geometry_analysis_annotated.png"]
         CDoc["color_texture_design_doc.json"]
@@ -38,7 +42,7 @@ flowchart TD
         PMd["placement_report.md"]
         SDoc["structural_geometry_report.json"]
         MatMan["material_manifest.json"]
-        MasterSpec["master_3d_design_specification.json"]
+        MasterSpec["master_3d_design_specification.json\n(Created from multi_pov + sub-specs)"]
     end
 
     subgraph Stage2["Stage 2: Modular 3D Synthesis & Packaging Art"]
@@ -81,6 +85,8 @@ flowchart TD
     end
 
     RefImg --> Stage1_1
+    Stage1_1 --> Stage1_1b
+    Stage1_1b --> MultiPOVSpec & MultiPOVMd
     Stage1_1 --> Stage1_2
     Stage1_2 --> GDoc & GVis
     Stage1_2 --> Stage1_3 & Stage1_4
@@ -89,10 +95,10 @@ flowchart TD
     Stage1_4 --> PJson & PMd
     Stage1_5 --> MatMan
     RefImg --> Stage1_6 --> SDoc
-    GDoc & CDoc & PJson & MatMan & SDoc --> Stage1_7 --> MasterSpec
+    MultiPOVSpec & GDoc & CDoc & PJson & MatMan & SDoc --> Stage1_7 --> MasterSpec
 
-    MasterSpec --> Stage2_1
-    MasterSpec --> BlenderGen
+    MasterSpec -->|Ingested for Graphic Layout| Stage2_1
+    MasterSpec -->|Authoritative Blueprint for 3D Model Generation| BlenderGen
     Stage2_1 --> BlenderGen
 
     BlenderGen --> MVR
@@ -128,13 +134,15 @@ To prevent pipeline fragmentation, specification drift, and invalid state transi
    - Skipping stages, executing stages out of order, or running comparison before generation is strictly prohibited.
    - Stage Capture (14-camera orbit array) is a mandatory precondition for Stage 3 comparison and Stage 5 contact sheet generation.
 
-2. **Stage 1 Artifact Completeness Invariant**:
-   Stage 2 execution is strictly gated on the complete presence and mathematical integrity of all 9 specification artifacts in `projects/<name>/outputs/specs/`:
-   `geometry_design_doc.json`, `geometry_analysis_annotated.png`, `color_texture_design_doc.json`, `color_texture_swatches.png`, `placement_report.json`, `placement_report.md`, `structural_geometry_report.json`, `material_manifest.json`, `master_3d_design_specification.json`.
-   If any artifact is missing or invalid, the harness must halt and re-run Stage 1. Inventing dummy specifications is strictly prohibited.
+2. **Stage 1 Artifact Completeness Invariant & Master Blueprint Generation**:
+   Stage 2 execution is strictly gated on the complete presence and mathematical integrity of all Stage 1 specification artifacts in `projects/<name>/outputs/specs/`:
+   `multi_pov_dimensional_specification.json`, `multi_pov_dimensional_report.md`, `geometry_design_doc.json`, `geometry_analysis_annotated.png`, `color_texture_design_doc.json`, `color_texture_swatches.png`, `placement_report.json`, `placement_report.md`, `structural_geometry_report.json`, `material_manifest.json`, and `master_3d_design_specification.json`.
+   - **Specification Derivation**: `master_3d_design_specification.json` MUST be compiled directly by synthesizing `multi_pov_dimensional_specification.json` (photogrammetric spatial calibration, cross-view coherence, procedural generator constants) with the complementary vision, geometry, color, placement, and structural reports.
+   - **Model Generation Mandate**: `master_3d_design_specification.json` serves as the authoritative, unified master specification consumed by Stage 2 (`generate_<name>.py`) to generate the 3D model in Blender.
+   - If any artifact is missing or invalid, the harness must halt and re-run Stage 1. Inventing dummy specifications is strictly prohibited.
 
 3. **Decoupled Generator & Refiner Scripts Contract**:
-   Before invoking Stage 2 or Stage 4, `projects/<name>/scripts/generate_<name>.py` and `projects/<name>/scripts/refine_<name>.py` (subclassing `BaseRefinementEngine`) must exist and be registered in `project.yaml`. All geometric parameters must be dynamically ingested from `HARNESS_GEOM_JSON` and `HARNESS_COLOR_JSON`. Zero hardcoded object names are permitted in `harness/`.
+   Before invoking Stage 2 or Stage 4, `projects/<name>/scripts/generate_<name>.py` and `projects/<name>/scripts/refine_<name>.py` (subclassing `BaseRefinementEngine`) must exist and be registered in `project.yaml`. All geometric parameters must be dynamically ingested from `HARNESS_MASTER_SPEC_JSON` (`master_3d_design_specification.json`, derived from `multi_pov_dimensional_specification.json`), `HARNESS_GEOM_JSON`, and `HARNESS_COLOR_JSON`. Zero hardcoded object names are permitted in `harness/`.
 
 4. **Dual Geometry Verification Invariant (Stage 3)**:
    The Stage 2 3D render must be analyzed using the exact same `GeometryAnalyzer` that scanned the reference image, generating `render_geometry_doc.json` and `render_geometry_annotated.png`. Comparative scoring must evaluate decomposed radial profiles, aspect ratios, and CIEDE2000 ($\Delta E_{00}$) color errors—never raw unaligned RGB pixel matrices.
@@ -412,7 +420,29 @@ Zero-meridian front center alignment anchors primary branding at $u_{\text{front
 
 ---
 
-## 3. Modular Component Object Data Contract
+## 3. Modular Component Object Data Contract & Specification Pipeline
+
+### 3.0 Master 3D Design Specification Derivation & Model Generation Architecture
+
+The specification pipeline follows a strict hierarchical aggregation:
+1. **Multi-POV Photogrammetry (`multi_pov_dimensional_specification.json`)**:
+   - Produced by multi-viewpoint analysis (`BaseObjective` / `objective_<name>.py`).
+   - Calibrates physical metric resolutions (`px_per_mm`, `mm_per_px`) from orthogonal viewpoints (front, left, right, top, rear, bottom).
+   - Validates dimensions across viewports via an overdetermined cross-view coherence matrix (enforcing $< 2.0\%$ dimensional discrepancies).
+   - Computes standardized `procedural_generator_constants` (`BODY_W`, `BODY_H`, `BODY_D`, `LENS_DIAMETER`, `LENS_CX`, etc.).
+
+2. **Master Specification Assembly (`master_3d_design_specification.json`)**:
+   - Synthesized in Stage 1.7 by embedding `multi_pov_dimensional_specification.json` under `"multi_pov_photogrammetry"`, combined with:
+     - `"gemini_vision"`: Semantic identities, functional categories, and visual priors.
+     - `"geometry"`: 100-slice radial mesh, aspect ratios, and bounding boxes.
+     - `"materials_and_colors"`: CIE $L^*a^*b^*$ palette clusters and BSDF parameters.
+     - `"placement_and_viewpoints"`: Metric coordinate offsets in Blender Units.
+     - `"pbr_materials"`: PolyHaven / ambientCG PBR texture bindings.
+     - `"structural_geometry"`: BMesh rotational symmetry and primitive segmentations.
+
+3. **Model Generation Consumption (Stage 2)**:
+   - `generate_<name>.py` reads `master_3d_design_specification.json` as the definitive master blueprint.
+   - It instantiates precision 3D meshes, applying the procedural constants and component dimensions derived from `multi_pov_dimensional_specification.json` directly into Blender's scene graph.
 
 ### 3.1 Canonical Modular Component Object Schema
 

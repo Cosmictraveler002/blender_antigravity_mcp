@@ -108,7 +108,7 @@
   ],
   "component_materials": {
     "comp_upper_structure": {
-      "material_name": "UpperStructureMaterial",
+      "material_name": "UpperStructure&ViewfinderPrismMaterial",
       "dominant_color": {
         "srgb_display": [
           0.671,
@@ -146,7 +146,7 @@
           1.0
         ],
         "roughness": 0.22,
-        "metallic": 0.0,
+        "metallic": 0.17,
         "specular_ior_level": 0.5,
         "sheen_weight": 0.05,
         "subsurface_weight": 0.0
@@ -235,7 +235,7 @@
         "execution_tier": "tier_3_apu_cpu",
         "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
         "opencl_accelerated": true,
-        "inference_time_ms": 233.37,
+        "inference_time_ms": 232.45,
         "normal_mode": "valid_tangent",
         "acceptance_gates": {
           "roughness_variance": {
@@ -267,79 +267,79 @@
       }
     },
     "comp_main_body": {
-      "material_name": "MainBodyMaterial",
+      "material_name": "CameraChassisMaterial",
       "dominant_color": {
         "srgb_display": [
-          0.192,
-          0.184,
+          0.196,
+          0.188,
           0.204
         ],
         "srgb_linear": [
-          0.031,
-          0.028,
+          0.032,
+          0.03,
           0.034
         ],
-        "hex": "#312f34",
+        "hex": "#323034",
         "cie_lab": {
-          "L": 19.8,
-          "a": 2.1,
-          "b": -2.9
+          "L": 20.2,
+          "a": 1.8,
+          "b": -2.2
         }
       },
-      "specular_coverage_pct": 0.09,
+      "specular_coverage_pct": 0.1,
       "principled_bsdf": {
         "base_color_rgb": [
-          0.192,
-          0.184,
+          0.196,
+          0.188,
           0.204
         ],
         "base_color_srgb_linear": [
-          0.031,
-          0.028,
+          0.032,
+          0.03,
           0.034
         ],
         "base_color_rgba": [
-          0.192,
-          0.184,
+          0.196,
+          0.188,
           0.204,
           1.0
         ],
-        "roughness": 0.43,
-        "metallic": 0.0,
+        "roughness": 0.17,
+        "metallic": 0.47,
         "specular_ior_level": 0.5,
         "sheen_weight": 0.05,
         "subsurface_weight": 0.0
       },
       "surface_texture": {
-        "roughness_estimate": 0.43,
-        "gradient_energy": 0.0031,
-        "lbp_entropy": 3.47,
+        "roughness_estimate": 0.17,
+        "gradient_energy": 0.0025,
+        "lbp_entropy": 3.48,
         "gabor_grain_direction_deg": null,
-        "gabor_isotropy_score": 0.527,
+        "gabor_isotropy_score": 0.53,
         "is_isotropic": true,
         "texture_category": "SMOOTH_ISOTROPIC"
       },
       "notes": "Procedural PBR material for comp_main_body",
       "color_histogram_lab": {
         "L": [
-          0.01077,
-          0.02836,
-          0.02875,
-          0.0334,
-          0.03481,
-          0.02345,
-          0.01648,
-          0.00971,
-          0.00531,
-          0.00218,
-          0.00209,
-          0.00183,
-          0.00142,
-          0.00059,
-          0.00029,
-          0.00011,
-          0.00025,
-          0.00021,
+          0.00802,
+          0.02771,
+          0.02894,
+          0.03472,
+          0.03606,
+          0.02424,
+          0.01712,
+          0.01,
+          0.00538,
+          0.00204,
+          0.00168,
+          0.00143,
+          0.00116,
+          0.00057,
+          0.00031,
+          0.00012,
+          0.00026,
+          0.00022,
           0.0,
           0.0
         ],
@@ -352,9 +352,9 @@
           0.0,
           0.0,
           3e-05,
-          0.00119,
-          0.10565,
-          0.00183,
+          0.00127,
+          0.10544,
+          0.00196,
           0.0,
           0.0,
           0.0,
@@ -376,9 +376,9 @@
           0.0,
           0.0,
           1e-05,
-          0.09744,
-          0.0016,
-          0.00045,
+          0.0973,
+          0.00171,
+          0.00048,
           0.0,
           0.0,
           0.0,
@@ -394,17 +394,17 @@
         "execution_tier": "tier_3_apu_cpu",
         "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
         "opencl_accelerated": true,
-        "inference_time_ms": 67.23,
+        "inference_time_ms": 76.1,
         "normal_mode": "valid_tangent",
         "acceptance_gates": {
           "roughness_variance": {
-            "value": 0.00655,
+            "value": 0.0062,
             "threshold": ">= 0.005",
             "status": "RECOVERED",
             "mode": "procedural_perturbed"
           },
           "normal_flatness": {
-            "value": 0.011,
+            "value": 0.0115,
             "threshold": "<= 0.98",
             "status": "PASS",
             "mode": "valid_tangent"
@@ -416,7 +416,7 @@
             "mode": "delit_clean"
           }
         },
-        "composite_confidence_q": 0.727,
+        "composite_confidence_q": 0.719,
         "maps": {
           "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_main_body/diffuse.png",
           "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_main_body/roughness.png",
@@ -425,46 +425,520 @@
         }
       }
     },
-    "comp_base_section": {
-      "material_name": "BaseSectionMaterial",
+    "comp_handgrip": {
+      "material_name": "HandgripRubberMaterial",
+      "dominant_color": {
+        "srgb_display": [
+          0.463,
+          0.459,
+          0.478
+        ],
+        "srgb_linear": [
+          0.181,
+          0.178,
+          0.195
+        ],
+        "hex": "#76757a",
+        "cie_lab": {
+          "L": 49.5,
+          "a": 1.4,
+          "b": -2.6
+        }
+      },
+      "specular_coverage_pct": 0.0,
+      "principled_bsdf": {
+        "base_color_rgb": [
+          0.463,
+          0.459,
+          0.478
+        ],
+        "base_color_srgb_linear": [
+          0.181,
+          0.178,
+          0.195
+        ],
+        "base_color_rgba": [
+          0.463,
+          0.459,
+          0.478,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.0,
+        "specular_ior_level": 0.5,
+        "sheen_weight": 0.05,
+        "subsurface_weight": 0.0
+      },
+      "surface_texture": {
+        "roughness_estimate": 0.5,
+        "texture_category": "UNKNOWN",
+        "gradient_energy": 0.0,
+        "lbp_entropy": 0.0,
+        "gabor_grain_direction_deg": 0.0,
+        "gabor_isotropy_score": 1.0
+      },
+      "notes": "Procedural PBR material for comp_handgrip",
+      "color_histogram_lab": {
+        "L": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.02051,
+          0.03795,
+          0.01231,
+          0.00821,
+          0.01026,
+          0.01436,
+          0.02667,
+          0.03385,
+          0.02974,
+          0.00615,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "a": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.1087,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0995,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "svbrdf_analysis": {
+        "component_id": "comp_handgrip",
+        "decomposition_mode": "photometric_intrinsic_decomposition",
+        "execution_tier": "tier_3_apu_cpu",
+        "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
+        "opencl_accelerated": true,
+        "inference_time_ms": 52.1,
+        "normal_mode": "valid_tangent",
+        "acceptance_gates": {
+          "roughness_variance": {
+            "value": 0.00655,
+            "threshold": ">= 0.005",
+            "status": "RECOVERED",
+            "mode": "procedural_perturbed"
+          },
+          "normal_flatness": {
+            "value": 0.1206,
+            "threshold": "<= 0.98",
+            "status": "PASS",
+            "mode": "valid_tangent"
+          },
+          "albedo_specular_clipping": {
+            "value": 0.0,
+            "threshold": "<= 0.05",
+            "status": "PASS",
+            "mode": "delit_clean"
+          }
+        },
+        "composite_confidence_q": 0.683,
+        "maps": {
+          "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_handgrip/diffuse.png",
+          "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_handgrip/roughness.png",
+          "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_handgrip/normal.png",
+          "metallic": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_handgrip/metallic.png"
+        }
+      }
+    },
+    "comp_lens_barrel": {
+      "material_name": "LensBarrel&FocusRingMaterial",
+      "dominant_color": {
+        "srgb_display": [
+          0.635,
+          0.631,
+          0.651
+        ],
+        "srgb_linear": [
+          0.361,
+          0.356,
+          0.381
+        ],
+        "hex": "#a2a1a6",
+        "cie_lab": {
+          "L": 66.5,
+          "a": 1.3,
+          "b": -2.5
+        }
+      },
+      "specular_coverage_pct": 0.0,
+      "principled_bsdf": {
+        "base_color_rgb": [
+          0.635,
+          0.631,
+          0.651
+        ],
+        "base_color_srgb_linear": [
+          0.361,
+          0.356,
+          0.381
+        ],
+        "base_color_rgba": [
+          0.635,
+          0.631,
+          0.651,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.85,
+        "specular_ior_level": 0.5,
+        "sheen_weight": 0.05,
+        "subsurface_weight": 0.0
+      },
+      "surface_texture": {
+        "roughness_estimate": 0.5,
+        "texture_category": "UNKNOWN",
+        "gradient_energy": 0.0,
+        "lbp_entropy": 0.0,
+        "gabor_grain_direction_deg": 0.0,
+        "gabor_isotropy_score": 1.0
+      },
+      "notes": "Procedural PBR material for comp_lens_barrel",
+      "color_histogram_lab": {
+        "L": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0841,
+          0.11179,
+          0.0041,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "a": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.1087,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0995,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "svbrdf_analysis": {
+        "component_id": "comp_lens_barrel",
+        "decomposition_mode": "photometric_intrinsic_decomposition",
+        "execution_tier": "tier_3_apu_cpu",
+        "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
+        "opencl_accelerated": true,
+        "inference_time_ms": 58.16,
+        "normal_mode": "valid_tangent",
+        "acceptance_gates": {
+          "roughness_variance": {
+            "value": 0.00655,
+            "threshold": ">= 0.005",
+            "status": "RECOVERED",
+            "mode": "procedural_perturbed"
+          },
+          "normal_flatness": {
+            "value": 0.284,
+            "threshold": "<= 0.98",
+            "status": "PASS",
+            "mode": "valid_tangent"
+          },
+          "albedo_specular_clipping": {
+            "value": 0.0,
+            "threshold": "<= 0.05",
+            "status": "PASS",
+            "mode": "delit_clean"
+          }
+        },
+        "composite_confidence_q": 0.617,
+        "maps": {
+          "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_barrel/diffuse.png",
+          "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_barrel/roughness.png",
+          "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_barrel/normal.png",
+          "metallic": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_barrel/metallic.png"
+        }
+      }
+    },
+    "comp_lens_front_element": {
+      "material_name": "FrontOpticalGlassElementMaterial",
       "dominant_color": {
         "srgb_display": [
           0.671,
-          0.663,
+          0.667,
           0.686
         ],
         "srgb_linear": [
           0.407,
-          0.397,
+          0.402,
           0.429
         ],
-        "hex": "#aba9af",
+        "hex": "#abaaaf",
         "cie_lab": {
-          "L": 69.6,
-          "a": 1.9,
-          "b": -2.8
+          "L": 69.8,
+          "a": 1.3,
+          "b": -2.4
         }
       },
       "specular_coverage_pct": 0.0,
       "principled_bsdf": {
         "base_color_rgb": [
           0.671,
-          0.663,
+          0.667,
           0.686
         ],
         "base_color_srgb_linear": [
           0.407,
-          0.397,
+          0.402,
           0.429
         ],
         "base_color_rgba": [
           0.671,
-          0.663,
+          0.667,
           0.686,
           1.0
         ],
         "roughness": 0.5,
         "metallic": 0.0,
+        "specular_ior_level": 0.5,
+        "sheen_weight": 0.05,
+        "subsurface_weight": 0.0
+      },
+      "surface_texture": {
+        "roughness_estimate": 0.5,
+        "texture_category": "UNKNOWN",
+        "gradient_energy": 0.0,
+        "lbp_entropy": 0.0,
+        "gabor_grain_direction_deg": 0.0,
+        "gabor_isotropy_score": 1.0
+      },
+      "notes": "Procedural PBR material for comp_lens_front_element",
+      "color_histogram_lab": {
+        "L": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.16718,
+          0.03282,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "a": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.1087,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "b": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0995,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "svbrdf_analysis": {
+        "component_id": "comp_lens_front_element",
+        "decomposition_mode": "photometric_intrinsic_decomposition",
+        "execution_tier": "tier_3_apu_cpu",
+        "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
+        "opencl_accelerated": true,
+        "inference_time_ms": 33.88,
+        "normal_mode": "valid_tangent",
+        "acceptance_gates": {
+          "roughness_variance": {
+            "value": 0.00655,
+            "threshold": ">= 0.005",
+            "status": "RECOVERED",
+            "mode": "procedural_perturbed"
+          },
+          "normal_flatness": {
+            "value": 0.396,
+            "threshold": "<= 0.98",
+            "status": "PASS",
+            "mode": "valid_tangent"
+          },
+          "albedo_specular_clipping": {
+            "value": 0.0,
+            "threshold": "<= 0.05",
+            "status": "PASS",
+            "mode": "delit_clean"
+          }
+        },
+        "composite_confidence_q": 0.573,
+        "maps": {
+          "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_front_element/diffuse.png",
+          "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_front_element/roughness.png",
+          "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_front_element/normal.png",
+          "metallic": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_lens_front_element/metallic.png"
+        }
+      }
+    },
+    "comp_base_section": {
+      "material_name": "BaseSectionMaterial",
+      "dominant_color": {
+        "srgb_display": [
+          0.667,
+          0.663,
+          0.682
+        ],
+        "srgb_linear": [
+          0.402,
+          0.397,
+          0.423
+        ],
+        "hex": "#aaa9ae",
+        "cie_lab": {
+          "L": 69.5,
+          "a": 1.3,
+          "b": -2.4
+        }
+      },
+      "specular_coverage_pct": 0.0,
+      "principled_bsdf": {
+        "base_color_rgb": [
+          0.667,
+          0.663,
+          0.682
+        ],
+        "base_color_srgb_linear": [
+          0.402,
+          0.397,
+          0.423
+        ],
+        "base_color_rgba": [
+          0.667,
+          0.663,
+          0.682,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.75,
         "specular_ior_level": 0.5,
         "sheen_weight": 0.05,
         "subsurface_weight": 0.0
@@ -493,8 +967,8 @@
           0.0,
           0.0,
           0.0,
-          0.1644,
-          0.0356,
+          0.17846,
+          0.02154,
           0.0,
           0.0,
           0.0,
@@ -552,7 +1026,7 @@
         "execution_tier": "tier_3_apu_cpu",
         "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
         "opencl_accelerated": true,
-        "inference_time_ms": 31.37,
+        "inference_time_ms": 35.86,
         "normal_mode": "valid_tangent",
         "acceptance_gates": {
           "roughness_variance": {
@@ -562,7 +1036,7 @@
             "mode": "procedural_perturbed"
           },
           "normal_flatness": {
-            "value": 0.4258,
+            "value": 0.4917,
             "threshold": "<= 0.98",
             "status": "PASS",
             "mode": "valid_tangent"
@@ -574,7 +1048,7 @@
             "mode": "delit_clean"
           }
         },
-        "composite_confidence_q": 0.561,
+        "composite_confidence_q": 0.534,
         "maps": {
           "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/diffuse.png",
           "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/roughness.png",

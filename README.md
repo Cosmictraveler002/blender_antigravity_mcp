@@ -9,6 +9,7 @@ A production-grade, multi-modal **2D Reference Image to 3D Blender Reconstructio
 
 ### Key Capabilities & Architectural Highlights
 - 🔄 **Auto-Rebuild on Structural Recommendations**: Automatically escalates from micro parameter nudges to clean procedural re-generation in Blender whenever topological or aspect ratio discrepancies are detected.
+- 📐 **Multi-POV Photogrammetry & Master Specification Pipeline**: Calibrates spatial resolution (mm/px) and verifies cross-view coherence to emit `multi_pov_dimensional_specification.json`, which compiles directly into `master_3d_design_specification.json` as the authoritative blueprint for 3D model generation.
 - 🎨 **Packaging Diffuse Substrate Tinting (`LabelTint`)**: Inserts dynamic `ShaderNodeMix` RGBA Multiply nodes in the shader graph, preventing packaging textures from blocking closed-loop color calibration.
 - 🎯 **Multi-Gate Component Convergence**: Rigorous validation enforcing aspect ratio ($\le 2\%$), component vertical span ($\le 0.8\%$), perceptual color difference ($\Delta E_{00} \le 6.5$), and radial contour MAE ($\le 0.040$) for $\ge 92.0\%$ fidelity.
 - 📸 **14-Camera Multi-Viewport 360° Capture**: Automated spherical orbit verification capturing orthographic and perspective views with symmetry IoU analysis.
@@ -72,7 +73,7 @@ Blender-MCP/
 │       │   └── verify_and_refine_bottle.py
 │       └── outputs/                   # Generated artifacts
 │           ├── renders/               # Viewport & Cycles renders (plus viewports/ 14 angles)
-│           ├── specs/                 # JSON design specifications
+│           ├── specs/                 # JSON design specifications (multi_pov_dimensional_specification.json, master_3d_design_specification.json)
 │           ├── reports/               # Markdown summaries, contact sheets & collages
 │           └── textures/              # Downloaded / synthesized PBR textures
 │
@@ -176,8 +177,8 @@ py -m harness run pyana_reka_can --dry-run
 
 | Stage | Name | Key Algorithms & Operations | Output Artifacts |
 | :--- | :--- | :--- | :--- |
-| **Stage 1** | **Analyze** | • Radial profile mesh (100 elevation slices)<br>• CIE L\*a\*b\* K-Means palette clustering<br>• Gabor filter anisotropy & frequency analysis<br>• Spatial coordinate mapping from 6 orthographic views | `geometry_design_doc.json`<br>`color_texture_design_doc.json`<br>`placement_report.json` / `.md`<br>`master_3d_design_specification.json` |
-| **Stage 2** | **Generate** | • Procedural mesh synthesis in Blender<br>• Principled BSDF shader setup<br>• Procedural PBR texture baking<br>• Studio lighting & camera framing | Active 3D Blender scene<br>`initial_render.png` |
+| **Stage 1** | **Analyze** | • Radial profile mesh (100 elevation slices)<br>• CIE L\*a\*b\* K-Means palette clustering<br>• Gabor filter anisotropy & frequency analysis<br>• Spatial coordinate mapping from 6 orthographic views<br>• Multi-POV photogrammetry & cross-view coherence (`BaseObjective`) | `multi_pov_dimensional_specification.json`<br>`multi_pov_dimensional_report.md`<br>`geometry_design_doc.json`<br>`color_texture_design_doc.json`<br>`placement_report.json` / `.md`<br>`master_3d_design_specification.json` (compiled blueprint) |
+| **Stage 2** | **Generate** | • Procedural mesh synthesis in Blender driven by `master_3d_design_specification.json` (compiled directly from `multi_pov_dimensional_specification.json`)<br>• Principled BSDF shader setup<br>• Procedural PBR texture baking<br>• Studio lighting & camera framing | Active 3D Blender scene<br>`initial_render.png` |
 | **Stage Capture** | **Capture** | • 14-camera spherical orbit (6 ortho + 8 perspective)<br>• Transparent film background capture with headlight fill<br>• Lateral & anterior-posterior silhouette symmetry IoU<br>• 4×4 visual contact sheet montage generation | `renders/viewports/*.png`<br>`viewport_manifest.json`<br>`viewport_analysis_report.json`<br>`viewport_contact_sheet.png` |
 | **Stage 3** | **Compare** | • Dual-analysis `GeometryAnalyzer` (identical model)<br>• 100-level radial mesh MAE & Procrustes metric<br>• Component CIEDE2000 color delta ($\Delta E_{00}$)<br>• Structural recommendation tagging (`is_structural`, `requires_rebuild`)<br>• 1:1 normalized baseline side-by-side diagnostic | `comparison_report.json`<br>`render_geometry_annotated.png`<br>`comparison_side_by_side.png` |
 | **Stage 4** | **Refine** | • Closed-loop proportional feedback controller<br>• Auto-Rebuild escalation on structural recommendations<br>• Multi-gate component convergence validation<br>• Diffuse substrate tinting (`LabelTint` multiplier) | Updated Blender scene<br>`refinement_log.json` |
@@ -196,7 +197,7 @@ Creating a new reconstruction project is as simple as creating a directory under
    ├── reference/
    │   └── reference.jpg
    └── scripts/
-       └── generate_model.py
+       └── generate_model.py          # Consumes master_3d_design_specification.json to generate 3D model
    ```
 2. Define `project.yaml`:
    ```yaml

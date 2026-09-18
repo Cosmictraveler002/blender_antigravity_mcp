@@ -27,6 +27,7 @@ class ProjectDefinition:
     generate_script: Optional[str] = None
     verify_script: Optional[str] = None
     refine_script: Optional[str] = None
+    objective_script: Optional[str] = None
 
     # Override-able config
     convergence: Optional[ConvergenceConfig] = None
@@ -111,6 +112,9 @@ def load_project(project_name: str, harness_root: Optional[str] = None) -> Proje
         refine_script = _resolve_path(project_dir, scripts["refine"])
     elif verify_script:
         refine_script = verify_script
+    objective_script = None
+    if "objective" in scripts:
+        objective_script = _resolve_path(project_dir, scripts["objective"])
 
     # Parse convergence overrides
     convergence = None
@@ -156,6 +160,7 @@ def load_project(project_name: str, harness_root: Optional[str] = None) -> Proje
         generate_script=gen_script,
         verify_script=verify_script,
         refine_script=refine_script,
+        objective_script=objective_script,
         convergence=convergence,
         render=render,
         viewport=viewport,

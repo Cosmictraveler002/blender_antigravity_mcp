@@ -23,8 +23,8 @@
     "sections": [
       {
         "component_id": "comp_upper_structure",
-        "name": "Upper Structure",
-        "category": "collar",
+        "name": "Upper Structure & Viewfinder Prism",
+        "category": "closure",
         "z_range_normalized": [
           0.841,
           1.0
@@ -33,22 +33,67 @@
         "height_bu": 0.239,
         "width_bu": 2.0,
         "center_offset_x_bu": 0.0,
-        "color_hex": "#747276",
+        "color_hex": "#343336",
         "notes": ""
       },
       {
         "component_id": "comp_main_body",
-        "name": "Main Body",
-        "category": "substrate",
+        "name": "Camera Chassis",
+        "category": "closure",
         "z_range_normalized": [
-          0.086,
+          0.132,
           0.841
         ],
-        "z_center_bu": 0.695,
-        "height_bu": 1.134,
+        "z_center_bu": 0.73,
+        "height_bu": 1.065,
         "width_bu": 2.0,
         "center_offset_x_bu": 0.0,
-        "color_hex": "#49474B",
+        "color_hex": "#353438",
+        "notes": ""
+      },
+      {
+        "component_id": "comp_handgrip",
+        "name": "Handgrip Rubber",
+        "category": "enclosure",
+        "z_range_normalized": [
+          0.099,
+          0.132
+        ],
+        "z_center_bu": 0.174,
+        "height_bu": 0.05,
+        "width_bu": 2.0,
+        "center_offset_x_bu": 0.0,
+        "color_hex": "#1E1E20",
+        "notes": ""
+      },
+      {
+        "component_id": "comp_lens_barrel",
+        "name": "Lens Barrel & Focus Ring",
+        "category": "enclosure",
+        "z_range_normalized": [
+          0.066,
+          0.099
+        ],
+        "z_center_bu": 0.125,
+        "height_bu": 0.05,
+        "width_bu": 2.0,
+        "center_offset_x_bu": 0.0,
+        "color_hex": "#2A292C",
+        "notes": ""
+      },
+      {
+        "component_id": "comp_lens_front_element",
+        "name": "Front Optical Glass Element",
+        "category": "enclosure",
+        "z_range_normalized": [
+          0.033,
+          0.066
+        ],
+        "z_center_bu": 0.075,
+        "height_bu": 0.05,
+        "width_bu": 2.0,
+        "center_offset_x_bu": 0.0,
+        "color_hex": "#18241D",
         "notes": ""
       },
       {
@@ -57,20 +102,20 @@
         "category": "structural_base",
         "z_range_normalized": [
           0.0,
-          0.086
+          0.033
         ],
-        "z_center_bu": 0.065,
-        "height_bu": 0.129,
+        "z_center_bu": 0.026,
+        "height_bu": 0.05,
         "width_bu": 2.0,
         "center_offset_x_bu": 0.0,
-        "color_hex": "#ABA9AF",
+        "color_hex": "#353438",
         "notes": ""
       }
     ]
   },
   "blender_target_transforms": {
     "comp_upper_structure": {
-      "display_name": "Upper Structure",
+      "display_name": "Upper Structure & Viewfinder Prism",
       "location": [
         0.0,
         0.0,
@@ -93,21 +138,90 @@
       ]
     },
     "comp_main_body": {
-      "display_name": "Main Body",
+      "display_name": "Camera Chassis",
       "location": [
         0.0,
         0.0,
-        0.695
+        0.73
       ],
       "scale": [
         1.0,
         1.0,
-        0.567
+        0.532
       ],
       "dimensions_bu": [
         2.0,
         2.0,
-        1.134
+        1.065
+      ],
+      "rotation_euler_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "comp_handgrip": {
+      "display_name": "Handgrip Rubber",
+      "location": [
+        0.0,
+        0.0,
+        0.174
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        0.025
+      ],
+      "dimensions_bu": [
+        2.0,
+        2.0,
+        0.05
+      ],
+      "rotation_euler_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "comp_lens_barrel": {
+      "display_name": "Lens Barrel & Focus Ring",
+      "location": [
+        0.0,
+        0.0,
+        0.125
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        0.025
+      ],
+      "dimensions_bu": [
+        2.0,
+        2.0,
+        0.05
+      ],
+      "rotation_euler_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "comp_lens_front_element": {
+      "display_name": "Front Optical Glass Element",
+      "location": [
+        0.0,
+        0.0,
+        0.075
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        0.025
+      ],
+      "dimensions_bu": [
+        2.0,
+        2.0,
+        0.05
       ],
       "rotation_euler_deg": [
         0.0,
@@ -120,17 +234,17 @@
       "location": [
         0.0,
         0.0,
-        0.065
+        0.026
       ],
       "scale": [
         1.0,
         1.0,
-        0.065
+        0.025
       ],
       "dimensions_bu": [
         2.0,
         2.0,
-        0.129
+        0.05
       ],
       "rotation_euler_deg": [
         0.0,

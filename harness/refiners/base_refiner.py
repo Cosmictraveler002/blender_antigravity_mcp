@@ -57,6 +57,27 @@ class BaseRefinementEngine:
                 self.target_color = json.load(f)
 
         self.iteration_history: List[Dict[str, Any]] = []
+        self.stagnation_patience = 3
+        self.stagnation_epsilon = 1.0  # % delta threshold across last N passes
+        self.last_applied_parameters: List[str] = []
+        self.rec_seen_counts: Dict[str, int] = {}
+
+    @staticmethod
+    def _rec_id(rec: Dict[str, Any]) -> str:
+        """Stable identifier for a recommendation across passes."""
+        if "recommendation_id" in rec:
+            return str(rec["recommendation_id"])
+        param = rec.get("parameter", "unknown")
+        tgt = rec.get("target") if rec.get("target") is not None else rec.get("target_delta", "")
+        return f"{param}:{tgt}"
+
+    def check_stagnation(self) -> bool:
+        """Return True if fidelity score has plateaued across last stagnation_patience passes."""
+        if len(self.iteration_history) < self.stagnation_patience:
+            return False
+        recent = [p.get("score", 0.0) for p in self.iteration_history[-self.stagnation_patience:]]
+        delta = max(recent) - min(recent)
+        return delta < self.stagnation_epsilon
 
     def check_structural_rebuild_needed(self, recommendations: List[Dict[str, Any]]) -> bool:
         """Determine if recommendations mandate a clean 3D procedural rebuild."""
@@ -153,10 +174,31 @@ class BaseRefinementEngine:
 
         converged = False
         final_score = 0.0
+        loop_status = "max_iterations_reached"
         recommendations = self.get_latest_recommendations()
+        prev_recommendation_ids = [self._rec_id(r) for r in recommendations]
+        last_comp: Dict[str, Any] = {}
 
         for pass_num in range(1, self.max_iterations + 1):
-            print(f"\n[Refine Pass {pass_num}/{self.max_iterations}] Evaluating corrective actions ({len(recommendations)} recs)...")
+            # Annotate recommendations with repeat counts & unresolvable flag
+            for rec in recommendations:
+                rid = self._rec_id(rec)
+                self.rec_seen_counts[rid] = self.rec_seen_counts.get(rid, 0) + 1
+                if self.rec_seen_counts[rid] >= 2:
+                    rec["unresolvable"] = True
+
+            active_recs = [r for r in recommendations if not r.get("unresolvable", False)]
+            unresolvable_recs = [r for r in recommendations if r.get("unresolvable", False)]
+
+            curr_ids = [self._rec_id(r) for r in recommendations]
+            added_ids = [i for i in curr_ids if i not in prev_recommendation_ids]
+            removed_ids = [i for i in prev_recommendation_ids if i not in curr_ids]
+
+            print(f"\n[Refine Pass {pass_num}/{self.max_iterations}] Evaluating corrective actions "
+                  f"({len(active_recs)} active, {len(unresolvable_recs)} unresolvable, "
+                  f"+{len(added_ids)} new, -{len(removed_ids)} resolved)...")
+            if unresolvable_recs:
+                print(f"[Refine Pass {pass_num}] Notice: {len(unresolvable_recs)} recommendation(s) persisted across passes without resolution.")
 
             # Check for structural rebuild escalation
             if self.check_structural_rebuild_needed(recommendations):
@@ -166,41 +208,67 @@ class BaseRefinementEngine:
                     # Capture fresh baseline render and comparison post-rebuild
                     render_path = self.trigger_render(f"{pass_num}_rebuild")
                     comp_result = self.evaluate_render(render_path)
+                    last_comp = comp_result
                     current_score = comp_result.get("overall_score", 0.0)
                     recommendations = comp_result.get("recommendations", [])
+                    for rec in recommendations:
+                        rid = self._rec_id(rec)
+                        if self.rec_seen_counts.get(rid, 0) >= 2:
+                            rec["unresolvable"] = True
                     print(f"[Refine Pass {pass_num} Post-Rebuild] Fresh Baseline Score: {current_score:.1f}%")
                     self.iteration_history.append({
                         "pass": f"{pass_num}_rebuild",
                         "score": current_score,
                         "render_path": render_path,
                         "rebuild_cycle": self.rebuild_count,
-                        "recommendations_count": len(recommendations),
+                        "recommendations_count": len([r for r in recommendations if not r.get('unresolvable', False)]),
+                        "applied_parameters": ["procedural_rebuild"],
                         "timestamp": time.time()
                     })
                     conv_status = comp_result.get("convergence_status", {})
                     if (conv_status.get("converged", False) or current_score >= self.target_score):
                         converged = conv_status.get("converged", False)
                         final_score = current_score
+                        loop_status = "converged"
                         break
 
             # Apply project-specific mutations
-            adjusted = self.apply_adjustments(pass_num, recommendations)
+            self.last_applied_parameters = []
+            adj_res = self.apply_adjustments(pass_num, recommendations)
+            if isinstance(adj_res, tuple):
+                adjusted, applied_params = adj_res
+                self.last_applied_parameters = applied_params
+            elif isinstance(adj_res, list):
+                adjusted = bool(adj_res)
+                self.last_applied_parameters = adj_res
+            else:
+                adjusted = bool(adj_res)
+
             if not adjusted:
                 print(f"[Refine Pass {pass_num}] No further adjustments applied.")
+            else:
+                print(f"[Refine Pass {pass_num}] Applied adjustments: {self.last_applied_parameters or ['modified_properties']}")
 
             # Trigger render & comparison
             render_path = self.trigger_render(pass_num)
             comp_result = self.evaluate_render(render_path)
+            last_comp = comp_result
 
             current_score = comp_result.get("overall_score", 0.0)
             final_score = current_score
+            prev_recommendation_ids = curr_ids
             recommendations = comp_result.get("recommendations", [])
+            for rec in recommendations:
+                rid = self._rec_id(rec)
+                if self.rec_seen_counts.get(rid, 0) >= 2:
+                    rec["unresolvable"] = True
 
             self.iteration_history.append({
                 "pass": pass_num,
                 "score": current_score,
                 "render_path": render_path,
-                "recommendations_count": len(recommendations),
+                "recommendations_count": len([r for r in recommendations if not r.get('unresolvable', False)]),
+                "applied_parameters": list(self.last_applied_parameters),
                 "timestamp": time.time()
             })
 
@@ -212,27 +280,44 @@ class BaseRefinementEngine:
             if is_converged and current_score >= self.target_score:
                 print(f"\n[Refine] SUCCESS: All component tolerance gates and target score reached on pass {pass_num}!")
                 converged = True
+                loop_status = "converged"
                 break
             elif current_score >= self.target_score and not is_converged:
                 print(f"[Refine Pass {pass_num}] Target score reached ({current_score:.1f}%), but component tolerances pending. Continuing refinement...")
+
+            # Stagnation check: abort early if scores have flatlined
+            if self.check_stagnation():
+                print(f"\n[Refine Pass {pass_num}] STAGNATION DETECTED: Score delta over last {self.stagnation_patience} passes is below {self.stagnation_epsilon}%.")
+                print(f"Aborting refinement loop early to avoid redundant passes.")
+                loop_status = "stagnated"
+                break
 
         # Update canonical front render with latest refined pass
         if self.iteration_history:
             latest_pass_render = self.iteration_history[-1].get("render_path")
             if latest_pass_render and os.path.exists(latest_pass_render):
                 import shutil
-                front_dest = os.path.join(self.renders_dir, "can_front_render.png")
-                try:
-                    shutil.copyfile(latest_pass_render, front_dest)
-                    print(f"[Refine] Updated canonical front render -> {front_dest}")
-                except Exception as e:
-                    print(f"[Refine] Could not update canonical front render: {e}")
+                dest_paths = [
+                    os.path.join(self.renders_dir, "initial_render.png"),
+                    os.path.join(self.renders_dir, "canonical_front_render.png"),
+                ]
+                for dest in dest_paths:
+                    try:
+                        shutil.copyfile(latest_pass_render, dest)
+                        print(f"[Refine] Updated canonical front render -> {dest}")
+                    except Exception as e:
+                        print(f"[Refine] Could not update {dest}: {e}")
 
         log_data = {
+            "status": loop_status,
             "converged": converged,
             "final_score": final_score,
+            "final_geometry_score": last_comp.get("geometry_score", final_score),
+            "final_color_score": last_comp.get("color_score", 0.0),
+            "final_texture_score": last_comp.get("texture_score", 0.0),
             "total_passes": len(self.iteration_history),
             "rebuilds_executed": self.rebuild_count,
+            "unresolvable_recommendations_count": len([r for r in recommendations if r.get("unresolvable")]),
             "history": self.iteration_history
         }
 
@@ -286,6 +371,9 @@ bpy.ops.render.render(write_still=True)
         comp_res = comparator.compare_against_target(rend_data)
         return {
             "overall_score": comp_res.get("overall_fidelity", {}).get("total_score_pct", 0.0),
+            "geometry_score": comp_res.get("overall_fidelity", {}).get("geometry_score_pct", 0.0),
+            "color_score": comp_res.get("overall_fidelity", {}).get("color_score_pct", 0.0),
+            "texture_score": comp_res.get("overall_fidelity", {}).get("texture_score_pct", 0.0),
             "recommendations": comp_res.get("correction_recommendations", []),
             "convergence_status": comp_res.get("convergence_status", {}),
             "metrics": comp_res.get("metrics", [])
