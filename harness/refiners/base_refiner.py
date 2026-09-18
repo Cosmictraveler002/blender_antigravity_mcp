@@ -268,8 +268,6 @@ import bpy
 cam = bpy.data.objects.get('Cam_Front') or bpy.data.objects.get('Camera')
 if cam:
     bpy.context.scene.camera = cam
-bpy.context.scene.render.resolution_x = 720
-bpy.context.scene.render.resolution_y = 1280
 bpy.context.scene.render.filepath = '{render_path}'
 bpy.ops.render.render(write_still=True)
 """

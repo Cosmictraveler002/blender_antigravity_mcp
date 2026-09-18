@@ -1,0 +1,25 @@
+name: Nexus Mirrorless Camera
+version: 1.0.0
+object_type: camera
+reference_image: reference/front_view.png
+blender_scripts:
+  generate: scripts/generate_camera.py
+  refine: scripts/refine_camera.py
+  verify: scripts/verify_camera.py
+convergence:
+  max_iterations: 5
+  ciede2000_threshold: 3.5
+  ssim_threshold: 0.88
+  geometry_score_threshold: 0.9
+render:
+  resolution:
+  - 1024
+  - 576
+  view_transform: Standard
+  samples: 64
+viewport_capture:
+  enabled: true
+  resolution_scale: 0.5
+  samples: 32
+  padding_factor: 1.25
+  camera_distance_factor: 1.6

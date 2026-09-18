@@ -25,7 +25,9 @@ manual_env/
 *token*
 
 # User Projects (CRITICAL: EXCLUDED AS REQUESTED)
-projects/
+projects/*
+!projects/nexus_camera/
+!projects/nexus_camera/outputs/
 
 # Texture Cache & Heavy Local Assets
 assets/textures_cache/
@@ -45,7 +47,7 @@ src/blender_mcp/config.py
 # Debug artifacts
 debug/
 *.log
-outputs/
+/outputs/
 scratch/
 .pytest_cache/
 

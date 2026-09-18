@@ -1,0 +1,145 @@
+{
+  "project_name": "Nexus Mirrorless Camera",
+  "viewports_dir": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports",
+  "total_viewports": 14,
+  "captured_count": 14,
+  "resolution": [
+    512,
+    288
+  ],
+  "viewports": [
+    {
+      "name": "front",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_front.png",
+      "exists": true,
+      "size_bytes": 70703,
+      "azimuth": 0,
+      "elevation": 0,
+      "ortho": true
+    },
+    {
+      "name": "back",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_back.png",
+      "exists": true,
+      "size_bytes": 65644,
+      "azimuth": 180,
+      "elevation": 0,
+      "ortho": true
+    },
+    {
+      "name": "left",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_left.png",
+      "exists": true,
+      "size_bytes": 61908,
+      "azimuth": 270,
+      "elevation": 0,
+      "ortho": true
+    },
+    {
+      "name": "right",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_right.png",
+      "exists": true,
+      "size_bytes": 62902,
+      "azimuth": 90,
+      "elevation": 0,
+      "ortho": true
+    },
+    {
+      "name": "top",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_top.png",
+      "exists": true,
+      "size_bytes": 72641,
+      "azimuth": 0,
+      "elevation": 90,
+      "ortho": true
+    },
+    {
+      "name": "bottom",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_bottom.png",
+      "exists": true,
+      "size_bytes": 67763,
+      "azimuth": 0,
+      "elevation": -90,
+      "ortho": true
+    },
+    {
+      "name": "front_left_45",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_front_left_45.png",
+      "exists": true,
+      "size_bytes": 72297,
+      "azimuth": 315,
+      "elevation": 30,
+      "ortho": false
+    },
+    {
+      "name": "front_right_45",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_front_right_45.png",
+      "exists": true,
+      "size_bytes": 72212,
+      "azimuth": 45,
+      "elevation": 30,
+      "ortho": false
+    },
+    {
+      "name": "back_left_45",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_back_left_45.png",
+      "exists": true,
+      "size_bytes": 70624,
+      "azimuth": 225,
+      "elevation": 30,
+      "ortho": false
+    },
+    {
+      "name": "back_right_45",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_back_right_45.png",
+      "exists": true,
+      "size_bytes": 72307,
+      "azimuth": 135,
+      "elevation": 30,
+      "ortho": false
+    },
+    {
+      "name": "high_front",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_high_front.png",
+      "exists": true,
+      "size_bytes": 73507,
+      "azimuth": 0,
+      "elevation": 60,
+      "ortho": false
+    },
+    {
+      "name": "high_back",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_high_back.png",
+      "exists": true,
+      "size_bytes": 69627,
+      "azimuth": 180,
+      "elevation": 60,
+      "ortho": false
+    },
+    {
+      "name": "low_front",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_low_front.png",
+      "exists": true,
+      "size_bytes": 62104,
+      "azimuth": 0,
+      "elevation": -15,
+      "ortho": false
+    },
+    {
+      "name": "low_back",
+      "path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_low_back.png",
+      "exists": true,
+      "size_bytes": 63195,
+      "azimuth": 180,
+      "elevation": -15,
+      "ortho": false
+    }
+  ],
+  "blender_response": {
+    "status": "success",
+    "result": {
+      "executed": true,
+      "result": "[MultiViewport] Center: <Vector (0.0000, -33.7500, 10.7500)>, Dims: <Vector (142.2000, 125.5000, 101.9000)>, MaxDim: 142.20, Radius: 107.65\n[MultiViewport] Rendering 'front' (Az: 0\u00b0, El: 0\u00b0, Ortho: True) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_front.png\n[MultiViewport] Rendering 'back' (Az: 180\u00b0, El: 0\u00b0, Ortho: True) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_back.png\n[MultiViewport] Rendering 'left' (Az: 270\u00b0, El: 0\u00b0, Ortho: True) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_left.png\n[MultiViewport] Rendering 'right' (Az: 90\u00b0, El: 0\u00b0, Ortho: True) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_right.png\n[MultiViewport] Rendering 'top' (Az: 0\u00b0, El: 90\u00b0, Ortho: True) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_top.png\n[MultiViewport] Rendering 'bottom' (Az: 0\u00b0, El: -90\u00b0, Ortho: True) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_bottom.png\n[MultiViewport] Rendering 'front_left_45' (Az: 315\u00b0, El: 30\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_front_left_45.png\n[MultiViewport] Rendering 'front_right_45' (Az: 45\u00b0, El: 30\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_front_right_45.png\n[MultiViewport] Rendering 'back_left_45' (Az: 225\u00b0, El: 30\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_back_left_45.png\n[MultiViewport] Rendering 'back_right_45' (Az: 135\u00b0, El: 30\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_back_right_45.png\n[MultiViewport] Rendering 'high_front' (Az: 0\u00b0, El: 60\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_high_front.png\n[MultiViewport] Rendering 'high_back' (Az: 180\u00b0, El: 60\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_high_back.png\n[MultiViewport] Rendering 'low_front' (Az: 0\u00b0, El: -15\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_low_front.png\n[MultiViewport] Rendering 'low_back' (Az: 180\u00b0, El: -15\u00b0, Ortho: False) -> C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\renders\\viewports\\viewport_low_back.png\n"
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "comp_upper_structure": {
+    "component_id": "comp_upper_structure",
+    "status": "pbr_downloaded",
+    "source": "polyhaven",
+    "asset_id": "smooth_concrete_floor",
+    "maps": {
+      "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\diffuse.jpg",
+      "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\roughness.jpg",
+      "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\normal.jpg",
+      "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\ao.jpg",
+      "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\displacement.jpg"
+    },
+    "target_color_hex": "#747276",
+    "estimated_roughness": 0.22,
+    "estimated_metallic": 0.0,
+    "is_procedural_fallback": false
+  },
+  "comp_main_body": {
+    "component_id": "comp_main_body",
+    "status": "pbr_downloaded",
+    "source": "polyhaven",
+    "asset_id": "smooth_concrete_floor",
+    "maps": {
+      "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\diffuse.jpg",
+      "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\roughness.jpg",
+      "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\normal.jpg",
+      "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\ao.jpg",
+      "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\displacement.jpg"
+    },
+    "target_color_hex": "#49474B",
+    "estimated_roughness": 0.43,
+    "estimated_metallic": 0.0,
+    "is_procedural_fallback": false
+  },
+  "comp_base_section": {
+    "component_id": "comp_base_section",
+    "status": "pbr_downloaded",
+    "source": "polyhaven",
+    "asset_id": "smooth_concrete_floor",
+    "maps": {
+      "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\diffuse.jpg",
+      "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\roughness.jpg",
+      "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\normal.jpg",
+      "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\ao.jpg",
+      "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\displacement.jpg"
+    },
+    "target_color_hex": "#ABA9AF",
+    "estimated_roughness": 0.5,
+    "estimated_metallic": 0.0,
+    "is_procedural_fallback": false
+  }
+}

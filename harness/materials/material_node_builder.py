@@ -48,6 +48,7 @@ def build_pbr_material_nodes(
     diffuse_path = maps.get("diffuse", "").replace("\\", "/")
     roughness_path = maps.get("roughness", "").replace("\\", "/")
     normal_path = maps.get("normal", "").replace("\\", "/")
+    metallic_path = maps.get("metallic", "").replace("\\", "/")
     ao_path = maps.get("ao", "").replace("\\", "/")
 
     r, g, b = target_color_rgb if target_color_rgb else (0.8, 0.8, 0.8)
@@ -131,6 +132,8 @@ if diffuse_path and os.path.exists(diffuse_path):
     if {tint_factor} > 0.01:
         # Tint node
         tint = nodes.new(type='ShaderNodeMix')
+        tint.name = "LabelTint"
+        tint.label = "LabelTint"
         tint.data_type = 'RGBA'
         tint.blend_type = 'MULTIPLY'
         tint.location = (50, 150)
@@ -154,7 +157,18 @@ if rough_path and os.path.exists(rough_path):
     links.new(mapping.outputs['Vector'], tex_rough.inputs['Vector'])
     links.new(tex_rough.outputs['Color'], bsdf.inputs['Roughness'])
 
-# 3. Normal Map
+# 3. Metallic Map
+metallic_path = {repr(metallic_path)}
+if metallic_path and os.path.exists(metallic_path):
+    img_metal = bpy.data.images.load(metallic_path, check_existing=True)
+    img_metal.colorspace_settings.name = 'Non-Color'
+    tex_metal = nodes.new(type='ShaderNodeTexImage')
+    tex_metal.location = (-200, -220)
+    tex_metal.image = img_metal
+    links.new(mapping.outputs['Vector'], tex_metal.inputs['Vector'])
+    links.new(tex_metal.outputs['Color'], bsdf.inputs['Metallic'])
+
+# 4. Normal Map
 norm_path = {repr(normal_path)}
 if norm_path and os.path.exists(norm_path):
     img_norm = bpy.data.images.load(norm_path, check_existing=True)

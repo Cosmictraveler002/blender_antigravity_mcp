@@ -1,0 +1,335 @@
+{
+  "total_viewports": 14,
+  "analyzed_viewports": 14,
+  "overall_health_score": 100.0,
+  "defect_warnings": [],
+  "cross_viewport_metrics": {
+    "lateral_symmetry_iou": 99.9,
+    "anterior_posterior_iou": 99.82,
+    "top_to_bottom_area_ratio": 1.0
+  },
+  "per_viewport_metrics": {
+    "front": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 20046,
+      "coverage_percentage": 13.59,
+      "is_clipped": false,
+      "aspect_ratio": 0.72,
+      "bbox": [
+        163,
+        77,
+        186,
+        134
+      ],
+      "bounding_width_px": 186,
+      "bounding_height_px": 134,
+      "framing_fill_factor": 80.4,
+      "azimuth": 0,
+      "elevation": 0,
+      "ortho": true
+    },
+    "back": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 20050,
+      "coverage_percentage": 13.6,
+      "is_clipped": false,
+      "aspect_ratio": 0.72,
+      "bbox": [
+        163,
+        77,
+        186,
+        134
+      ],
+      "bounding_width_px": 186,
+      "bounding_height_px": 134,
+      "framing_fill_factor": 80.4,
+      "azimuth": 180,
+      "elevation": 0,
+      "ortho": true
+    },
+    "left": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 16962,
+      "coverage_percentage": 11.5,
+      "is_clipped": false,
+      "aspect_ratio": 0.817,
+      "bbox": [
+        174,
+        77,
+        164,
+        134
+      ],
+      "bounding_width_px": 164,
+      "bounding_height_px": 134,
+      "framing_fill_factor": 77.2,
+      "azimuth": 270,
+      "elevation": 0,
+      "ortho": true
+    },
+    "right": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 16965,
+      "coverage_percentage": 11.51,
+      "is_clipped": false,
+      "aspect_ratio": 0.817,
+      "bbox": [
+        174,
+        77,
+        164,
+        134
+      ],
+      "bounding_width_px": 164,
+      "bounding_height_px": 134,
+      "framing_fill_factor": 77.2,
+      "azimuth": 90,
+      "elevation": 0,
+      "ortho": true
+    },
+    "top": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 21288,
+      "coverage_percentage": 14.44,
+      "is_clipped": false,
+      "aspect_ratio": 0.882,
+      "bbox": [
+        163,
+        62,
+        186,
+        164
+      ],
+      "bounding_width_px": 186,
+      "bounding_height_px": 164,
+      "framing_fill_factor": 69.8,
+      "azimuth": 0,
+      "elevation": 90,
+      "ortho": true
+    },
+    "bottom": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 21287,
+      "coverage_percentage": 14.44,
+      "is_clipped": false,
+      "aspect_ratio": 0.882,
+      "bbox": [
+        163,
+        62,
+        186,
+        164
+      ],
+      "bounding_width_px": 186,
+      "bounding_height_px": 164,
+      "framing_fill_factor": 69.8,
+      "azimuth": 0,
+      "elevation": -90,
+      "ortho": true
+    },
+    "front_left_45": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 17498,
+      "coverage_percentage": 11.87,
+      "is_clipped": false,
+      "aspect_ratio": 0.834,
+      "bbox": [
+        160,
+        75,
+        175,
+        146
+      ],
+      "bounding_width_px": 175,
+      "bounding_height_px": 146,
+      "framing_fill_factor": 68.5,
+      "azimuth": 315,
+      "elevation": 30,
+      "ortho": false
+    },
+    "front_right_45": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 17742,
+      "coverage_percentage": 12.03,
+      "is_clipped": false,
+      "aspect_ratio": 0.861,
+      "bbox": [
+        187,
+        79,
+        165,
+        142
+      ],
+      "bounding_width_px": 165,
+      "bounding_height_px": 142,
+      "framing_fill_factor": 75.7,
+      "azimuth": 45,
+      "elevation": 30,
+      "ortho": false
+    },
+    "back_left_45": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 17597,
+      "coverage_percentage": 11.93,
+      "is_clipped": false,
+      "aspect_ratio": 0.931,
+      "bbox": [
+        162,
+        97,
+        160,
+        149
+      ],
+      "bounding_width_px": 160,
+      "bounding_height_px": 149,
+      "framing_fill_factor": 73.8,
+      "azimuth": 225,
+      "elevation": 30,
+      "ortho": false
+    },
+    "back_right_45": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 17172,
+      "coverage_percentage": 11.65,
+      "is_clipped": false,
+      "aspect_ratio": 0.911,
+      "bbox": [
+        181,
+        92,
+        169,
+        154
+      ],
+      "bounding_width_px": 169,
+      "bounding_height_px": 154,
+      "framing_fill_factor": 66.0,
+      "azimuth": 135,
+      "elevation": 30,
+      "ortho": false
+    },
+    "high_front": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 17942,
+      "coverage_percentage": 12.17,
+      "is_clipped": false,
+      "aspect_ratio": 1.084,
+      "bbox": [
+        178,
+        60,
+        154,
+        167
+      ],
+      "bounding_width_px": 154,
+      "bounding_height_px": 167,
+      "framing_fill_factor": 69.8,
+      "azimuth": 0,
+      "elevation": 60,
+      "ortho": false
+    },
+    "high_back": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 17373,
+      "coverage_percentage": 11.78,
+      "is_clipped": false,
+      "aspect_ratio": 0.889,
+      "bbox": [
+        175,
+        78,
+        162,
+        144
+      ],
+      "bounding_width_px": 162,
+      "bounding_height_px": 144,
+      "framing_fill_factor": 74.5,
+      "azimuth": 180,
+      "elevation": 60,
+      "ortho": false
+    },
+    "low_front": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 14023,
+      "coverage_percentage": 9.51,
+      "is_clipped": false,
+      "aspect_ratio": 0.713,
+      "bbox": [
+        179,
+        100,
+        150,
+        107
+      ],
+      "bounding_width_px": 150,
+      "bounding_height_px": 107,
+      "framing_fill_factor": 87.4,
+      "azimuth": 0,
+      "elevation": -15,
+      "ortho": false
+    },
+    "low_back": {
+      "status": "success",
+      "image_size": [
+        512,
+        288
+      ],
+      "foreground_pixels": 17308,
+      "coverage_percentage": 11.74,
+      "is_clipped": false,
+      "aspect_ratio": 0.805,
+      "bbox": [
+        174,
+        73,
+        164,
+        132
+      ],
+      "bounding_width_px": 164,
+      "bounding_height_px": 132,
+      "framing_fill_factor": 80.0,
+      "azimuth": 180,
+      "elevation": -15,
+      "ortho": false
+    }
+  }
+}

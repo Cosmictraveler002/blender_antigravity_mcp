@@ -13,6 +13,9 @@ from harness.utils.color_math import (
     srgb_to_xyz, xyz_to_lab, rgb_to_lab, srgb_to_linear, rgb_to_hex,
     compute_ciede2000 as compute_delta_e_2000,
 )
+from harness.utils.optical_material_math import (
+    estimate_physical_roughness, estimate_physical_metallic
+)
 
 class ColorTextureAnalyzer:
     """
@@ -148,11 +151,12 @@ class ColorTextureAnalyzer:
         is_isotropic = bool(isotropy >= 0.72 or energy < 0.004)
         grain_direction = None if is_isotropic else deg_map[max_idx]
 
-        # Calibrated roughness mapping:
-        # Matte powder coat: high micro-dispersion (0.65 - 0.78)
-        # Laser text stainless steel: smoother, lower roughness (0.28 - 0.35)
-        # Bamboo wood: directional fiber grain (0.38 - 0.45)
-        roughness = float(np.clip(0.35 + 18.0 * energy, 0.15, 0.85))
+        # Physical micro-surface roughness estimation from specular gradient falloff and texture dispersion
+        roughness = estimate_physical_roughness(
+            crop_rgb=region_crop,
+            gradient_energy=energy,
+            lbp_entropy=entropy
+        )
 
         if energy > 0.015:
             cat = "GRAINED_OR_ROUGH"
@@ -290,6 +294,11 @@ class ColorTextureAnalyzer:
                 c_rgb, c_spec = sample_clean_color(crop)
                 c_tex = self.analyze_texture_and_gabor(crop)
 
+                # Objective physical estimators grounded in image reflections and category priors
+                cat = comp.get("category", "")
+                measured_rough = float(c_tex.get("roughness_estimate", rough_hint))
+                measured_metal = estimate_physical_metallic(crop, category_hint=cat, prior_hint=metal_hint)
+
                 # Execute SVBRDF engine intrinsic analysis
                 crop_bgr = cv2.cvtColor(crop, cv2.COLOR_RGB2BGR) if crop.size > 0 else np.zeros((32, 32, 3), dtype=np.uint8)
                 svbrdf_temp_dir = os.path.join(os.path.dirname(self.image_path), "..", "textures", cid)
@@ -299,8 +308,8 @@ class ColorTextureAnalyzer:
                         output_dir=svbrdf_temp_dir,
                         component_id=cid,
                         target_color_hex=comp.get("color_hex"),
-                        base_roughness_hint=rough_hint,
-                        base_metallic_hint=metal_hint,
+                        base_roughness_hint=measured_rough,
+                        base_metallic_hint=measured_metal,
                         erosion_px=0  # Already eroded above
                     )
                 except Exception as e:
@@ -309,7 +318,7 @@ class ColorTextureAnalyzer:
 
                 mat_spec = make_spec(
                     disp_name, c_rgb, c_spec, c_tex,
-                    rough=rough_hint, metallic=metal_hint,
+                    rough=measured_rough, metallic=measured_metal,
                     subsurf=0.0, sheen=0.05,
                     notes=comp.get("description", f"Procedural PBR material for {cid}")
                 )
@@ -376,7 +385,7 @@ class ColorTextureAnalyzer:
             bbox = self.geom_doc["overall_dimensions"]["bbox_pixels"]
             bx, by, bw, bh = bbox
         else:
-            bx, by, bw, bh = (398, 48, 230, 914)
+            bx, by, bw, bh = (0, 0, self.w, self.h)
 
         # Foreground mask
         fg_mask = np.zeros((self.h, self.w), dtype=np.uint8)

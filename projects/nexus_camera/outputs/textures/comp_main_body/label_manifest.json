@@ -1,0 +1,21 @@
+{
+  "component_id": "comp_main_body",
+  "canvas_dimensions": {
+    "width_px": 3217,
+    "height_px": 581,
+    "aspect_ratio": 5.537
+  },
+  "substrate_material": {
+    "color_hex": "#49474B",
+    "roughness": 0.2
+  },
+  "ink_material": {
+    "roughness": 0.18
+  },
+  "rendered_typography": [],
+  "texture_maps": {
+    "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/textures/comp_main_body/label_diffuse.png",
+    "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/textures/comp_main_body/label_roughness.png",
+    "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/textures/comp_main_body/label_normal.png"
+  }
+}

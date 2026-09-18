@@ -1,0 +1,80 @@
+{
+  "object_summary": "Classical CV reconstruction decomposition: front view",
+  "object_type": "manufactured_object",
+  "decomposition_mode": "classical_cv_fallback",
+  "components": [
+    {
+      "component_id": "comp_upper_structure",
+      "display_name": "Upper Structure",
+      "category": "collar",
+      "sub_category": "procedural_tier",
+      "visual_description": "Extracted tier (32px to 56px) with grounded palette",
+      "pbr_material_keywords": [
+        "smooth",
+        "matte"
+      ],
+      "color_hex": "#747276",
+      "estimated_roughness": 0.26,
+      "estimated_metallic": 0.0,
+      "normal_intensity": 0.25,
+      "bounding_box": [
+        173.0,
+        293.5,
+        302.7,
+        686.9
+      ]
+    },
+    {
+      "component_id": "comp_main_body",
+      "display_name": "Main Body",
+      "category": "substrate",
+      "sub_category": "procedural_tier",
+      "visual_description": "Extracted tier (56px to 175px) with grounded palette",
+      "pbr_material_keywords": [
+        "smooth",
+        "matte"
+      ],
+      "color_hex": "#49474B",
+      "estimated_roughness": 0.2,
+      "estimated_metallic": 0.0,
+      "normal_intensity": 0.25,
+      "bounding_box": [
+        302.7,
+        293.5,
+        945.9,
+        686.9
+      ]
+    },
+    {
+      "component_id": "comp_base_section",
+      "display_name": "Base Section",
+      "category": "structural_base",
+      "sub_category": "procedural_tier",
+      "visual_description": "Extracted tier (175px to 183px) with grounded palette",
+      "pbr_material_keywords": [
+        "smooth",
+        "matte"
+      ],
+      "color_hex": "#ABA9AF",
+      "estimated_roughness": 0.23,
+      "estimated_metallic": 0.0,
+      "normal_intensity": 0.25,
+      "bounding_box": [
+        945.9,
+        293.5,
+        989.2,
+        686.9
+      ]
+    }
+  ],
+  "typography_and_labels": [],
+  "lighting_and_environment": {
+    "recommended_hdri_type": "studio",
+    "recommended_hdri_keywords": [
+      "studio",
+      "white",
+      "softbox"
+    ],
+    "key_light_direction": "front_left"
+  }
+}

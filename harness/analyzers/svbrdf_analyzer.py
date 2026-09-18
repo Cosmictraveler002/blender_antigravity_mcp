@@ -385,7 +385,11 @@ class SVBRDFEngine:
         roughness = np.clip(roughness_hint + (high_freq - np.mean(high_freq)) * 1.5, 0.05, 0.95).astype(np.float32)
 
         # 4. Metallic Mask
-        metallic = np.full((h, w), float(np.clip(metallic_hint, 0.0, 1.0)), dtype=np.float32)
+        m_base = float(np.clip(metallic_hint, 0.0, 1.0))
+        if m_base > 0.15:
+            metallic = np.clip(m_base + (high_freq - np.mean(high_freq)) * 0.4, 0.0, 1.0).astype(np.float32)
+        else:
+            metallic = np.full((h, w), m_base, dtype=np.float32)
 
         return albedo, roughness, normal, metallic, "photometric_intrinsic_decomposition"
 
@@ -436,7 +440,11 @@ class SVBRDFEngine:
                 p_blur = cv2.GaussianBlur(p_gray_f, (5, 5), 0)
                 p_high_freq = np.abs(p_gray_f - p_blur)
                 p_roughness = np.clip(roughness_hint + (p_high_freq - np.mean(p_high_freq)) * 1.5, 0.05, 0.95).astype(np.float32)
-                p_metallic = np.full((patch_size, patch_size), float(np.clip(metallic_hint, 0.0, 1.0)), dtype=np.float32)
+                m_base = float(np.clip(metallic_hint, 0.0, 1.0))
+                if m_base > 0.15:
+                    p_metallic = np.clip(m_base + (p_high_freq - np.mean(p_high_freq)) * 0.4, 0.0, 1.0).astype(np.float32)
+                else:
+                    p_metallic = np.full((patch_size, patch_size), m_base, dtype=np.float32)
 
                 # Accumulate with 2D Hann weight
                 w_exp = hann_2d

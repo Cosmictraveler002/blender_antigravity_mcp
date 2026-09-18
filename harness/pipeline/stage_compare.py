@@ -92,21 +92,19 @@ def run_comparison(project: ProjectDefinition, config: HarnessConfig) -> Dict[st
     
     component_reports = []
     
-    house_render = os.path.join(project.renders_dir, "render_closeup_house.png")
-    if os.path.exists(house_render):
+    # Dynamically find any closeup component renders
+    closeup_renders = [
+        f for f in os.listdir(project.renders_dir)
+        if f.startswith("render_closeup_") and f.endswith(".png")
+    ]
+    for cref in closeup_renders:
+        comp_name = cref.replace("render_closeup_", "").replace(".png", "").replace("_", " ").title()
+        cref_path = os.path.join(project.renders_dir, cref)
         try:
-            house_report = component_comparator.compare(project.reference_image, house_render, "House")
-            component_reports.append(house_report)
+            creport = component_comparator.compare(project.reference_image, cref_path, comp_name)
+            component_reports.append(creport)
         except Exception as e:
-            print(f"[Compare] Component comparison failed for House: {e}")
-            
-    trees_render = os.path.join(project.renders_dir, "render_closeup_trees.png")
-    if os.path.exists(trees_render):
-        try:
-            trees_report = component_comparator.compare(project.reference_image, trees_render, "Trees")
-            component_reports.append(trees_report)
-        except Exception as e:
-            print(f"[Compare] Component comparison failed for Trees: {e}")
+            print(f"[Compare] Component comparison failed for {comp_name}: {e}")
             
     # Add to recommendations
     for creport in component_reports:

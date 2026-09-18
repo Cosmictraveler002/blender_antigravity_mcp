@@ -114,7 +114,11 @@ def run_analysis(project: ProjectDefinition, config: HarnessConfig) -> Dict[str,
         cat = comp.get("category", "generic")
         keywords = comp.get("pbr_material_keywords", [cat])
         target_color = comp.get("color_hex")
-        roughness = comp.get("estimated_roughness", 0.5)
+
+        # Prioritize physical measured parameters from ColorTextureAnalyzer if available
+        comp_mat = color_doc.get("component_materials", {}).get(cid, {}).get("principled_bsdf", {})
+        roughness = comp_mat.get("roughness", comp.get("estimated_roughness", 0.5))
+        metallic = comp_mat.get("metallic", comp.get("estimated_metallic", 0.0))
 
         comp_tex_dir = os.path.join(project.textures_dir, cid)
         resolved = pbr_engine.resolve_material(
@@ -124,6 +128,7 @@ def run_analysis(project: ProjectDefinition, config: HarnessConfig) -> Dict[str,
             target_dir=comp_tex_dir,
             target_color_hex=target_color,
             estimated_roughness=roughness,
+            estimated_metallic=metallic,
             resolution="1k"
         )
         materials_resolved[cid] = resolved

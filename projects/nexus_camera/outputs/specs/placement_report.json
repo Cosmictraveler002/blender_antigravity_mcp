@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "source_image": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\reference\\front_view.png",
+    "framework_version": "4.0.0",
+    "coordinate_system": {
+      "origin": "BASE_CENTER_ON_GROUND (Z=0.0)",
+      "axis_orientation": "X=RIGHT, Y=FORWARD (camera facing), Z=VERTICAL UP",
+      "unit_normalization": "WIDTH=2.0 BU, HEIGHT=1.502 BU, SCALE_FACTOR=0.00995"
+    }
+  },
+  "overall_bounds_bu": {
+    "width_bu": 2.0,
+    "depth_bu": 2.0,
+    "height_bu": 1.502,
+    "aspect_ratio": 0.751
+  },
+  "front_elevation": {
+    "camera_recommended": {
+      "angle_deg": 0.0,
+      "target_z_bu": 0.75,
+      "distance_bu": 3.3
+    },
+    "sections": [
+      {
+        "component_id": "comp_upper_structure",
+        "name": "Upper Structure",
+        "category": "collar",
+        "z_range_normalized": [
+          0.841,
+          1.0
+        ],
+        "z_center_bu": 1.382,
+        "height_bu": 0.239,
+        "width_bu": 2.0,
+        "center_offset_x_bu": 0.0,
+        "color_hex": "#747276",
+        "notes": ""
+      },
+      {
+        "component_id": "comp_main_body",
+        "name": "Main Body",
+        "category": "substrate",
+        "z_range_normalized": [
+          0.086,
+          0.841
+        ],
+        "z_center_bu": 0.695,
+        "height_bu": 1.134,
+        "width_bu": 2.0,
+        "center_offset_x_bu": 0.0,
+        "color_hex": "#49474B",
+        "notes": ""
+      },
+      {
+        "component_id": "comp_base_section",
+        "name": "Base Section",
+        "category": "structural_base",
+        "z_range_normalized": [
+          0.0,
+          0.086
+        ],
+        "z_center_bu": 0.065,
+        "height_bu": 0.129,
+        "width_bu": 2.0,
+        "center_offset_x_bu": 0.0,
+        "color_hex": "#ABA9AF",
+        "notes": ""
+      }
+    ]
+  },
+  "blender_target_transforms": {
+    "comp_upper_structure": {
+      "display_name": "Upper Structure",
+      "location": [
+        0.0,
+        0.0,
+        1.382
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        0.119
+      ],
+      "dimensions_bu": [
+        2.0,
+        2.0,
+        0.239
+      ],
+      "rotation_euler_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "comp_main_body": {
+      "display_name": "Main Body",
+      "location": [
+        0.0,
+        0.0,
+        0.695
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        0.567
+      ],
+      "dimensions_bu": [
+        2.0,
+        2.0,
+        1.134
+      ],
+      "rotation_euler_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "comp_base_section": {
+      "display_name": "Base Section",
+      "location": [
+        0.0,
+        0.0,
+        0.065
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        0.065
+      ],
+      "dimensions_bu": [
+        2.0,
+        2.0,
+        0.129
+      ],
+      "rotation_euler_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

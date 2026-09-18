@@ -1,0 +1,59 @@
+{
+  "converged": false,
+  "final_score": 45.18,
+  "total_passes": 7,
+  "rebuilds_executed": 2,
+  "history": [
+    {
+      "pass": "1_rebuild",
+      "score": 45.51,
+      "render_path": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/renders/refine_pass_1_rebuild.png",
+      "rebuild_cycle": 1,
+      "recommendations_count": 7,
+      "timestamp": 1789708182.9891655
+    },
+    {
+      "pass": 1,
+      "score": 45.87,
+      "render_path": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/renders/refine_pass_1.png",
+      "recommendations_count": 7,
+      "timestamp": 1789708211.614993
+    },
+    {
+      "pass": "2_rebuild",
+      "score": 45.51,
+      "render_path": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/renders/refine_pass_2_rebuild.png",
+      "rebuild_cycle": 2,
+      "recommendations_count": 7,
+      "timestamp": 1789708415.341707
+    },
+    {
+      "pass": 2,
+      "score": 45.87,
+      "render_path": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/renders/refine_pass_2.png",
+      "recommendations_count": 7,
+      "timestamp": 1789708439.3811572
+    },
+    {
+      "pass": 3,
+      "score": 45.18,
+      "render_path": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/renders/refine_pass_3.png",
+      "recommendations_count": 7,
+      "timestamp": 1789708465.0932136
+    },
+    {
+      "pass": 4,
+      "score": 45.18,
+      "render_path": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/renders/refine_pass_4.png",
+      "recommendations_count": 7,
+      "timestamp": 1789708491.204197
+    },
+    {
+      "pass": 5,
+      "score": 45.18,
+      "render_path": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/outputs/renders/refine_pass_5.png",
+      "recommendations_count": 7,
+      "timestamp": 1789708514.1051166
+    }
+  ]
+}

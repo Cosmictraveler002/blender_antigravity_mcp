@@ -25,6 +25,10 @@ from typing import Dict, Any, Optional, List
 import cv2
 import numpy as np
 
+from harness.utils.optical_material_math import (
+    estimate_physical_roughness, estimate_physical_metallic
+)
+
 
 GEMINI_ANALYSIS_SCHEMA = {
     "type": "object",
@@ -371,29 +375,16 @@ class GeminiVisionAnalyzer:
                     if np.std(lum) > 25.0:
                         bright_mask = (lum >= np.percentile(lum, 60)) & (lum <= np.percentile(lum, 92))
                         med_rgb = np.median(fg_px[bright_mask], axis=0).astype(int) if np.any(bright_mask) else np.median(fg_px, axis=0).astype(int)
-                    else:
-                        med_rgb = np.median(fg_px, axis=0).astype(int)
-                    est_metallic = 0.0  # Coated/printed packaging substrates are dielectrics
-                    est_roughness = 0.20
+                    est_roughness = round(estimate_physical_roughness(crop_rgb=crop), 2)
+                    est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=cat), 2)
                 else:
                     med_rgb = np.median(fg_px, axis=0).astype(int)
-                    fg_gray = crop_gray[crop_thresh > 0]
-                    var_lum = float(np.var(fg_gray)) if len(fg_gray) > 0 else 0.0
-                    est_roughness = round(float(np.clip(1.0 - var_lum / 0.05, 0.20, 0.80)), 2)
-                    hsv_fg = cv2.cvtColor(fg_px.reshape(-1, 1, 3), cv2.COLOR_RGB2HSV)
-                    mean_sat = float(np.mean(hsv_fg[:, :, 1])) / 255.0
-                    mean_lum = float(np.mean(fg_gray)) * 255.0 if len(fg_gray) > 0 else 0.0
-                    # Distinguish bare metal from light-colored coated shoulders:
-                    # Coated shoulders sharing body substrate have bright dielectric albedo
-                    if cat in ["collar", "enclosure"] and mean_lum > 140.0 and mean_sat < 0.15:
-                        est_metallic = 0.0
-                        est_roughness = 0.25
-                    else:
-                        est_metallic = 0.85 if (mean_sat < 0.15 and var_lum > 0.015) else 0.0
+                    est_roughness = round(estimate_physical_roughness(crop_rgb=crop), 2)
+                    est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=cat), 2)
             else:
                 med_rgb = np.median(crop.reshape(-1, 3), axis=0).astype(int)
-                est_roughness = 0.50
-                est_metallic = 0.0
+                est_roughness = round(estimate_physical_roughness(crop_rgb=crop), 2)
+                est_metallic = round(estimate_physical_metallic(crop_rgb=crop, category_hint=cat), 2)
 
             hex_color = f"#{int(med_rgb[0]):02X}{int(med_rgb[1]):02X}{int(med_rgb[2]):02X}"
             display_name = name.replace("_", " ").title()

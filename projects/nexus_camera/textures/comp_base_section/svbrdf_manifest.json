@@ -1,0 +1,36 @@
+{
+  "component_id": "comp_base_section",
+  "decomposition_mode": "photometric_intrinsic_decomposition",
+  "execution_tier": "tier_3_apu_cpu",
+  "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
+  "opencl_accelerated": true,
+  "inference_time_ms": 31.37,
+  "normal_mode": "valid_tangent",
+  "acceptance_gates": {
+    "roughness_variance": {
+      "value": 0.00655,
+      "threshold": ">= 0.005",
+      "status": "RECOVERED",
+      "mode": "procedural_perturbed"
+    },
+    "normal_flatness": {
+      "value": 0.4258,
+      "threshold": "<= 0.98",
+      "status": "PASS",
+      "mode": "valid_tangent"
+    },
+    "albedo_specular_clipping": {
+      "value": 0.0,
+      "threshold": "<= 0.05",
+      "status": "PASS",
+      "mode": "delit_clean"
+    }
+  },
+  "composite_confidence_q": 0.561,
+  "maps": {
+    "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/diffuse.png",
+    "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/roughness.png",
+    "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/normal.png",
+    "metallic": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/metallic.png"
+  }
+}

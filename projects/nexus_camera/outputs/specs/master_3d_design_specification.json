@@ -1,0 +1,4058 @@
+{
+  "analysis_meta": {
+    "source_image": "front_view.png",
+    "project_name": "Nexus Mirrorless Camera",
+    "project_version": "1.0.0",
+    "framework_version": "4.0.0",
+    "pipeline": [
+      "GeminiVisionAnalyzer",
+      "GeometryAnalyzer",
+      "ColorTextureAnalyzer",
+      "PlacementReportGenerator",
+      "PBRMaterialEngine",
+      "StructuralGeometryAnalyzer"
+    ]
+  },
+  "gemini_vision": {
+    "object_summary": "Classical CV reconstruction decomposition: front view",
+    "object_type": "manufactured_object",
+    "decomposition_mode": "classical_cv_fallback",
+    "components": [
+      {
+        "component_id": "comp_upper_structure",
+        "display_name": "Upper Structure",
+        "category": "collar",
+        "sub_category": "procedural_tier",
+        "visual_description": "Extracted tier (32px to 56px) with grounded palette",
+        "pbr_material_keywords": [
+          "smooth",
+          "matte"
+        ],
+        "color_hex": "#747276",
+        "estimated_roughness": 0.26,
+        "estimated_metallic": 0.0,
+        "normal_intensity": 0.25,
+        "bounding_box": [
+          173.0,
+          293.5,
+          302.7,
+          686.9
+        ]
+      },
+      {
+        "component_id": "comp_main_body",
+        "display_name": "Main Body",
+        "category": "substrate",
+        "sub_category": "procedural_tier",
+        "visual_description": "Extracted tier (56px to 175px) with grounded palette",
+        "pbr_material_keywords": [
+          "smooth",
+          "matte"
+        ],
+        "color_hex": "#49474B",
+        "estimated_roughness": 0.2,
+        "estimated_metallic": 0.0,
+        "normal_intensity": 0.25,
+        "bounding_box": [
+          302.7,
+          293.5,
+          945.9,
+          686.9
+        ]
+      },
+      {
+        "component_id": "comp_base_section",
+        "display_name": "Base Section",
+        "category": "structural_base",
+        "sub_category": "procedural_tier",
+        "visual_description": "Extracted tier (175px to 183px) with grounded palette",
+        "pbr_material_keywords": [
+          "smooth",
+          "matte"
+        ],
+        "color_hex": "#ABA9AF",
+        "estimated_roughness": 0.23,
+        "estimated_metallic": 0.0,
+        "normal_intensity": 0.25,
+        "bounding_box": [
+          945.9,
+          293.5,
+          989.2,
+          686.9
+        ]
+      }
+    ],
+    "typography_and_labels": [],
+    "lighting_and_environment": {
+      "recommended_hdri_type": "studio",
+      "recommended_hdri_keywords": [
+        "studio",
+        "white",
+        "softbox"
+      ],
+      "key_light_direction": "front_left"
+    }
+  },
+  "geometry": {
+    "image_metadata": {
+      "source_path": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\reference\\front_view.png",
+      "image_width_px": 511,
+      "image_height_px": 185,
+      "has_alpha_channel": false
+    },
+    "overall_dimensions": {
+      "bbox_pixels": [
+        150,
+        32,
+        201,
+        151
+      ],
+      "body_diameter_px": 201,
+      "body_radius_px": 100.5,
+      "height_px": 151,
+      "aspect_ratio_height_to_width": 0.751,
+      "center_x_px": 251.1,
+      "center_y_px": 112.0,
+      "foreground_area_pixels": 26751,
+      "silhouette_fullness_ratio": 0.881
+    },
+    "silhouette_contours": {
+      "polynomial_degree": 6,
+      "y_normalized_domain": [
+        0.0,
+        1.0
+      ],
+      "left_edge_coeffs": [
+        -10005.0646,
+        26034.2179,
+        -22761.2013,
+        6001.7025,
+        1631.0293,
+        -1023.6882,
+        275.0703
+      ],
+      "right_edge_coeffs": [
+        13827.9105,
+        -42273.8693,
+        48744.7317,
+        -25925.6183,
+        5972.2497,
+        -304.7688,
+        304.5649
+      ],
+      "mean_left_curvature": 0.49339,
+      "mean_right_curvature": 0.17603,
+      "max_left_curvature": 14.84749,
+      "max_right_curvature": 6.79765
+    },
+    "radial_profile_mesh": [
+      {
+        "level_index": 0,
+        "rel_z": 0.0,
+        "pixel_y": 183,
+        "left_x": 166.0,
+        "right_x": 334.0,
+        "center_x": 250.0,
+        "width_px": 168.0,
+        "radius_px": 84.0,
+        "radius_ratio": 0.8358,
+        "radius_ratio_to_max": 0.8358
+      },
+      {
+        "level_index": 1,
+        "rel_z": 0.01,
+        "pixel_y": 181,
+        "left_x": 163.0,
+        "right_x": 337.0,
+        "center_x": 250.0,
+        "width_px": 174.0,
+        "radius_px": 87.0,
+        "radius_ratio": 0.8657,
+        "radius_ratio_to_max": 0.8657
+      },
+      {
+        "level_index": 2,
+        "rel_z": 0.02,
+        "pixel_y": 179,
+        "left_x": 161.0,
+        "right_x": 339.0,
+        "center_x": 250.0,
+        "width_px": 178.0,
+        "radius_px": 89.0,
+        "radius_ratio": 0.8856,
+        "radius_ratio_to_max": 0.8856
+      },
+      {
+        "level_index": 3,
+        "rel_z": 0.03,
+        "pixel_y": 178,
+        "left_x": 160.0,
+        "right_x": 340.0,
+        "center_x": 250.0,
+        "width_px": 180.0,
+        "radius_px": 90.0,
+        "radius_ratio": 0.8955,
+        "radius_ratio_to_max": 0.8955
+      },
+      {
+        "level_index": 4,
+        "rel_z": 0.04,
+        "pixel_y": 176,
+        "left_x": 158.0,
+        "right_x": 342.0,
+        "center_x": 250.0,
+        "width_px": 184.0,
+        "radius_px": 92.0,
+        "radius_ratio": 0.9154,
+        "radius_ratio_to_max": 0.9154
+      },
+      {
+        "level_index": 5,
+        "rel_z": 0.051,
+        "pixel_y": 175,
+        "left_x": 156.0,
+        "right_x": 344.0,
+        "center_x": 250.0,
+        "width_px": 188.0,
+        "radius_px": 94.0,
+        "radius_ratio": 0.9353,
+        "radius_ratio_to_max": 0.9353
+      },
+      {
+        "level_index": 6,
+        "rel_z": 0.061,
+        "pixel_y": 173,
+        "left_x": 154.0,
+        "right_x": 346.0,
+        "center_x": 250.0,
+        "width_px": 192.0,
+        "radius_px": 96.0,
+        "radius_ratio": 0.9552,
+        "radius_ratio_to_max": 0.9552
+      },
+      {
+        "level_index": 7,
+        "rel_z": 0.071,
+        "pixel_y": 172,
+        "left_x": 153.0,
+        "right_x": 347.0,
+        "center_x": 250.0,
+        "width_px": 194.0,
+        "radius_px": 97.0,
+        "radius_ratio": 0.9652,
+        "radius_ratio_to_max": 0.9652
+      },
+      {
+        "level_index": 8,
+        "rel_z": 0.081,
+        "pixel_y": 170,
+        "left_x": 151.0,
+        "right_x": 349.0,
+        "center_x": 250.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 9,
+        "rel_z": 0.091,
+        "pixel_y": 169,
+        "left_x": 234.0,
+        "right_x": 311.0,
+        "center_x": 272.5,
+        "width_px": 77.0,
+        "radius_px": 38.5,
+        "radius_ratio": 0.3831,
+        "radius_ratio_to_max": 0.3831
+      },
+      {
+        "level_index": 10,
+        "rel_z": 0.101,
+        "pixel_y": 167,
+        "left_x": 233.0,
+        "right_x": 312.0,
+        "center_x": 272.5,
+        "width_px": 79.0,
+        "radius_px": 39.5,
+        "radius_ratio": 0.393,
+        "radius_ratio_to_max": 0.393
+      },
+      {
+        "level_index": 11,
+        "rel_z": 0.111,
+        "pixel_y": 166,
+        "left_x": 232.0,
+        "right_x": 313.0,
+        "center_x": 272.5,
+        "width_px": 81.0,
+        "radius_px": 40.5,
+        "radius_ratio": 0.403,
+        "radius_ratio_to_max": 0.403
+      },
+      {
+        "level_index": 12,
+        "rel_z": 0.121,
+        "pixel_y": 164,
+        "left_x": 156.0,
+        "right_x": 344.0,
+        "center_x": 250.0,
+        "width_px": 188.0,
+        "radius_px": 94.0,
+        "radius_ratio": 0.9353,
+        "radius_ratio_to_max": 0.9353
+      },
+      {
+        "level_index": 13,
+        "rel_z": 0.131,
+        "pixel_y": 163,
+        "left_x": 155.0,
+        "right_x": 346.0,
+        "center_x": 250.5,
+        "width_px": 191.0,
+        "radius_px": 95.5,
+        "radius_ratio": 0.9502,
+        "radius_ratio_to_max": 0.9502
+      },
+      {
+        "level_index": 14,
+        "rel_z": 0.141,
+        "pixel_y": 161,
+        "left_x": 154.0,
+        "right_x": 347.0,
+        "center_x": 250.5,
+        "width_px": 193.0,
+        "radius_px": 96.5,
+        "radius_ratio": 0.9602,
+        "radius_ratio_to_max": 0.9602
+      },
+      {
+        "level_index": 15,
+        "rel_z": 0.152,
+        "pixel_y": 160,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 16,
+        "rel_z": 0.162,
+        "pixel_y": 158,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 17,
+        "rel_z": 0.172,
+        "pixel_y": 157,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 18,
+        "rel_z": 0.182,
+        "pixel_y": 155,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 19,
+        "rel_z": 0.192,
+        "pixel_y": 154,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 20,
+        "rel_z": 0.202,
+        "pixel_y": 152,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 21,
+        "rel_z": 0.212,
+        "pixel_y": 150,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 22,
+        "rel_z": 0.222,
+        "pixel_y": 149,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 23,
+        "rel_z": 0.232,
+        "pixel_y": 147,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 24,
+        "rel_z": 0.242,
+        "pixel_y": 146,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 25,
+        "rel_z": 0.253,
+        "pixel_y": 144,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 26,
+        "rel_z": 0.263,
+        "pixel_y": 143,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 27,
+        "rel_z": 0.273,
+        "pixel_y": 141,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 28,
+        "rel_z": 0.283,
+        "pixel_y": 140,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 29,
+        "rel_z": 0.293,
+        "pixel_y": 138,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 30,
+        "rel_z": 0.303,
+        "pixel_y": 137,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 31,
+        "rel_z": 0.313,
+        "pixel_y": 135,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 32,
+        "rel_z": 0.323,
+        "pixel_y": 134,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 33,
+        "rel_z": 0.333,
+        "pixel_y": 132,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 34,
+        "rel_z": 0.343,
+        "pixel_y": 131,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 35,
+        "rel_z": 0.354,
+        "pixel_y": 129,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 36,
+        "rel_z": 0.364,
+        "pixel_y": 128,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 37,
+        "rel_z": 0.374,
+        "pixel_y": 126,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 38,
+        "rel_z": 0.384,
+        "pixel_y": 125,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 39,
+        "rel_z": 0.394,
+        "pixel_y": 123,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 40,
+        "rel_z": 0.404,
+        "pixel_y": 121,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 41,
+        "rel_z": 0.414,
+        "pixel_y": 120,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 42,
+        "rel_z": 0.424,
+        "pixel_y": 118,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 43,
+        "rel_z": 0.434,
+        "pixel_y": 117,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 44,
+        "rel_z": 0.444,
+        "pixel_y": 115,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 45,
+        "rel_z": 0.455,
+        "pixel_y": 114,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 46,
+        "rel_z": 0.465,
+        "pixel_y": 112,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 47,
+        "rel_z": 0.475,
+        "pixel_y": 111,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 48,
+        "rel_z": 0.485,
+        "pixel_y": 109,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 49,
+        "rel_z": 0.495,
+        "pixel_y": 108,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 50,
+        "rel_z": 0.505,
+        "pixel_y": 106,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 51,
+        "rel_z": 0.515,
+        "pixel_y": 105,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 52,
+        "rel_z": 0.525,
+        "pixel_y": 103,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 53,
+        "rel_z": 0.535,
+        "pixel_y": 102,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 54,
+        "rel_z": 0.545,
+        "pixel_y": 100,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 55,
+        "rel_z": 0.556,
+        "pixel_y": 99,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 56,
+        "rel_z": 0.566,
+        "pixel_y": 97,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 57,
+        "rel_z": 0.576,
+        "pixel_y": 96,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 58,
+        "rel_z": 0.586,
+        "pixel_y": 94,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 59,
+        "rel_z": 0.596,
+        "pixel_y": 93,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 60,
+        "rel_z": 0.606,
+        "pixel_y": 91,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 61,
+        "rel_z": 0.616,
+        "pixel_y": 89,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 62,
+        "rel_z": 0.626,
+        "pixel_y": 88,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 63,
+        "rel_z": 0.636,
+        "pixel_y": 86,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 64,
+        "rel_z": 0.646,
+        "pixel_y": 85,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 65,
+        "rel_z": 0.657,
+        "pixel_y": 83,
+        "left_x": 153.0,
+        "right_x": 350.0,
+        "center_x": 251.5,
+        "width_px": 197.0,
+        "radius_px": 98.5,
+        "radius_ratio": 0.9801,
+        "radius_ratio_to_max": 0.9801
+      },
+      {
+        "level_index": 66,
+        "rel_z": 0.667,
+        "pixel_y": 82,
+        "left_x": 153.0,
+        "right_x": 350.0,
+        "center_x": 251.5,
+        "width_px": 197.0,
+        "radius_px": 98.5,
+        "radius_ratio": 0.9801,
+        "radius_ratio_to_max": 0.9801
+      },
+      {
+        "level_index": 67,
+        "rel_z": 0.677,
+        "pixel_y": 80,
+        "left_x": 153.0,
+        "right_x": 350.0,
+        "center_x": 251.5,
+        "width_px": 197.0,
+        "radius_px": 98.5,
+        "radius_ratio": 0.9801,
+        "radius_ratio_to_max": 0.9801
+      },
+      {
+        "level_index": 68,
+        "rel_z": 0.687,
+        "pixel_y": 79,
+        "left_x": 153.0,
+        "right_x": 351.0,
+        "center_x": 252.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 69,
+        "rel_z": 0.697,
+        "pixel_y": 77,
+        "left_x": 153.0,
+        "right_x": 351.0,
+        "center_x": 252.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 70,
+        "rel_z": 0.707,
+        "pixel_y": 76,
+        "left_x": 153.0,
+        "right_x": 351.0,
+        "center_x": 252.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 71,
+        "rel_z": 0.717,
+        "pixel_y": 74,
+        "left_x": 153.0,
+        "right_x": 351.0,
+        "center_x": 252.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 72,
+        "rel_z": 0.727,
+        "pixel_y": 73,
+        "left_x": 153.0,
+        "right_x": 351.0,
+        "center_x": 252.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 73,
+        "rel_z": 0.737,
+        "pixel_y": 71,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 74,
+        "rel_z": 0.747,
+        "pixel_y": 70,
+        "left_x": 153.0,
+        "right_x": 349.0,
+        "center_x": 251.0,
+        "width_px": 196.0,
+        "radius_px": 98.0,
+        "radius_ratio": 0.9751,
+        "radius_ratio_to_max": 0.9751
+      },
+      {
+        "level_index": 75,
+        "rel_z": 0.758,
+        "pixel_y": 68,
+        "left_x": 152.0,
+        "right_x": 350.0,
+        "center_x": 251.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 76,
+        "rel_z": 0.768,
+        "pixel_y": 67,
+        "left_x": 151.0,
+        "right_x": 350.0,
+        "center_x": 250.5,
+        "width_px": 199.0,
+        "radius_px": 99.5,
+        "radius_ratio": 0.99,
+        "radius_ratio_to_max": 0.99
+      },
+      {
+        "level_index": 77,
+        "rel_z": 0.778,
+        "pixel_y": 65,
+        "left_x": 151.0,
+        "right_x": 350.0,
+        "center_x": 250.5,
+        "width_px": 199.0,
+        "radius_px": 99.5,
+        "radius_ratio": 0.99,
+        "radius_ratio_to_max": 0.99
+      },
+      {
+        "level_index": 78,
+        "rel_z": 0.788,
+        "pixel_y": 64,
+        "left_x": 152.0,
+        "right_x": 350.0,
+        "center_x": 251.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 79,
+        "rel_z": 0.798,
+        "pixel_y": 62,
+        "left_x": 153.0,
+        "right_x": 350.0,
+        "center_x": 251.5,
+        "width_px": 197.0,
+        "radius_px": 98.5,
+        "radius_ratio": 0.9801,
+        "radius_ratio_to_max": 0.9801
+      },
+      {
+        "level_index": 80,
+        "rel_z": 0.808,
+        "pixel_y": 60,
+        "left_x": 153.0,
+        "right_x": 351.0,
+        "center_x": 252.0,
+        "width_px": 198.0,
+        "radius_px": 99.0,
+        "radius_ratio": 0.9851,
+        "radius_ratio_to_max": 0.9851
+      },
+      {
+        "level_index": 81,
+        "rel_z": 0.818,
+        "pixel_y": 59,
+        "left_x": 153.0,
+        "right_x": 350.0,
+        "center_x": 251.5,
+        "width_px": 197.0,
+        "radius_px": 98.5,
+        "radius_ratio": 0.9801,
+        "radius_ratio_to_max": 0.9801
+      },
+      {
+        "level_index": 82,
+        "rel_z": 0.828,
+        "pixel_y": 57,
+        "left_x": 153.0,
+        "right_x": 348.0,
+        "center_x": 250.5,
+        "width_px": 195.0,
+        "radius_px": 97.5,
+        "radius_ratio": 0.9701,
+        "radius_ratio_to_max": 0.9701
+      },
+      {
+        "level_index": 83,
+        "rel_z": 0.838,
+        "pixel_y": 56,
+        "left_x": 153.0,
+        "right_x": 346.0,
+        "center_x": 249.5,
+        "width_px": 193.0,
+        "radius_px": 96.5,
+        "radius_ratio": 0.9602,
+        "radius_ratio_to_max": 0.9602
+      },
+      {
+        "level_index": 84,
+        "rel_z": 0.848,
+        "pixel_y": 54,
+        "left_x": 156.0,
+        "right_x": 308.0,
+        "center_x": 232.0,
+        "width_px": 152.0,
+        "radius_px": 76.0,
+        "radius_ratio": 0.7562,
+        "radius_ratio_to_max": 0.7562
+      },
+      {
+        "level_index": 85,
+        "rel_z": 0.859,
+        "pixel_y": 53,
+        "left_x": 157.0,
+        "right_x": 307.0,
+        "center_x": 232.0,
+        "width_px": 150.0,
+        "radius_px": 75.0,
+        "radius_ratio": 0.7463,
+        "radius_ratio_to_max": 0.7463
+      },
+      {
+        "level_index": 86,
+        "rel_z": 0.869,
+        "pixel_y": 51,
+        "left_x": 159.0,
+        "right_x": 307.0,
+        "center_x": 233.0,
+        "width_px": 148.0,
+        "radius_px": 74.0,
+        "radius_ratio": 0.7363,
+        "radius_ratio_to_max": 0.7363
+      },
+      {
+        "level_index": 87,
+        "rel_z": 0.879,
+        "pixel_y": 50,
+        "left_x": 204.0,
+        "right_x": 307.0,
+        "center_x": 255.5,
+        "width_px": 103.0,
+        "radius_px": 51.5,
+        "radius_ratio": 0.5124,
+        "radius_ratio_to_max": 0.5124
+      },
+      {
+        "level_index": 88,
+        "rel_z": 0.889,
+        "pixel_y": 48,
+        "left_x": 204.0,
+        "right_x": 307.0,
+        "center_x": 255.5,
+        "width_px": 103.0,
+        "radius_px": 51.5,
+        "radius_ratio": 0.5124,
+        "radius_ratio_to_max": 0.5124
+      },
+      {
+        "level_index": 89,
+        "rel_z": 0.899,
+        "pixel_y": 47,
+        "left_x": 204.0,
+        "right_x": 307.0,
+        "center_x": 255.5,
+        "width_px": 103.0,
+        "radius_px": 51.5,
+        "radius_ratio": 0.5124,
+        "radius_ratio_to_max": 0.5124
+      },
+      {
+        "level_index": 90,
+        "rel_z": 0.909,
+        "pixel_y": 45,
+        "left_x": 204.0,
+        "right_x": 307.0,
+        "center_x": 255.5,
+        "width_px": 103.0,
+        "radius_px": 51.5,
+        "radius_ratio": 0.5124,
+        "radius_ratio_to_max": 0.5124
+      },
+      {
+        "level_index": 91,
+        "rel_z": 0.919,
+        "pixel_y": 44,
+        "left_x": 204.0,
+        "right_x": 307.0,
+        "center_x": 255.5,
+        "width_px": 103.0,
+        "radius_px": 51.5,
+        "radius_ratio": 0.5124,
+        "radius_ratio_to_max": 0.5124
+      },
+      {
+        "level_index": 92,
+        "rel_z": 0.929,
+        "pixel_y": 42,
+        "left_x": 236.0,
+        "right_x": 306.0,
+        "center_x": 271.0,
+        "width_px": 70.0,
+        "radius_px": 35.0,
+        "radius_ratio": 0.3483,
+        "radius_ratio_to_max": 0.3483
+      },
+      {
+        "level_index": 93,
+        "rel_z": 0.939,
+        "pixel_y": 41,
+        "left_x": 238.0,
+        "right_x": 306.0,
+        "center_x": 272.0,
+        "width_px": 68.0,
+        "radius_px": 34.0,
+        "radius_ratio": 0.3383,
+        "radius_ratio_to_max": 0.3383
+      },
+      {
+        "level_index": 94,
+        "rel_z": 0.949,
+        "pixel_y": 39,
+        "left_x": 240.0,
+        "right_x": 306.0,
+        "center_x": 273.0,
+        "width_px": 66.0,
+        "radius_px": 33.0,
+        "radius_ratio": 0.3284,
+        "radius_ratio_to_max": 0.3284
+      },
+      {
+        "level_index": 95,
+        "rel_z": 0.96,
+        "pixel_y": 38,
+        "left_x": 240.0,
+        "right_x": 305.0,
+        "center_x": 272.5,
+        "width_px": 65.0,
+        "radius_px": 32.5,
+        "radius_ratio": 0.3234,
+        "radius_ratio_to_max": 0.3234
+      },
+      {
+        "level_index": 96,
+        "rel_z": 0.97,
+        "pixel_y": 36,
+        "left_x": 242.0,
+        "right_x": 304.0,
+        "center_x": 273.0,
+        "width_px": 62.0,
+        "radius_px": 31.0,
+        "radius_ratio": 0.3085,
+        "radius_ratio_to_max": 0.3085
+      },
+      {
+        "level_index": 97,
+        "rel_z": 0.98,
+        "pixel_y": 35,
+        "left_x": 243.0,
+        "right_x": 303.0,
+        "center_x": 273.0,
+        "width_px": 60.0,
+        "radius_px": 30.0,
+        "radius_ratio": 0.2985,
+        "radius_ratio_to_max": 0.2985
+      },
+      {
+        "level_index": 98,
+        "rel_z": 0.99,
+        "pixel_y": 33,
+        "left_x": 245.0,
+        "right_x": 301.0,
+        "center_x": 273.0,
+        "width_px": 56.0,
+        "radius_px": 28.0,
+        "radius_ratio": 0.2786,
+        "radius_ratio_to_max": 0.2786
+      },
+      {
+        "level_index": 99,
+        "rel_z": 1.0,
+        "pixel_y": 32,
+        "left_x": 300.0,
+        "right_x": 300.0,
+        "center_x": 300.0,
+        "width_px": 0.0,
+        "radius_px": 0.0,
+        "radius_ratio": 0.0,
+        "radius_ratio_to_max": 0.0
+      }
+    ],
+    "components": {
+      "comp_upper_structure": {
+        "display_name": "Upper Structure",
+        "category": "collar",
+        "semantic_role": "comp_upper_structure",
+        "elevation_z_range": [
+          0.841,
+          1.0
+        ],
+        "snapped_pixel_y_bounds": [
+          32,
+          56
+        ],
+        "snapping_confidence": 0.65,
+        "dimensions_bu": {
+          "width": 2.0,
+          "depth": 2.0,
+          "height": 0.239
+        },
+        "geometry_primitive": "lathe_profile",
+        "pixel_bbox": [
+          150,
+          32,
+          201,
+          24
+        ],
+        "pixel_y_top": 32,
+        "pixel_y_bottom": 56,
+        "height_px": 24,
+        "height_ratio_to_total": 0.159,
+        "center_x_px": 251.1,
+        "center_y_px": 44.0,
+        "pbr_material": {
+          "material_id": "mat_comp_upper_structure",
+          "base_color_hex": "#747276",
+          "metallic": 0.0,
+          "roughness": 0.26,
+          "texture_maps": {}
+        },
+        "color_hex": "#747276",
+        "estimated_roughness": 0.26,
+        "estimated_metallic": 0.0,
+        "pbr_material_keywords": [
+          "smooth",
+          "matte"
+        ]
+      },
+      "comp_main_body": {
+        "display_name": "Main Body",
+        "category": "substrate",
+        "semantic_role": "comp_main_body",
+        "elevation_z_range": [
+          0.086,
+          0.841
+        ],
+        "snapped_pixel_y_bounds": [
+          56,
+          170
+        ],
+        "snapping_confidence": 0.65,
+        "dimensions_bu": {
+          "width": 2.0,
+          "depth": 2.0,
+          "height": 1.134
+        },
+        "geometry_primitive": "cylinder",
+        "pixel_bbox": [
+          150,
+          56,
+          201,
+          114
+        ],
+        "pixel_y_top": 56,
+        "pixel_y_bottom": 170,
+        "height_px": 114,
+        "height_ratio_to_total": 0.755,
+        "center_x_px": 251.1,
+        "center_y_px": 113.0,
+        "pbr_material": {
+          "material_id": "mat_comp_main_body",
+          "base_color_hex": "#49474B",
+          "metallic": 0.0,
+          "roughness": 0.2,
+          "texture_maps": {}
+        },
+        "color_hex": "#49474B",
+        "estimated_roughness": 0.2,
+        "estimated_metallic": 0.0,
+        "pbr_material_keywords": [
+          "smooth",
+          "matte"
+        ]
+      },
+      "comp_base_section": {
+        "display_name": "Base Section",
+        "category": "structural_base",
+        "semantic_role": "comp_base_section",
+        "elevation_z_range": [
+          0.0,
+          0.086
+        ],
+        "snapped_pixel_y_bounds": [
+          170,
+          183
+        ],
+        "snapping_confidence": 1.0,
+        "dimensions_bu": {
+          "width": 2.0,
+          "depth": 2.0,
+          "height": 0.129
+        },
+        "geometry_primitive": "concave_lathe",
+        "pixel_bbox": [
+          150,
+          170,
+          201,
+          13
+        ],
+        "pixel_y_top": 170,
+        "pixel_y_bottom": 183,
+        "height_px": 13,
+        "height_ratio_to_total": 0.086,
+        "center_x_px": 251.1,
+        "center_y_px": 176.5,
+        "pbr_material": {
+          "material_id": "mat_comp_base_section",
+          "base_color_hex": "#ABA9AF",
+          "metallic": 0.0,
+          "roughness": 0.23,
+          "texture_maps": {}
+        },
+        "color_hex": "#ABA9AF",
+        "estimated_roughness": 0.23,
+        "estimated_metallic": 0.0,
+        "pbr_material_keywords": [
+          "smooth",
+          "matte"
+        ]
+      }
+    }
+  },
+  "materials_and_colors": {
+    "meta": {
+      "source_image": "front_view.png",
+      "framework_version": "3.0.0",
+      "geometry_doc_used": true
+    },
+    "dominant_palette": [
+      {
+        "rank": 2,
+        "coverage_pct": 30.6,
+        "srgb": [
+          0.2,
+          0.192,
+          0.212
+        ],
+        "srgb_linear": [
+          0.033,
+          0.031,
+          0.037
+        ],
+        "hex": "#333136",
+        "cie_lab": {
+          "L": 20.8,
+          "a": 1.9,
+          "b": -2.5
+        }
+      },
+      {
+        "rank": 4,
+        "coverage_pct": 23.8,
+        "srgb": [
+          0.106,
+          0.098,
+          0.11
+        ],
+        "srgb_linear": [
+          0.011,
+          0.01,
+          0.012
+        ],
+        "hex": "#1b191c",
+        "cie_lab": {
+          "L": 9.0,
+          "a": 1.3,
+          "b": -1.7
+        }
+      },
+      {
+        "rank": 1,
+        "coverage_pct": 20.6,
+        "srgb": [
+          0.671,
+          0.667,
+          0.686
+        ],
+        "srgb_linear": [
+          0.407,
+          0.402,
+          0.429
+        ],
+        "hex": "#abaaaf",
+        "cie_lab": {
+          "L": 69.4,
+          "a": 1.4,
+          "b": -2.4
+        }
+      },
+      {
+        "rank": 3,
+        "coverage_pct": 17.0,
+        "srgb": [
+          0.306,
+          0.298,
+          0.318
+        ],
+        "srgb_linear": [
+          0.076,
+          0.072,
+          0.082
+        ],
+        "hex": "#4e4c51",
+        "cie_lab": {
+          "L": 33.7,
+          "a": 1.7,
+          "b": -2.3
+        }
+      },
+      {
+        "rank": 5,
+        "coverage_pct": 8.0,
+        "srgb": [
+          0.502,
+          0.498,
+          0.522
+        ],
+        "srgb_linear": [
+          0.216,
+          0.212,
+          0.235
+        ],
+        "hex": "#807f85",
+        "cie_lab": {
+          "L": 52.7,
+          "a": 1.4,
+          "b": -1.8
+        }
+      }
+    ],
+    "component_materials": {
+      "comp_upper_structure": {
+        "material_name": "UpperStructureMaterial",
+        "dominant_color": {
+          "srgb_display": [
+            0.671,
+            0.667,
+            0.686
+          ],
+          "srgb_linear": [
+            0.407,
+            0.402,
+            0.429
+          ],
+          "hex": "#abaaaf",
+          "cie_lab": {
+            "L": 69.8,
+            "a": 1.3,
+            "b": -2.4
+          }
+        },
+        "specular_coverage_pct": 0.26,
+        "principled_bsdf": {
+          "base_color_rgb": [
+            0.671,
+            0.667,
+            0.686
+          ],
+          "base_color_srgb_linear": [
+            0.407,
+            0.402,
+            0.429
+          ],
+          "base_color_rgba": [
+            0.671,
+            0.667,
+            0.686,
+            1.0
+          ],
+          "roughness": 0.22,
+          "metallic": 0.0,
+          "specular_ior_level": 0.5,
+          "sheen_weight": 0.05,
+          "subsurface_weight": 0.0
+        },
+        "surface_texture": {
+          "roughness_estimate": 0.22,
+          "gradient_energy": 0.0056,
+          "lbp_entropy": 3.33,
+          "gabor_grain_direction_deg": 45.0,
+          "gabor_isotropy_score": 0.503,
+          "is_isotropic": false,
+          "texture_category": "FINE_MATTE_POWDER"
+        },
+        "notes": "Procedural PBR material for comp_upper_structure",
+        "color_histogram_lab": {
+          "L": [
+            0.0,
+            0.00023,
+            0.00251,
+            0.01236,
+            0.00547,
+            0.00473,
+            0.0065,
+            0.00462,
+            0.00427,
+            0.00353,
+            0.01932,
+            0.01618,
+            0.00547,
+            0.02655,
+            0.08632,
+            0.00103,
+            0.0004,
+            0.00046,
+            6e-05,
+            0.0
+          ],
+          "a": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.1087,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "b": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0995,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "svbrdf_analysis": {
+          "component_id": "comp_upper_structure",
+          "decomposition_mode": "photometric_intrinsic_decomposition",
+          "execution_tier": "tier_3_apu_cpu",
+          "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
+          "opencl_accelerated": true,
+          "inference_time_ms": 233.37,
+          "normal_mode": "valid_tangent",
+          "acceptance_gates": {
+            "roughness_variance": {
+              "value": 0.00648,
+              "threshold": ">= 0.005",
+              "status": "RECOVERED",
+              "mode": "procedural_perturbed"
+            },
+            "normal_flatness": {
+              "value": 0.1933,
+              "threshold": "<= 0.98",
+              "status": "PASS",
+              "mode": "valid_tangent"
+            },
+            "albedo_specular_clipping": {
+              "value": 0.0,
+              "threshold": "<= 0.05",
+              "status": "PASS",
+              "mode": "delit_clean"
+            }
+          },
+          "composite_confidence_q": 0.652,
+          "maps": {
+            "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_upper_structure/diffuse.png",
+            "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_upper_structure/roughness.png",
+            "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_upper_structure/normal.png",
+            "metallic": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_upper_structure/metallic.png"
+          }
+        }
+      },
+      "comp_main_body": {
+        "material_name": "MainBodyMaterial",
+        "dominant_color": {
+          "srgb_display": [
+            0.192,
+            0.184,
+            0.204
+          ],
+          "srgb_linear": [
+            0.031,
+            0.028,
+            0.034
+          ],
+          "hex": "#312f34",
+          "cie_lab": {
+            "L": 19.8,
+            "a": 2.1,
+            "b": -2.9
+          }
+        },
+        "specular_coverage_pct": 0.09,
+        "principled_bsdf": {
+          "base_color_rgb": [
+            0.192,
+            0.184,
+            0.204
+          ],
+          "base_color_srgb_linear": [
+            0.031,
+            0.028,
+            0.034
+          ],
+          "base_color_rgba": [
+            0.192,
+            0.184,
+            0.204,
+            1.0
+          ],
+          "roughness": 0.43,
+          "metallic": 0.0,
+          "specular_ior_level": 0.5,
+          "sheen_weight": 0.05,
+          "subsurface_weight": 0.0
+        },
+        "surface_texture": {
+          "roughness_estimate": 0.43,
+          "gradient_energy": 0.0031,
+          "lbp_entropy": 3.47,
+          "gabor_grain_direction_deg": null,
+          "gabor_isotropy_score": 0.527,
+          "is_isotropic": true,
+          "texture_category": "SMOOTH_ISOTROPIC"
+        },
+        "notes": "Procedural PBR material for comp_main_body",
+        "color_histogram_lab": {
+          "L": [
+            0.01077,
+            0.02836,
+            0.02875,
+            0.0334,
+            0.03481,
+            0.02345,
+            0.01648,
+            0.00971,
+            0.00531,
+            0.00218,
+            0.00209,
+            0.00183,
+            0.00142,
+            0.00059,
+            0.00029,
+            0.00011,
+            0.00025,
+            0.00021,
+            0.0,
+            0.0
+          ],
+          "a": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            3e-05,
+            0.00119,
+            0.10565,
+            0.00183,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "b": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1e-05,
+            0.09744,
+            0.0016,
+            0.00045,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "svbrdf_analysis": {
+          "component_id": "comp_main_body",
+          "decomposition_mode": "photometric_intrinsic_decomposition",
+          "execution_tier": "tier_3_apu_cpu",
+          "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
+          "opencl_accelerated": true,
+          "inference_time_ms": 67.23,
+          "normal_mode": "valid_tangent",
+          "acceptance_gates": {
+            "roughness_variance": {
+              "value": 0.00655,
+              "threshold": ">= 0.005",
+              "status": "RECOVERED",
+              "mode": "procedural_perturbed"
+            },
+            "normal_flatness": {
+              "value": 0.011,
+              "threshold": "<= 0.98",
+              "status": "PASS",
+              "mode": "valid_tangent"
+            },
+            "albedo_specular_clipping": {
+              "value": 0.0,
+              "threshold": "<= 0.05",
+              "status": "PASS",
+              "mode": "delit_clean"
+            }
+          },
+          "composite_confidence_q": 0.727,
+          "maps": {
+            "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_main_body/diffuse.png",
+            "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_main_body/roughness.png",
+            "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_main_body/normal.png",
+            "metallic": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_main_body/metallic.png"
+          }
+        }
+      },
+      "comp_base_section": {
+        "material_name": "BaseSectionMaterial",
+        "dominant_color": {
+          "srgb_display": [
+            0.671,
+            0.663,
+            0.686
+          ],
+          "srgb_linear": [
+            0.407,
+            0.397,
+            0.429
+          ],
+          "hex": "#aba9af",
+          "cie_lab": {
+            "L": 69.6,
+            "a": 1.9,
+            "b": -2.8
+          }
+        },
+        "specular_coverage_pct": 0.0,
+        "principled_bsdf": {
+          "base_color_rgb": [
+            0.671,
+            0.663,
+            0.686
+          ],
+          "base_color_srgb_linear": [
+            0.407,
+            0.397,
+            0.429
+          ],
+          "base_color_rgba": [
+            0.671,
+            0.663,
+            0.686,
+            1.0
+          ],
+          "roughness": 0.5,
+          "metallic": 0.0,
+          "specular_ior_level": 0.5,
+          "sheen_weight": 0.05,
+          "subsurface_weight": 0.0
+        },
+        "surface_texture": {
+          "roughness_estimate": 0.5,
+          "texture_category": "UNKNOWN",
+          "gradient_energy": 0.0,
+          "lbp_entropy": 0.0,
+          "gabor_grain_direction_deg": 0.0,
+          "gabor_isotropy_score": 1.0
+        },
+        "notes": "Procedural PBR material for comp_base_section",
+        "color_histogram_lab": {
+          "L": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.1644,
+            0.0356,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "a": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.1087,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "b": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0995,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "svbrdf_analysis": {
+          "component_id": "comp_base_section",
+          "decomposition_mode": "photometric_intrinsic_decomposition",
+          "execution_tier": "tier_3_apu_cpu",
+          "hardware_device": "gfx902 (Advanced Micro Devices, Inc.) [OpenCL Accelerated, UMA=True]",
+          "opencl_accelerated": true,
+          "inference_time_ms": 31.37,
+          "normal_mode": "valid_tangent",
+          "acceptance_gates": {
+            "roughness_variance": {
+              "value": 0.00655,
+              "threshold": ">= 0.005",
+              "status": "RECOVERED",
+              "mode": "procedural_perturbed"
+            },
+            "normal_flatness": {
+              "value": 0.4258,
+              "threshold": "<= 0.98",
+              "status": "PASS",
+              "mode": "valid_tangent"
+            },
+            "albedo_specular_clipping": {
+              "value": 0.0,
+              "threshold": "<= 0.05",
+              "status": "PASS",
+              "mode": "delit_clean"
+            }
+          },
+          "composite_confidence_q": 0.561,
+          "maps": {
+            "diffuse": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/diffuse.png",
+            "roughness": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/roughness.png",
+            "normal": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/normal.png",
+            "metallic": "C:/Users/PC/myapps/Blender works/projects/nexus_camera/reference/../textures/comp_base_section/metallic.png"
+          }
+        }
+      }
+    }
+  },
+  "placement_and_viewpoints": {
+    "meta": {
+      "source_image": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\reference\\front_view.png",
+      "framework_version": "4.0.0",
+      "coordinate_system": {
+        "origin": "BASE_CENTER_ON_GROUND (Z=0.0)",
+        "axis_orientation": "X=RIGHT, Y=FORWARD (camera facing), Z=VERTICAL UP",
+        "unit_normalization": "WIDTH=2.0 BU, HEIGHT=1.502 BU, SCALE_FACTOR=0.00995"
+      }
+    },
+    "overall_bounds_bu": {
+      "width_bu": 2.0,
+      "depth_bu": 2.0,
+      "height_bu": 1.502,
+      "aspect_ratio": 0.751
+    },
+    "front_elevation": {
+      "camera_recommended": {
+        "angle_deg": 0.0,
+        "target_z_bu": 0.75,
+        "distance_bu": 3.3
+      },
+      "sections": [
+        {
+          "component_id": "comp_upper_structure",
+          "name": "Upper Structure",
+          "category": "collar",
+          "z_range_normalized": [
+            0.841,
+            1.0
+          ],
+          "z_center_bu": 1.382,
+          "height_bu": 0.239,
+          "width_bu": 2.0,
+          "center_offset_x_bu": 0.0,
+          "color_hex": "#747276",
+          "notes": ""
+        },
+        {
+          "component_id": "comp_main_body",
+          "name": "Main Body",
+          "category": "substrate",
+          "z_range_normalized": [
+            0.086,
+            0.841
+          ],
+          "z_center_bu": 0.695,
+          "height_bu": 1.134,
+          "width_bu": 2.0,
+          "center_offset_x_bu": 0.0,
+          "color_hex": "#49474B",
+          "notes": ""
+        },
+        {
+          "component_id": "comp_base_section",
+          "name": "Base Section",
+          "category": "structural_base",
+          "z_range_normalized": [
+            0.0,
+            0.086
+          ],
+          "z_center_bu": 0.065,
+          "height_bu": 0.129,
+          "width_bu": 2.0,
+          "center_offset_x_bu": 0.0,
+          "color_hex": "#ABA9AF",
+          "notes": ""
+        }
+      ]
+    },
+    "blender_target_transforms": {
+      "comp_upper_structure": {
+        "display_name": "Upper Structure",
+        "location": [
+          0.0,
+          0.0,
+          1.382
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          0.119
+        ],
+        "dimensions_bu": [
+          2.0,
+          2.0,
+          0.239
+        ],
+        "rotation_euler_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "comp_main_body": {
+        "display_name": "Main Body",
+        "location": [
+          0.0,
+          0.0,
+          0.695
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          0.567
+        ],
+        "dimensions_bu": [
+          2.0,
+          2.0,
+          1.134
+        ],
+        "rotation_euler_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "comp_base_section": {
+        "display_name": "Base Section",
+        "location": [
+          0.0,
+          0.0,
+          0.065
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          0.065
+        ],
+        "dimensions_bu": [
+          2.0,
+          2.0,
+          0.129
+        ],
+        "rotation_euler_deg": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "pbr_materials": {
+    "comp_upper_structure": {
+      "component_id": "comp_upper_structure",
+      "status": "pbr_downloaded",
+      "source": "polyhaven",
+      "asset_id": "smooth_concrete_floor",
+      "maps": {
+        "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\diffuse.jpg",
+        "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\roughness.jpg",
+        "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\normal.jpg",
+        "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\ao.jpg",
+        "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_upper_structure\\displacement.jpg"
+      },
+      "target_color_hex": "#747276",
+      "estimated_roughness": 0.22,
+      "estimated_metallic": 0.0,
+      "is_procedural_fallback": false
+    },
+    "comp_main_body": {
+      "component_id": "comp_main_body",
+      "status": "pbr_downloaded",
+      "source": "polyhaven",
+      "asset_id": "smooth_concrete_floor",
+      "maps": {
+        "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\diffuse.jpg",
+        "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\roughness.jpg",
+        "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\normal.jpg",
+        "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\ao.jpg",
+        "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_main_body\\displacement.jpg"
+      },
+      "target_color_hex": "#49474B",
+      "estimated_roughness": 0.43,
+      "estimated_metallic": 0.0,
+      "is_procedural_fallback": false
+    },
+    "comp_base_section": {
+      "component_id": "comp_base_section",
+      "status": "pbr_downloaded",
+      "source": "polyhaven",
+      "asset_id": "smooth_concrete_floor",
+      "maps": {
+        "diffuse": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\diffuse.jpg",
+        "roughness": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\roughness.jpg",
+        "normal": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\normal.jpg",
+        "ao": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\ao.jpg",
+        "displacement": "C:\\Users\\PC\\myapps\\Blender works\\projects\\nexus_camera\\outputs\\textures\\comp_base_section\\displacement.jpg"
+      },
+      "target_color_hex": "#ABA9AF",
+      "estimated_roughness": 0.5,
+      "estimated_metallic": 0.0,
+      "is_procedural_fallback": false
+    }
+  },
+  "structural_geometry": {
+    "tier1": {
+      "object_name": "Cube",
+      "bounding_box": {
+        "x_min": -1.0,
+        "x_max": 1.0,
+        "width": 2.0,
+        "y_min": -1.0,
+        "y_max": 1.0,
+        "depth": 2.0,
+        "z_min": -1.0,
+        "z_max": 1.0,
+        "height": 2.0
+      },
+      "aspect_ratio_height_to_width": 1.0,
+      "aspect_ratio_height_to_depth": 1.0,
+      "symmetry": {
+        "rotational_z": {
+          "is_symmetric": false,
+          "confidence": 0.85,
+          "mean_circularity": 0.785,
+          "symmetry_order": "none"
+        },
+        "mirror_xz": {
+          "is_symmetric": true,
+          "confidence": 1.0
+        },
+        "mirror_yz": {
+          "is_symmetric": true,
+          "confidence": 1.0
+        }
+      },
+      "dominant_category": "camera",
+      "primitive_segment_count": 1,
+      "material_slot_count": 1
+    },
+    "tier2": {
+      "slice_count": 100,
+      "z_slices": [
+        {
+          "slice_index": 0,
+          "rel_z": 0.0,
+          "world_z": -1.0,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 1,
+          "rel_z": 0.0101,
+          "world_z": -0.9798,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 2,
+          "rel_z": 0.0202,
+          "world_z": -0.9596,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 3,
+          "rel_z": 0.0303,
+          "world_z": -0.9394,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 4,
+          "rel_z": 0.0404,
+          "world_z": -0.9192,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 5,
+          "rel_z": 0.0505,
+          "world_z": -0.899,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 6,
+          "rel_z": 0.0606,
+          "world_z": -0.8788,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 7,
+          "rel_z": 0.0707,
+          "world_z": -0.8586,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 8,
+          "rel_z": 0.0808,
+          "world_z": -0.8384,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 9,
+          "rel_z": 0.0909,
+          "world_z": -0.8182,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 10,
+          "rel_z": 0.101,
+          "world_z": -0.798,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 11,
+          "rel_z": 0.1111,
+          "world_z": -0.7778,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 12,
+          "rel_z": 0.1212,
+          "world_z": -0.7576,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 13,
+          "rel_z": 0.1313,
+          "world_z": -0.7374,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 14,
+          "rel_z": 0.1414,
+          "world_z": -0.7172,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 15,
+          "rel_z": 0.1515,
+          "world_z": -0.697,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 16,
+          "rel_z": 0.1616,
+          "world_z": -0.6768,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 17,
+          "rel_z": 0.1717,
+          "world_z": -0.6566,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 18,
+          "rel_z": 0.1818,
+          "world_z": -0.6364,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 19,
+          "rel_z": 0.1919,
+          "world_z": -0.6162,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 20,
+          "rel_z": 0.202,
+          "world_z": -0.596,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 21,
+          "rel_z": 0.2121,
+          "world_z": -0.5758,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 22,
+          "rel_z": 0.2222,
+          "world_z": -0.5556,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 23,
+          "rel_z": 0.2323,
+          "world_z": -0.5354,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 24,
+          "rel_z": 0.2424,
+          "world_z": -0.5152,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 25,
+          "rel_z": 0.2525,
+          "world_z": -0.4949,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 26,
+          "rel_z": 0.2626,
+          "world_z": -0.4747,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 27,
+          "rel_z": 0.2727,
+          "world_z": -0.4545,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 28,
+          "rel_z": 0.2828,
+          "world_z": -0.4343,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 29,
+          "rel_z": 0.2929,
+          "world_z": -0.4141,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 30,
+          "rel_z": 0.303,
+          "world_z": -0.3939,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 31,
+          "rel_z": 0.3131,
+          "world_z": -0.3737,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 32,
+          "rel_z": 0.3232,
+          "world_z": -0.3535,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 33,
+          "rel_z": 0.3333,
+          "world_z": -0.3333,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 34,
+          "rel_z": 0.3434,
+          "world_z": -0.3131,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 35,
+          "rel_z": 0.3535,
+          "world_z": -0.2929,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 36,
+          "rel_z": 0.3636,
+          "world_z": -0.2727,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 37,
+          "rel_z": 0.3737,
+          "world_z": -0.2525,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 38,
+          "rel_z": 0.3838,
+          "world_z": -0.2323,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 39,
+          "rel_z": 0.3939,
+          "world_z": -0.2121,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 40,
+          "rel_z": 0.404,
+          "world_z": -0.1919,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 41,
+          "rel_z": 0.4141,
+          "world_z": -0.1717,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 42,
+          "rel_z": 0.4242,
+          "world_z": -0.1515,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 43,
+          "rel_z": 0.4343,
+          "world_z": -0.1313,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 44,
+          "rel_z": 0.4444,
+          "world_z": -0.1111,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 45,
+          "rel_z": 0.4545,
+          "world_z": -0.0909,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 46,
+          "rel_z": 0.4646,
+          "world_z": -0.0707,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 47,
+          "rel_z": 0.4747,
+          "world_z": -0.0505,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 48,
+          "rel_z": 0.4848,
+          "world_z": -0.0303,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 49,
+          "rel_z": 0.4949,
+          "world_z": -0.0101,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 50,
+          "rel_z": 0.5051,
+          "world_z": 0.0101,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 51,
+          "rel_z": 0.5152,
+          "world_z": 0.0303,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 52,
+          "rel_z": 0.5253,
+          "world_z": 0.0505,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 53,
+          "rel_z": 0.5354,
+          "world_z": 0.0707,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 54,
+          "rel_z": 0.5455,
+          "world_z": 0.0909,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 55,
+          "rel_z": 0.5556,
+          "world_z": 0.1111,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 56,
+          "rel_z": 0.5657,
+          "world_z": 0.1313,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 57,
+          "rel_z": 0.5758,
+          "world_z": 0.1515,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 58,
+          "rel_z": 0.5859,
+          "world_z": 0.1717,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 59,
+          "rel_z": 0.596,
+          "world_z": 0.1919,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 60,
+          "rel_z": 0.6061,
+          "world_z": 0.2121,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 61,
+          "rel_z": 0.6162,
+          "world_z": 0.2323,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 62,
+          "rel_z": 0.6263,
+          "world_z": 0.2525,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 63,
+          "rel_z": 0.6364,
+          "world_z": 0.2727,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 64,
+          "rel_z": 0.6465,
+          "world_z": 0.2929,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 65,
+          "rel_z": 0.6566,
+          "world_z": 0.3131,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 66,
+          "rel_z": 0.6667,
+          "world_z": 0.3333,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 67,
+          "rel_z": 0.6768,
+          "world_z": 0.3535,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 68,
+          "rel_z": 0.6869,
+          "world_z": 0.3737,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 69,
+          "rel_z": 0.697,
+          "world_z": 0.3939,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 70,
+          "rel_z": 0.7071,
+          "world_z": 0.4141,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 71,
+          "rel_z": 0.7172,
+          "world_z": 0.4343,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 72,
+          "rel_z": 0.7273,
+          "world_z": 0.4545,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 73,
+          "rel_z": 0.7374,
+          "world_z": 0.4747,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 74,
+          "rel_z": 0.7475,
+          "world_z": 0.4949,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 75,
+          "rel_z": 0.7576,
+          "world_z": 0.5152,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 76,
+          "rel_z": 0.7677,
+          "world_z": 0.5354,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 77,
+          "rel_z": 0.7778,
+          "world_z": 0.5556,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 78,
+          "rel_z": 0.7879,
+          "world_z": 0.5758,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 79,
+          "rel_z": 0.798,
+          "world_z": 0.596,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 80,
+          "rel_z": 0.8081,
+          "world_z": 0.6162,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 81,
+          "rel_z": 0.8182,
+          "world_z": 0.6364,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 82,
+          "rel_z": 0.8283,
+          "world_z": 0.6566,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 83,
+          "rel_z": 0.8384,
+          "world_z": 0.6768,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 84,
+          "rel_z": 0.8485,
+          "world_z": 0.697,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 85,
+          "rel_z": 0.8586,
+          "world_z": 0.7172,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 86,
+          "rel_z": 0.8687,
+          "world_z": 0.7374,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 87,
+          "rel_z": 0.8788,
+          "world_z": 0.7576,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 88,
+          "rel_z": 0.8889,
+          "world_z": 0.7778,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 89,
+          "rel_z": 0.899,
+          "world_z": 0.798,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 90,
+          "rel_z": 0.9091,
+          "world_z": 0.8182,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 91,
+          "rel_z": 0.9192,
+          "world_z": 0.8384,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 92,
+          "rel_z": 0.9293,
+          "world_z": 0.8586,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 93,
+          "rel_z": 0.9394,
+          "world_z": 0.8788,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 94,
+          "rel_z": 0.9495,
+          "world_z": 0.899,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 95,
+          "rel_z": 0.9596,
+          "world_z": 0.9192,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 96,
+          "rel_z": 0.9697,
+          "world_z": 0.9394,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 97,
+          "rel_z": 0.9798,
+          "world_z": 0.9596,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 98,
+          "rel_z": 0.9899,
+          "world_z": 0.9798,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        },
+        {
+          "slice_index": 99,
+          "rel_z": 1.0,
+          "world_z": 1.0,
+          "centroid": [
+            0.0,
+            0.0
+          ],
+          "radius_mean": 1.4142,
+          "radius_min": 1.4142,
+          "radius_max": 1.4142,
+          "radius_var": 0.0,
+          "area": 4.0,
+          "perimeter": 8.0,
+          "circularity": 0.7854,
+          "point_count": 4
+        }
+      ],
+      "primitive_segments": [
+        {
+          "segment_id": "segment_01",
+          "primitive_type": "CYLINDRICAL",
+          "z_range_world": [
+            -1.0,
+            1.0
+          ],
+          "rel_z_span": [
+            0.0,
+            1.0
+          ],
+          "height": 2.0,
+          "radius_bottom": 1.4142,
+          "radius_top": 1.4142,
+          "radius_mean": 1.4142,
+          "taper_angle_deg": 0.0,
+          "slice_indices": [
+            0,
+            99
+          ],
+          "material_slot_index": 0,
+          "material_name": "Material"
+        }
+      ],
+      "material_zones": [
+        {
+          "segment_id": "segment_01",
+          "material_name": "Material",
+          "material_slot_index": 0,
+          "z_range": [
+            -1.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    "category_matched": {
+      "category": "camera",
+      "schema_matched": false,
+      "schema_score": 1.0,
+      "components": {}
+    },
+    "warnings": []
+  }
+}

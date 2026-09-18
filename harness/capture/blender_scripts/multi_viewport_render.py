@@ -145,7 +145,9 @@ def run_viewport_capture(params=None):
     rendered_viewports = []
 
     try:
-        orbit_radius = bbox_radius * camera_distance_factor
+        min_persp_factor = (1.0 / math.tan(math.radians(13.5))) * padding_factor
+        effective_dist_factor = max(camera_distance_factor, min_persp_factor)
+        orbit_radius = bbox_radius * effective_dist_factor
 
         for cfg in configs:
             name = cfg["name"]
@@ -174,12 +176,15 @@ def run_viewport_capture(params=None):
                 quat = direction.to_track_quat('-Z', 'Y')
                 cam_obj.rotation_euler = quat.to_euler()
 
+            aspect_ratio = float(resolution_x) / max(float(resolution_y), 1.0)
             if is_ortho:
                 cam_data.type = 'ORTHO'
+                cam_data.sensor_fit = 'VERTICAL'
                 cam_data.ortho_scale = max_dim * padding_factor * 1.25
             else:
                 cam_data.type = 'PERSP'
                 cam_data.lens = 50.0
+                cam_data.sensor_fit = 'VERTICAL'
 
             out_filename = f"viewport_{name}.png"
             out_filepath = os.path.normpath(os.path.join(output_dir, out_filename))

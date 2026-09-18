@@ -56,6 +56,8 @@ def run_report(project: ProjectDefinition, config: HarnessConfig) -> Dict[str, A
 
     if master_spec:
         report["stages_completed"].append("analyze")
+    if os.path.isfile(os.path.join(project.renders_dir, "initial_render.png")):
+        report["stages_completed"].append("generate")
     if viewport_analysis:
         report["stages_completed"].append("capture")
         health = viewport_analysis.get("overall_health_score", 0.0)
@@ -75,6 +77,7 @@ def run_report(project: ProjectDefinition, config: HarnessConfig) -> Dict[str, A
         report["summary"]["total_iterations"] = (
             refinement.get("geometry_iterations", 0) + refinement.get("color_iterations", 0)
         )
+    report["stages_completed"].append("report")
 
     # Overall verdict
     all_pass = all(v in ("PASS", "WARN") for v in report["verdicts"].values())

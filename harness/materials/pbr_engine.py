@@ -216,6 +216,7 @@ class PBRMaterialEngine:
         target_dir: str,
         target_color_hex: Optional[str] = None,
         estimated_roughness: float = 0.5,
+        estimated_metallic: float = 0.0,
         resolution: str = "1k",
         min_score: float = 3.0,
     ) -> Dict[str, Any]:
@@ -229,6 +230,7 @@ class PBRMaterialEngine:
             target_dir: Directory to save resolved maps (projects/<p>/outputs/textures/<comp>).
             target_color_hex: Target hex color for procedural tint/fallback.
             estimated_roughness: Target roughness estimate [0, 1].
+            estimated_metallic: Target metallic factor [0, 1].
             resolution: '1k' or '2k'.
             min_score: Minimum match score threshold to accept a downloaded texture.
 
@@ -260,6 +262,7 @@ class PBRMaterialEngine:
                     "maps": downloaded,
                     "target_color_hex": target_color_hex,
                     "estimated_roughness": estimated_roughness,
+                    "estimated_metallic": estimated_metallic,
                     "is_procedural_fallback": False,
                 }
 
@@ -271,6 +274,7 @@ class PBRMaterialEngine:
             target_dir=target_dir,
             target_color_hex=target_color_hex,
             roughness=estimated_roughness,
+            metallic=estimated_metallic,
         )
 
         return {
@@ -281,6 +285,7 @@ class PBRMaterialEngine:
             "maps": fallback_maps,
             "target_color_hex": target_color_hex,
             "estimated_roughness": estimated_roughness,
+            "estimated_metallic": estimated_metallic,
             "is_procedural_fallback": True,
         }
 
@@ -322,6 +327,7 @@ class PBRMaterialEngine:
         svbrdf_manifest: Dict[str, Any],
         target_color_hex: Optional[str] = None,
         estimated_roughness: float = 0.5,
+        estimated_metallic: float = 0.0,
     ) -> Dict[str, Any]:
         """
         Directly registers locally-generated SVBRDF map bundle (from SVBRDFEngine.decompose_crop)
@@ -336,6 +342,7 @@ class PBRMaterialEngine:
             "maps": maps,
             "target_color_hex": target_color_hex,
             "estimated_roughness": estimated_roughness,
+            "estimated_metallic": estimated_metallic,
             "is_procedural_fallback": False,
             "execution_tier": svbrdf_manifest.get("execution_tier", "tier_3_apu_cpu"),
             "normal_mode": svbrdf_manifest.get("normal_mode", "valid_tangent"),
@@ -448,12 +455,13 @@ class PBRMaterialEngine:
         target_dir: str,
         target_color_hex: Optional[str] = None,
         roughness: float = 0.5,
+        metallic: float = 0.0,
         resolution: int = 1024,
     ) -> Dict[str, str]:
         """
-        Generate physical PBR albedo, roughness, and tangent-space normal maps
+        Generate physical PBR albedo, roughness, tangent-space normal, and metallic maps
         meeting quantitative acceptance thresholds (PIPELINE_SOLUTIONS_SPEC.md § 1.5 & § 4.3).
-        Never generates degenerate flat [128, 128, 255] normal maps or zero-variance roughness.
+        Supports continuous physical metallic values and non-degenerate roughness.
         """
         os.makedirs(target_dir, exist_ok=True)
 
@@ -535,7 +543,13 @@ class PBRMaterialEngine:
         norm_img.save(norm_path)
 
         # 4. Metallic Map
-        metal_val = 255 if category.lower() in ["metal", "aluminum", "steel", "brass", "copper"] else 0
+        # Support continuous physical metallic values [0.0, 1.0]
+        if metallic is not None and metallic > 0.0:
+            metal_val = int(np.clip(metallic * 255.0, 0, 255))
+        elif category.lower() in ["metal", "aluminum", "steel", "brass", "copper", "magnesium", "alloy", "chrome"]:
+            metal_val = 220
+        else:
+            metal_val = 0
         metal_arr = np.full((resolution, resolution), metal_val, dtype=np.uint8)
         metal_path = os.path.join(target_dir, "metallic.png")
         Image.fromarray(metal_arr).save(metal_path)
