@@ -38,10 +38,15 @@ class MultiViewportRenderer:
     def __init__(self, config: Optional[HarnessConfig] = None):
         self.config = config or DEFAULT_CONFIG
 
-    def capture_all(self, project: ProjectDefinition) -> Dict[str, Any]:
+    def capture_all(self, project: ProjectDefinition, quality: str = "high", filter_views: str = "all") -> Dict[str, Any]:
         """
         Executes multi-viewport capture for the given project.
         Renders 14 viewports to `project.viewports_dir`.
+        
+        Args:
+            project: The project definition.
+            quality: 'fast' or 'high' for adaptive sampling.
+            filter_views: 'all' or 'primary_ortho'.
 
         Returns:
             Dict containing manifest of rendered files, metadata, and status.
@@ -79,9 +84,12 @@ class MultiViewportRenderer:
             "output_dir": project.viewports_dir.replace("\\", "/"),
             "resolution_x": vp_res_x,
             "resolution_y": vp_res_y,
-            "samples": samples,
+            "quality": quality,
+            "samples_fast": max(8, samples // 4),
+            "samples_high": samples,
             "padding_factor": padding,
             "camera_distance_factor": dist_factor,
+            "filter_views": filter_views,
             "viewports": self.VIEWPORT_CONFIGS
         }
 

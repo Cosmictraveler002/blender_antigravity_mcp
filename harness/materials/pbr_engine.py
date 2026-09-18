@@ -20,6 +20,8 @@ from typing import Dict, Any, List, Optional, Tuple
 import numpy as np
 import cv2
 from PIL import Image
+import time
+import concurrent.futures
 
 
 USER_AGENT = "BlenderMCP/4.0 (Windows; Python-Harness)"
@@ -38,11 +40,28 @@ class PolyHavenClient:
         if self._assets_cache is not None:
             return self._assets_cache
 
+        cache_dir = os.path.join(os.path.expanduser("~"), ".blender_mcp", "cache")
+        os.makedirs(cache_dir, exist_ok=True)
+        cache_file = os.path.join(cache_dir, "catalogue_polyhaven.json")
+        
+        # Check 24-hour TTL
+        if os.path.isfile(cache_file):
+            if time.time() - os.path.getmtime(cache_file) < 86400:
+                try:
+                    with open(cache_file, "r", encoding="utf-8") as f:
+                        self._assets_cache = json.load(f)
+                    return self._assets_cache
+                except Exception as e:
+                    print(f"[PolyHaven] Cache read failed: {e}")
+
         url = f"{self.BASE_API}/assets?t=textures"
         req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
         try:
             with urllib.request.urlopen(req, timeout=12) as resp:
-                self._assets_cache = json.loads(resp.read().decode("utf-8"))
+                data = resp.read().decode("utf-8")
+                self._assets_cache = json.loads(data)
+                with open(cache_file, "w", encoding="utf-8") as f:
+                    f.write(data)
         except Exception as e:
             print(f"[PolyHaven] WARNING: Could not fetch texture catalogue: {e}")
             self._assets_cache = {}
@@ -205,8 +224,10 @@ class PBRMaterialEngine:
         self.cache_dir = cache_dir
         os.makedirs(self.cache_dir, exist_ok=True)
 
-        self.polyhaven = PolyHavenClient()
+        self.polyhaven = PolyHavenClient(cache_dir=self.cache_dir)
         self.ambientcg = AmbientCGClient()
+        self._downloaded_assets: Dict[str, Dict[str, str]] = {}
+        self._session_asset_cache: Dict[str, Dict[str, str]] = {}
 
     def resolve_material(
         self,
@@ -250,8 +271,21 @@ class PBRMaterialEngine:
         # 2. Try downloading if we have a qualified match
         if best_match:
             asset_id = best_match["asset_id"]
-            print(f"[PBREngine] Selected '{asset_id}' from PolyHaven (Score: {best_match['score']:.1f})")
-            downloaded = self._download_polyhaven_asset(asset_id, target_dir, resolution=resolution)
+            downloaded = None
+
+            if asset_id in self._downloaded_assets:
+                print(f"[PBREngine] Reusing cached asset '{asset_id}' from current run.")
+                downloaded = {}
+                for map_type, src_path in self._downloaded_assets[asset_id].items():
+                    dest_file = os.path.join(target_dir, os.path.basename(src_path))
+                    shutil.copyfile(src_path, dest_file)
+                    downloaded[map_type] = dest_file
+            else:
+                print(f"[PBREngine] Selected '{asset_id}' from PolyHaven (Score: {best_match['score']:.1f})")
+                downloaded = self._download_polyhaven_asset(asset_id, target_dir, resolution=resolution)
+                if downloaded:
+                    self._downloaded_assets[asset_id] = downloaded.copy()
+
             if downloaded:
                 downloaded = self._validate_downloaded_maps(downloaded, target_dir, category, target_color_hex)
                 return {
@@ -291,6 +325,16 @@ class PBRMaterialEngine:
 
     def _download_polyhaven_asset(self, asset_id: str, target_dir: str, resolution: str = "1k") -> Optional[Dict[str, str]]:
         """Download and cache all maps for a PolyHaven texture."""
+        cache_key = f"{asset_id}_{resolution}"
+        if cache_key in self._session_asset_cache:
+            print(f"[PBREngine] Using session-cached asset {asset_id} for new component.")
+            resolved_maps = {}
+            for map_type, src_path in self._session_asset_cache[cache_key].items():
+                dest_file = os.path.join(target_dir, os.path.basename(src_path))
+                shutil.copyfile(src_path, dest_file)
+                resolved_maps[map_type] = dest_file
+            return resolved_maps
+
         cached_asset_dir = os.path.join(self.cache_dir, f"polyhaven_{asset_id}_{resolution}")
         os.makedirs(cached_asset_dir, exist_ok=True)
 
@@ -299,7 +343,8 @@ class PBRMaterialEngine:
             return None
 
         resolved_maps = {}
-        for map_type, url in map_urls.items():
+        
+        def download_single_map(map_type: str, url: str) -> Optional[Tuple[str, str]]:
             ext = os.path.splitext(url.split("?")[0])[1] or ".jpg"
             cache_file = os.path.join(cached_asset_dir, f"{map_type}{ext}")
 
@@ -312,14 +357,27 @@ class PBRMaterialEngine:
                         shutil.copyfileobj(resp, f_out)
                 except Exception as e:
                     print(f"[PBREngine] WARNING: Failed to download {map_type}: {e}")
-                    continue
+                    return None
 
             # Copy to project target directory
             dest_file = os.path.join(target_dir, f"{map_type}{ext}")
             shutil.copyfile(cache_file, dest_file)
-            resolved_maps[map_type] = dest_file
+            return map_type, dest_file
 
-        return resolved_maps if resolved_maps else None
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            futures = {
+                executor.submit(download_single_map, m_type, url): m_type
+                for m_type, url in map_urls.items()
+            }
+            for future in concurrent.futures.as_completed(futures):
+                result = future.result()
+                if result:
+                    resolved_maps[result[0]] = result[1]
+
+        if resolved_maps:
+            self._session_asset_cache[cache_key] = resolved_maps
+            return resolved_maps
+        return None
 
     def register_svbrdf_maps(
         self,

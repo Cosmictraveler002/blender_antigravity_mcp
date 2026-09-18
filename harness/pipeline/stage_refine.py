@@ -63,6 +63,8 @@ def run_refinement(project: ProjectDefinition, config: HarnessConfig) -> Dict[st
 
         env = os.environ.copy()
         env["HARNESS_SPEC_DIR"] = project.specs_dir
+        env["HARNESS_MASTER_SPEC_JSON"] = os.path.join(project.specs_dir, "master_3d_design_specification.json")
+        env["HARNESS_MULTI_POV_JSON"] = os.path.join(project.specs_dir, "multi_pov_dimensional_specification.json")
         env["HARNESS_GEOM_JSON"] = geom_json
         env["HARNESS_COLOR_JSON"] = color_json
         env["HARNESS_REPORTS_DIR"] = project.reports_dir
@@ -79,7 +81,8 @@ def run_refinement(project: ProjectDefinition, config: HarnessConfig) -> Dict[st
             env=env,
             capture_output=True,
             text=True,
-            cwd=os.getcwd()
+            cwd=os.getcwd(),
+            timeout=300
         )
 
         if proc.stdout:

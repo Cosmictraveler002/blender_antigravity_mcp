@@ -107,7 +107,7 @@ Add the following to your Antigravity MCP configuration (`mcp_config.json`):
     "blender": {
       "command": "C:/Path/To/Your/python.exe",
       "args": [
-        "C:/Users/PC/myapps/Blender works/mcp_server/server.py"
+        "C:/Path/To/Blender-MCP/server.py"
       ],
       "env": {
         "PYTHONUTF8": "1"
@@ -266,4 +266,4 @@ python -m harness run bottle --stage analyze
 
 ## 📄 License & Credits
 
-Personal Use & Non-Commercial License. Strictly for personal, educational, and non-monetized hobbyist use. Commercial use, resale, and monetization are strictly prohibited. See [LICENSE](file:///C:/Users/PC/myapps/Blender%20works/LICENSE) for full legal terms.
+Personal Use & Non-Commercial License. Strictly for personal, educational, and non-monetized hobbyist use. Commercial use, resale, and monetization are strictly prohibited. See [LICENSE](LICENSE) for full legal terms.

@@ -26,8 +26,14 @@ manual_env/
 
 # User Projects (CRITICAL: EXCLUDED AS REQUESTED)
 projects/*
-!projects/nexus_camera/
-!projects/nexus_camera/outputs/
+!projects/*/project.yaml
+!projects/*/reference/
+!projects/*/scripts/
+!projects/*/outputs/
+!projects/*/outputs/specs/
+projects/*/outputs/renders/
+projects/*/outputs/textures/
+projects/*/outputs/reports/
 
 # Texture Cache & Heavy Local Assets
 assets/textures_cache/

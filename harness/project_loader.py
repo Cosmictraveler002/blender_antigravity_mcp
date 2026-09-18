@@ -29,6 +29,8 @@ class ProjectDefinition:
     refine_script: Optional[str] = None
     objective_script: Optional[str] = None
 
+    execution_mode: str = "socket_client"
+
     # Override-able config
     convergence: Optional[ConvergenceConfig] = None
     render: Optional[RenderConfig] = None
@@ -161,6 +163,7 @@ def load_project(project_name: str, harness_root: Optional[str] = None) -> Proje
         verify_script=verify_script,
         refine_script=refine_script,
         objective_script=objective_script,
+        execution_mode=cfg.get("execution_mode", "socket_client"),
         convergence=convergence,
         render=render,
         viewport=viewport,

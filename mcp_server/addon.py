@@ -19,6 +19,10 @@ from datetime import datetime
 import hashlib, hmac, base64
 import os.path as osp
 from contextlib import redirect_stdout, suppress
+import struct
+import secrets
+import uuid
+from typing import Tuple, Optional
 
 bl_info = {
     "name": "Blender MCP",
@@ -36,13 +40,105 @@ RODIN_FREE_TRIAL_KEY = "k9TcfFoEhNd9cCPP2guHAHHHkctZHIRhZDywZ1euGUXwihbYLpOjQhof
 REQ_HEADERS = requests.utils.default_headers()
 REQ_HEADERS.update({"User-Agent": "blender-mcp"})
 
+MAX_PAYLOAD_SIZE = 64 * 1024 * 1024  # 64 MB
+SOCKET_READ_TIMEOUT = 30.0  # 30 seconds
+
+def get_session_token_path() -> str:
+    token_dir = os.path.join(os.path.expanduser("~"), ".blender_mcp")
+    os.makedirs(token_dir, exist_ok=True)
+    return os.path.join(token_dir, "session.token")
+
+def send_framed_data(sock: socket.socket, data: dict, use_length_prefix: bool = True):
+    payload = json.dumps(data).encode("utf-8")
+    if use_length_prefix:
+        header = struct.pack(">I", len(payload))
+        sock.sendall(header + payload)
+    else:
+        sock.sendall(payload)
+
+def recv_framed_data(sock: socket.socket, max_payload: int = MAX_PAYLOAD_SIZE) -> Tuple[Optional[dict], bool]:
+    """
+    Receives JSON from socket. Supports both length-prefixed (4-byte big-endian)
+    and legacy raw JSON streams.
+    Returns: (parsed_json_dict, was_length_prefixed)
+    """
+    def recv_exact(n):
+        buf = bytearray()
+        while len(buf) < n:
+            chunk = sock.recv(n - len(buf))
+            if not chunk:
+                return None
+            buf.extend(chunk)
+        return bytes(buf)
+
+    header = recv_exact(4)
+    if not header:
+        return None, False
+
+    # Check for legacy raw JSON (starts with '{' or whitespace)
+    if header[0] in (ord('{'), ord(' '), ord('\t'), ord('\r'), ord('\n')):
+        buffer = bytearray(header)
+        while True:
+            try:
+                data = json.loads(buffer.decode('utf-8'))
+                return data, False
+            except json.JSONDecodeError:
+                chunk = sock.recv(8192)
+                if not chunk:
+                    return None, False
+                buffer.extend(chunk)
+                if len(buffer) > max_payload:
+                    raise ValueError(f"Payload size {len(buffer)} exceeds max {max_payload}")
+
+    payload_len = struct.unpack(">I", header)[0]
+    if payload_len > max_payload:
+        raise ValueError(f"Payload size {payload_len} exceeds max {max_payload}")
+
+    payload = recv_exact(payload_len)
+    if payload is None:
+        return None, True
+
+    return json.loads(payload.decode('utf-8')), True
+
 class BlenderMCPServer:
-    def __init__(self, host='localhost', port=9876):
-        self.host = host
+    def __init__(self, host='127.0.0.1', port=9876):
+        # Force loopback binding for security
+        self.host = '127.0.0.1' if host in ('localhost', '127.0.0.1', '') else host
         self.port = port
         self.running = False
         self.socket = None
         self.server_thread = None
+        self.session_token = self._init_session_token()
+
+    def _init_session_token(self) -> str:
+        token = os.environ.get("BLENDER_MCP_TOKEN")
+        token_file = get_session_token_path()
+        if not token:
+            if os.path.isfile(token_file):
+                try:
+                    with open(token_file, "r", encoding="utf-8") as f:
+                        token = f.read().strip()
+                except Exception:
+                    pass
+        if not token:
+            token = secrets.token_hex(24)
+            try:
+                with open(token_file, "w", encoding="utf-8") as f:
+                    f.write(token)
+                if hasattr(os, "chmod"):
+                    try:
+                        os.chmod(token_file, 0o600)
+                    except Exception:
+                        pass
+            except Exception as e:
+                print(f"[BlenderMCP] Warning: Could not write session token to {token_file}: {e}")
+        return token
+
+    def _validate_auth(self, command: dict) -> bool:
+        if not self.session_token or os.environ.get("BLENDER_MCP_DISABLE_AUTH") == "1":
+            return True
+        client_token = command.get("token") or command.get("params", {}).get("token")
+        return client_token == self.session_token
 
     def start(self):
         if self.running:
@@ -56,7 +152,7 @@ class BlenderMCPServer:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.socket.bind((self.host, self.port))
-            self.socket.listen(1)
+            self.socket.listen(5)
 
             # Start server thread
             self.server_thread = threading.Thread(target=self._server_loop)
@@ -64,6 +160,7 @@ class BlenderMCPServer:
             self.server_thread.start()
 
             print(f"BlenderMCP server started on {self.host}:{self.port}")
+            print(f"Session Token: {self.session_token[:6]}... (saved in {get_session_token_path()})")
         except Exception as e:
             print(f"Failed to start server: {str(e)}")
             self.stop()
@@ -105,7 +202,7 @@ class BlenderMCPServer:
                     # Handle client in a separate thread
                     client_thread = threading.Thread(
                         target=self._handle_client,
-                        args=(client,)
+                        args=(client, address)
                     )
                     client_thread.daemon = True
                     client_thread.start()
@@ -123,65 +220,58 @@ class BlenderMCPServer:
 
         print("Server thread stopped")
 
-    def _handle_client(self, client):
-        """Handle connected client"""
-        print("Client handler started")
-        client.settimeout(None)  # No timeout
-        buffer = b''
-
+    def _handle_client(self, client, address=None):
+        """Handle connected client with framing and finite timeouts"""
+        client.settimeout(SOCKET_READ_TIMEOUT)
         try:
             while self.running:
-                # Receive data
                 try:
-                    data = client.recv(8192)
-                    if not data:
-                        print("Client disconnected")
+                    command, was_framed = recv_framed_data(client)
+                    if command is None:
                         break
 
-                    buffer += data
-                    try:
-                        # Try to parse command
-                        command = json.loads(buffer.decode('utf-8'))
-                        buffer = b''
+                    cmd_type = command.get("type", "unknown")
 
-                        # Execute command in Blender's main thread
-                        def execute_wrapper():
+                    # Validate session token
+                    if not self._validate_auth(command):
+                        print(f"[BlenderMCP AUDIT] Authentication failed for command '{cmd_type}' from {address}")
+                        error_resp = {
+                            "status": "error",
+                            "message": "Authentication failed: invalid or missing session token"
+                        }
+                        send_framed_data(client, error_resp, use_length_prefix=was_framed)
+                        continue
+
+                    def execute_wrapper():
+                        try:
+                            response = self.execute_command(command)
+                            send_framed_data(client, response, use_length_prefix=was_framed)
+                        except Exception as e:
+                            print(f"[BlenderMCP AUDIT] Error executing command: {str(e)}")
+                            traceback.print_exc()
+                            error_response = {
+                                "status": "error",
+                                "message": str(e)
+                            }
                             try:
-                                response = self.execute_command(command)
-                                response_json = json.dumps(response)
-                                try:
-                                    client.sendall(response_json.encode('utf-8'))
-                                except:
-                                    print("Failed to send response - client disconnected")
-                            except Exception as e:
-                                print(f"Error executing command: {str(e)}")
-                                traceback.print_exc()
-                                try:
-                                    error_response = {
-                                        "status": "error",
-                                        "message": str(e)
-                                    }
-                                    client.sendall(json.dumps(error_response).encode('utf-8'))
-                                except:
-                                    pass
-                            return None
+                                send_framed_data(client, error_response, use_length_prefix=was_framed)
+                            except:
+                                pass
+                        return None
 
-                        # Schedule execution in main thread
-                        bpy.app.timers.register(execute_wrapper, first_interval=0.0)
-                    except json.JSONDecodeError:
-                        # Incomplete data, wait for more
-                        pass
-                except Exception as e:
-                    print(f"Error receiving data: {str(e)}")
+                    bpy.app.timers.register(execute_wrapper, first_interval=0.0)
+                except socket.timeout:
+                    print(f"[BlenderMCP] Client read timeout ({SOCKET_READ_TIMEOUT}s idle). Closing connection.")
                     break
-        except Exception as e:
-            print(f"Error in client handler: {str(e)}")
+                except Exception as e:
+                    print(f"[BlenderMCP] Error in client handler: {str(e)}")
+                    break
         finally:
             try:
                 client.close()
             except:
                 pass
-            print("Client handler stopped")
+            print(f"Client handler stopped for {address}")
 
     def execute_command(self, command):
         """Execute a command in the main Blender thread"""
@@ -245,6 +335,7 @@ class BlenderMCPServer:
         if bpy.context.scene.blendermcp_use_hunyuan3d:
             hunyuan_handlers = {
                 "create_hunyuan_job": self.create_hunyuan_job,
+                "generate_hunyuan3d_model": self.create_hunyuan_job,  # Harmonized alias for MCP server compatibility
                 "poll_hunyuan_job_status": self.poll_hunyuan_job_status,
                 "import_generated_asset_hunyuan": self.import_generated_asset_hunyuan
             }
@@ -359,20 +450,24 @@ class BlenderMCPServer:
 
         return obj_info
 
-    def get_viewport_screenshot(self, max_size=800, filepath=None, format="png"):
+    def get_viewport_screenshot(self, max_size=800, filepath=None, format="png", return_base64=True):
         """
-        Capture a screenshot of the current 3D viewport and save it to the specified path.
+        Capture a screenshot of the current 3D viewport and save it to the specified path or return base64.
 
         Parameters:
         - max_size: Maximum size in pixels for the largest dimension of the image
-        - filepath: Path where to save the screenshot file
+        - filepath: Optional path where to save the screenshot file (auto-generated in temp if omitted)
         - format: Image format (png, jpg, etc.)
+        - return_base64: Whether to include base64-encoded image string in response
 
-        Returns success/error status
+        Returns success/error status with image metadata and optional base64 payload
         """
         try:
+            auto_temp = False
             if not filepath:
-                return {"error": "No filepath provided"}
+                temp_dir = tempfile.gettempdir()
+                filepath = os.path.join(temp_dir, f"blender_viewport_{uuid.uuid4().hex[:8]}.{format.lower()}")
+                auto_temp = True
 
             # Find the active 3D viewport
             area = None
@@ -406,20 +501,38 @@ class BlenderMCPServer:
             # Cleanup Blender image data
             bpy.data.images.remove(img)
 
-            return {
+            # Read image bytes if requested
+            image_b64 = None
+            if return_base64 or auto_temp:
+                with open(filepath, "rb") as f:
+                    image_b64 = base64.b64encode(f.read()).decode("utf-8")
+
+            # If filepath was auto-generated for base64 return, clean it up
+            if auto_temp and os.path.exists(filepath):
+                try:
+                    os.remove(filepath)
+                except Exception:
+                    pass
+
+            resp = {
                 "success": True,
                 "width": width,
                 "height": height,
-                "filepath": filepath
+                "filepath": filepath if not auto_temp else None
             }
+            if image_b64:
+                resp["image_base64"] = image_b64
+
+            return resp
 
         except Exception as e:
             return {"error": str(e)}
 
     def execute_code(self, code):
-        """Execute arbitrary Blender Python code"""
-        # This is powerful but potentially dangerous - use with caution
+        """Execute arbitrary Blender Python code with auditing"""
         try:
+            preview = code.strip().replace("\n", " ")[:120]
+            print(f"[BlenderMCP AUDIT] execute_code (len={len(code)}): {preview}...")
             # Create a local namespace for execution
             namespace = {"bpy": bpy}
 

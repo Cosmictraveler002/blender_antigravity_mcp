@@ -9,8 +9,21 @@ import json
 import socket
 import base64
 import tempfile
+import struct
 from dataclasses import dataclass
 from typing import Dict, Any, Optional, List
+
+def get_session_token() -> str:
+    token = os.environ.get("BLENDER_MCP_TOKEN")
+    if not token:
+        token_file = os.path.join(os.path.expanduser("~"), ".blender_mcp", "session.token")
+        if os.path.isfile(token_file):
+            try:
+                with open(token_file, "r", encoding="utf-8") as f:
+                    token = f.read().strip()
+            except Exception:
+                pass
+    return token or ""
 
 # CRITICAL: Set binary mode FIRST on Windows
 if sys.platform == 'win32':
@@ -55,12 +68,26 @@ def write_message(msg):
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 9876
 
+def get_session_token() -> str:
+    token = os.environ.get("BLENDER_MCP_TOKEN")
+    if token:
+        return token
+    token_file = os.path.join(os.path.expanduser("~"), ".blender_mcp", "session.token")
+    if os.path.isfile(token_file):
+        with open(token_file, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    return ""
+
 @dataclass
 class BlenderConnection:
     host: str
     port: int
     sock: socket.socket = None
+    session_token: str = ""
     
+    def __post_init__(self):
+        self.session_token = get_session_token()
+        
     def connect(self) -> bool:
         if self.sock:
             return True
@@ -86,26 +113,69 @@ class BlenderConnection:
         if not self.sock and not self.connect():
             raise ConnectionError("Not connected to Blender")
         
-        command = {"type": command_type, "params": params or {}}
-        self.sock.settimeout(180.0)
-        self.sock.sendall(json.dumps(command).encode('utf-8'))
+        command = {
+            "type": command_type,
+            "token": self.session_token,
+            "params": params or {}
+        }
+        self.sock.settimeout(30.0)
         
-        # Receive response
-        chunks = []
-        while True:
-            chunk = self.sock.recv(8192)
-            if not chunk:
-                break
-            chunks.append(chunk)
-            try:
-                data = b''.join(chunks)
-                response = json.loads(data.decode('utf-8'))
-                if response.get("status") == "error":
-                    raise Exception(response.get("message", "Unknown error"))
-                return response.get("result", {})
-            except json.JSONDecodeError:
-                continue
-        raise Exception("Incomplete response from Blender")
+        payload = json.dumps(command).encode('utf-8')
+        header = struct.pack(">I", len(payload))
+        
+        try:
+            self.sock.sendall(header + payload)
+        except Exception as e:
+            self.disconnect()
+            raise Exception(f"Socket send failed: {e}")
+            
+        def recv_exact(n):
+            buf = bytearray()
+            while len(buf) < n:
+                chunk = self.sock.recv(n - len(buf))
+                if not chunk:
+                    return None
+                buf.extend(chunk)
+            return bytes(buf)
+            
+        try:
+            header_resp = recv_exact(4)
+            if not header_resp:
+                self.disconnect()
+                raise Exception("Socket closed by remote peer")
+                
+            if header_resp[0] in (ord('{'), ord(' '), ord('\t'), ord('\r'), ord('\n')):
+                # Legacy raw JSON fallback
+                buffer = bytearray(header_resp)
+                while True:
+                    try:
+                        data = json.loads(buffer.decode('utf-8'))
+                        break
+                    except json.JSONDecodeError:
+                        chunk = self.sock.recv(8192)
+                        if not chunk:
+                            self.disconnect()
+                            raise Exception("Socket closed before complete JSON")
+                        buffer.extend(chunk)
+            else:
+                # Length-prefixed
+                payload_len = struct.unpack(">I", header_resp)[0]
+                payload_resp = recv_exact(payload_len)
+                if not payload_resp:
+                    self.disconnect()
+                    raise Exception("Socket closed while reading payload")
+                data = json.loads(payload_resp.decode('utf-8'))
+                
+            if data.get("status") == "error":
+                raise Exception(data.get("message", "Unknown error"))
+            return data.get("result", {})
+            
+        except socket.timeout:
+            self.disconnect()
+            raise Exception("Timeout waiting for response from Blender")
+        except Exception as e:
+            self.disconnect()
+            raise Exception(f"Failed to read response: {e}")
 
 # Global connection
 _connection: Optional[BlenderConnection] = None
@@ -370,21 +440,14 @@ def handle_tool_call(name: str, arguments: dict) -> str:
             return f"Code executed: {result.get('result', '')}"
         
         elif name == "get_viewport_screenshot":
-            temp_dir = tempfile.gettempdir()
-            temp_path = os.path.join(temp_dir, f"blender_screenshot_{os.getpid()}.png")
             result = conn.send_command("get_viewport_screenshot", {
-                "max_size": arguments.get("max_size", 800),
-                "filepath": temp_path,
-                "format": "png"
+                "max_size": arguments.get("max_size", 800)
             })
             if "error" in result:
                 return f"Screenshot error: {result['error']}"
-            if os.path.exists(temp_path):
-                with open(temp_path, 'rb') as f:
-                    img_data = base64.b64encode(f.read()).decode('utf-8')
-                os.remove(temp_path)
-                return f"Screenshot captured (base64): data:image/png;base64,{img_data[:100]}..."
-            return "Screenshot saved to temp file"
+            if "image_base64" in result:
+                return f"Screenshot captured (base64): data:image/png;base64,{result['image_base64'][:100]}..."
+            return f"Screenshot saved to {result.get('filepath')}"
         
         # PolyHaven Tools
         elif name == "get_polyhaven_status":

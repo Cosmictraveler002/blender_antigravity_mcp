@@ -110,21 +110,24 @@ def run_generation(project: ProjectDefinition, config: HarnessConfig) -> Dict[st
 
         env = os.environ.copy()
         env["HARNESS_SPEC_DIR"] = project.specs_dir
+        env["HARNESS_MASTER_SPEC_JSON"] = os.path.join(project.specs_dir, "master_3d_design_specification.json")
+        env["HARNESS_MULTI_POV_JSON"] = os.path.join(project.specs_dir, "multi_pov_dimensional_specification.json")
         env["HARNESS_GEOM_JSON"] = os.path.join(project.specs_dir, "geometry_design_doc.json")
         env["HARNESS_COLOR_JSON"] = os.path.join(project.specs_dir, "color_texture_design_doc.json")
         env["HARNESS_RENDER_DIR"] = project.renders_dir
         env["HARNESS_TEXTURE_DIR"] = project.textures_dir
+        env["HARNESS_GENERATE_SCRIPT"] = project.generate_script or ""
         env["PYTHONPATH"] = os.getcwd() + (os.pathsep + env["PYTHONPATH"] if "PYTHONPATH" in env else "")
 
-        # Check if the script is a host-side client runner (uses send_blender_code)
-        # or a direct Blender bpy script
-        if "send_blender_code" in script_content:
+        # Execute based on the project's execution mode
+        if getattr(project, "execution_mode", "socket_client") != "bpy_script":
             proc = subprocess.run(
                 [sys.executable, project.generate_script],
                 env=env,
                 capture_output=True,
                 text=True,
-                cwd=os.getcwd()
+                cwd=os.getcwd(),
+                timeout=300
             )
             if proc.stdout:
                 print(proc.stdout.strip())

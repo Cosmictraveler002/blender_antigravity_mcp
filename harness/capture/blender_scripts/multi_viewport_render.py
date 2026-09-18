@@ -21,9 +21,16 @@ def run_viewport_capture(params=None):
 
     resolution_x = params.get("resolution_x", 960)
     resolution_y = params.get("resolution_y", 540)
-    samples = params.get("samples", 64)
+    quality = params.get("quality", "high")
+    
+    if quality == "fast":
+        samples = params.get("samples_fast", 16)
+    else:
+        samples = params.get("samples_high", 64)
+        
     padding_factor = params.get("padding_factor", 1.25)
     camera_distance_factor = params.get("camera_distance_factor", 3.2)
+    filter_views = params.get("filter_views", "all")
 
     # Standard 14-angle orbit configuration
     default_configs = [
@@ -44,6 +51,10 @@ def run_viewport_capture(params=None):
     ]
 
     configs = params.get("viewports", default_configs)
+    
+    if filter_views == "primary_ortho":
+        configs = [cfg for cfg in configs if cfg.get("ortho", False)]
+        
     scene = bpy.context.scene
 
     # 1. Compute bounding box of all relevant mesh / geometry objects
